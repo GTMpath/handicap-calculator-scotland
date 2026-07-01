@@ -206,7 +206,7 @@
   <header class="mast">
     <div class="eyebrow">Scotland Golf Tour · Fife &amp; Angus</div>
     <h1>Fife &amp; Angus Golf Tour</h1>
-    <p class="sub">Two tools, one trip. The <b>Handicap Calculator</b> works out course &amp; playing handicaps for every course; the <b>Competition</b> tab runs the trip cup over 5 rounds — <b>3 pairs rounds + 2 singles</b> by default — with a live team cup <em>and</em> an individual net leaderboard. Everything saves to this device.</p>
+    <p class="sub">Two tools, one trip. The <b>Handicap Calculator</b> works out course &amp; playing handicaps for every course; the <b>Competition</b> tab runs the trip cup over 5 rounds — <b>4 pairs rounds + a singles finale</b> on the last day — with a live team cup <em>and</em> an individual net leaderboard. Everything saves to this device.</p>
   </header>
 
   <nav class="apptabs">
@@ -285,7 +285,7 @@
 
     <div class="foot">
       <span class="dot">▪</span>
-      <span><b>Pairs rounds:</b> Better Ball takes the lower of the two partners' nets, Aggregate adds both — pairs ranked for <b>3/2/1/0</b> (ties share). <b>Singles rounds:</b> everyone plays their own ball; you earn <b>½ point per player you beat on net</b>, and those points add to your pair's Cup total. Default is 3 pairs rounds + 2 singles, but flip any round with the Pairs/Singles toggle. <b>Shuffle</b> (pairs rounds only) makes a wildcard round that scores individuals but sits out of the Cup.</span>
+      <span><b>Pairs rounds:</b> Better Ball takes the lower of the two partners' nets, Aggregate adds both — pairs ranked for <b>3/2/1/0</b> (ties share). <b>Singles rounds:</b> everyone plays their own ball; you earn <b>½ point per player you beat on net</b>, and those points add to your pair's Cup total. Default is 4 pairs rounds + a singles finale on the Old Course, but flip any round with the Pairs/Singles toggle. <b>Shuffle</b> (pairs rounds only) makes a wildcard round that scores individuals but sits out of the Cup.</span>
     </div>
   </div>
 
@@ -351,9 +351,9 @@ const SEED_PAIRS = [
 const PAIR_COLORS = ['#2f6b63','#b4472e','#a9790c','#3f6b8f'];
 const ROUND_POINTS = [3,2,1,0];
 const FORMATS = {betterball:'Better Ball', aggregate:'Aggregate'};
-const DEFAULT_SINGLES = ['new','old'];   // the "3 pairs + 2 singles" default
+const DEFAULT_SINGLES = ['old'];   // 4 pairs rounds + a singles finale on the last day
 
-const LS_KEY = 'fife-hcp-v4';
+const LS_KEY = 'fife-hcp-v5';
 
 // ---------- State ----------
 let players = [];
