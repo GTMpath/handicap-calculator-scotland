@@ -206,7 +206,7 @@
   <header class="mast">
     <div class="eyebrow">Scotland Golf Tour · Fife &amp; Angus</div>
     <h1>Fife &amp; Angus Golf Tour</h1>
-    <p class="sub">Two tools, one trip. The <b>Handicap Calculator</b> works out course &amp; playing handicaps for every course; the <b>Competition</b> tab runs a 4‑pairs match over 5 rounds with a live team cup <em>and</em> an individual net leaderboard. Everything saves to this device.</p>
+    <p class="sub">Two tools, one trip. The <b>Handicap Calculator</b> works out course &amp; playing handicaps for every course; the <b>Competition</b> tab runs the trip cup over 5 rounds — <b>3 pairs rounds + 2 singles</b> by default — with a live team cup <em>and</em> an individual net leaderboard. Everything saves to this device.</p>
   </header>
 
   <nav class="apptabs">
@@ -247,8 +247,8 @@
     <section class="comp">
 
       <div class="csection">
-        <h3>Pairs Cup — standings</h3>
-        <div class="csub">Cumulative points across all counting rounds. Win a round on points; most points takes the cup.</div>
+        <h3>The Cup — standings</h3>
+        <div class="csub">Cumulative pair points across all rounds. Pairs rounds score 3/2/1/0; singles rounds add each partner's points to the pair. Most points takes the cup.</div>
         <div id="cupBoard"></div>
         <div class="divide"></div>
       </div>
@@ -262,7 +262,7 @@
 
       <div class="csection">
         <h3>Rounds &amp; scoring</h3>
-        <div class="csub">Pick a round, choose Better Ball or Aggregate, enter each player's gross. Net = gross − that round's Course Handicap.</div>
+        <div class="csub">Pick a round, set it to <b>Pairs</b> (Better Ball / Aggregate) or <b>Singles</b>, then enter each player's gross. Net = gross − that round's Course Handicap.</div>
         <div class="rtabs" id="roundTabs"></div>
         <div id="roundPanel"></div>
         <div class="divide"></div>
@@ -285,7 +285,7 @@
 
     <div class="foot">
       <span class="dot">▪</span>
-      <span><b>Better Ball</b> = the pair takes the lower of the two partners' net scores. <b>Aggregate</b> = both net scores added. Each round the four pairs are ranked and earn <b>3 / 2 / 1 / 0</b> points (ties share). Use <b>Shuffle pairings</b> on one round for a wildcard — a shuffled round scores for the individual leaderboard but sits out of the Pairs Cup.</span>
+      <span><b>Pairs rounds:</b> Better Ball takes the lower of the two partners' nets, Aggregate adds both — pairs ranked for <b>3/2/1/0</b> (ties share). <b>Singles rounds:</b> everyone plays their own ball; you earn <b>½ point per player you beat on net</b>, and those points add to your pair's Cup total. Default is 3 pairs rounds + 2 singles, but flip any round with the Pairs/Singles toggle. <b>Shuffle</b> (pairs rounds only) makes a wildcard round that scores individuals but sits out of the Cup.</span>
     </div>
   </div>
 
@@ -351,6 +351,7 @@ const SEED_PAIRS = [
 const PAIR_COLORS = ['#2f6b63','#b4472e','#a9790c','#3f6b8f'];
 const ROUND_POINTS = [3,2,1,0];
 const FORMATS = {betterball:'Better Ball', aggregate:'Aggregate'};
+const DEFAULT_SINGLES = ['new','old'];   // the "3 pairs + 2 singles" default
 
 const LS_KEY = 'fife-hcp-v4';
 
@@ -368,7 +369,7 @@ const newId = () => 'p' + (++uid);
 
 function freshRounds(){
   rounds = {};
-  COURSES.forEach(c => { rounds[c.id] = {format:'betterball', scores:{}, pairings:null}; });
+  COURSES.forEach(c => { rounds[c.id] = {type: DEFAULT_SINGLES.includes(c.id)?'singles':'pairs', format:'betterball', scores:{}, pairings:null}; });
 }
 function freshDefaults(){
   players = SEED_PLAYERS.map(p => ({...p}));
@@ -388,8 +389,9 @@ function ensureShape(){
   COURSES.forEach(c => {
     if(!teeChoice[c.id]) teeChoice[c.id] = {};
     if(allowance[c.id] == null) allowance[c.id] = 1.00;
-    if(!rounds[c.id]) rounds[c.id] = {format:'betterball', scores:{}, pairings:null};
+    if(!rounds[c.id]) rounds[c.id] = {type:'pairs', format:'betterball', scores:{}, pairings:null};
     if(!rounds[c.id].scores) rounds[c.id].scores = {};
+    if(rounds[c.id].type==null) rounds[c.id].type = DEFAULT_SINGLES.includes(c.id)?'singles':'pairs';
     if(rounds[c.id].format==null) rounds[c.id].format='betterball';
     if(rounds[c.id].pairings===undefined) rounds[c.id].pairings=null;
   });
@@ -474,12 +476,46 @@ function roundResult(cid){
   entries.forEach(e=>{ if(e.score!=null && e.points==null) e.points=0; });
   return entries;
 }
+const roundType = cid => rounds[cid].type || 'pairs';
+
+// singles: rank every player by net; ½ point for each player you finish ahead of (ties share)
+function singlesRanking(cid){
+  const c=courseById(cid);
+  const scored = players.map(p=>{ const n=playerNet(p.id,c); return (n && n.net!=null)?{pid:p.id, net:n.net}:null; })
+    .filter(Boolean).sort((a,b)=>a.net-b.net);
+  const K=scored.length, out={};
+  let i=0;
+  while(i<K){
+    let j=i; while(j+1<K && scored[j+1].net===scored[i].net) j++;
+    let sum=0; for(let k=i;k<=j;k++) sum += (K-1-k)/2;   // rank k (0-best) beats (K-1-k) players
+    const avg=sum/(j-i+1);
+    for(let k=i;k<=j;k++) out[scored[k].pid]=avg;
+    i=j+1;
+  }
+  return out;
+}
+// points each standing pair earns this round (null = didn't count), aligned to `pairs`
+function roundPairPoints(cid){
+  if(isShuffled(cid)) return pairs.map(()=>null);     // wildcard rounds sit out of the cup
+  if(roundType(cid)==='singles'){
+    const rank=singlesRanking(cid);
+    return pairs.map(pr=>{
+      let sum=0, any=false;
+      pr.players.forEach(pid=>{ if(pid!=null && rank[pid]!=null){ sum+=rank[pid]; any=true; } });
+      return any?sum:null;
+    });
+  }
+  return roundResult(cid).map(e=>e.points);
+}
+function roundDone(cid){
+  if(roundType(cid)==='singles') return Object.keys(singlesRanking(cid)).length>0;
+  return roundResult(cid).some(e=>e.points!=null);
+}
 function cupStandings(){
   const totals = pairs.map((p,i)=>({pair:p, colorIdx:i, points:0, rounds:0}));
   COURSES.forEach(c=>{
-    if(isShuffled(c.id)) return;                 // wildcard rounds sit out of the cup
-    const res = roundResult(c.id);
-    res.forEach((e,i)=>{ if(e.points!=null && totals[i]){ totals[i].points+=e.points; totals[i].rounds++; } });
+    const pts = roundPairPoints(c.id);
+    pts.forEach((v,i)=>{ if(v!=null && totals[i]){ totals[i].points+=v; totals[i].rounds++; } });
   });
   return totals.slice().sort((a,b)=> b.points-a.points || b.rounds-a.rounds);
 }
@@ -652,11 +688,11 @@ function renderPairSetup(){
 function renderRoundTabs(){
   const host=document.getElementById('roundTabs'); host.innerHTML='';
   COURSES.forEach((c,i)=>{
-    const res=roundResult(c.id);
-    const done=res.some(e=>e.points!=null);
+    const done=roundDone(c.id);
+    const sub = roundType(c.id)==='singles' ? 'Singles' : (isShuffled(c.id)?'shuffled':FORMATS[rounds[c.id].format]);
     const b=document.createElement('button');
     b.className='rtab'+(c.id===compRound?' active':'')+(done?' done':'');
-    b.innerHTML=`R${i+1} · ${c.short}<small>${isShuffled(c.id)?'shuffled':FORMATS[rounds[c.id].format]}</small>`;
+    b.innerHTML=`R${i+1} · ${c.short}<small>${sub}</small>`;
     b.addEventListener('click',()=>{ compRound=c.id; renderRoundTabs(); renderRoundPanel(); save('comp'); });
     host.appendChild(b);
   });
@@ -665,37 +701,75 @@ function renderRoundTabs(){
 function renderRoundPanel(){
   const host=document.getElementById('roundPanel');
   const c=courseById(compRound); const rd=rounds[c.id];
-  const shuffled=isShuffled(c.id);
-  const pairings=pairingsForRound(c.id);
+  const singles = roundType(c.id)==='singles';
+
+  const sessToggle=`<div class="fmt-toggle" style="margin-right:8px">
+      <button data-sess="pairs" class="${!singles?'on':''}">Pairs</button>
+      <button data-sess="singles" class="${singles?'on':''}">Singles</button>
+    </div>`;
+  const fmtToggle = singles ? '' : `<div class="fmt-toggle">
+      ${Object.keys(FORMATS).map(f=>`<button data-fmt="${f}" class="${rd.format===f?'on':''}">${FORMATS[f]}</button>`).join('')}
+    </div>`;
 
   let top=`<div class="round-top">
     <div>
       <div class="round-name">${c.name}</div>
-      <div class="round-meta">Par ${c.par} · net = gross − Course HCP (from the calculator tab)</div>
+      <div class="round-meta">Par ${c.par} · net = gross − Course HCP · ${singles?'Singles — ½ pt per player you beat, added to your pair':'Pairs — 3 / 2 / 1 / 0 by finish'}</div>
     </div>
-    <div class="fmt-toggle">
-      ${Object.keys(FORMATS).map(f=>`<button data-fmt="${f}" class="${rd.format===f?'on':''}">${FORMATS[f]}</button>`).join('')}
-    </div>
-  </div>
-  <div class="shufrow">
-    <button class="btn ghost sm" id="shuffleBtn">${shuffled?'Re-shuffle pairings':'Shuffle pairings (wildcard)'}</button>
-    ${shuffled?`<button class="btn ghost sm" id="unshuffleBtn">Restore standing pairs</button><span class="shufbadge">Wildcard round — individual only</span>`:''}
+    <div style="display:flex;flex-wrap:wrap;gap:8px">${sessToggle}${fmtToggle}</div>
   </div>`;
 
+  if(singles){
+    top += `<div class="shufrow"><span class="shufbadge" style="background:var(--sea);color:#fff">Singles round — everyone plays their own ball</span></div>`;
+    host.innerHTML = top + `<div class="scoregrid">${singlesCardsHtml(c)}</div>`;
+  } else {
+    const shuffled=isShuffled(c.id);
+    top += `<div class="shufrow">
+      <button class="btn ghost sm" id="shuffleBtn">${shuffled?'Re-shuffle pairings':'Shuffle pairings (wildcard)'}</button>
+      ${shuffled?`<button class="btn ghost sm" id="unshuffleBtn">Restore standing pairs</button><span class="shufbadge">Wildcard round — individual only</span>`:''}
+    </div>`;
+    host.innerHTML = top + `<div class="scoregrid">${pairCardsHtml(c)}</div>`;
+    const sh=document.getElementById('shuffleBtn');
+    if(sh) sh.addEventListener('click',()=>{ rounds[c.id].pairings=shufflePairs(); renderComp(); save('comp'); });
+    const un=document.getElementById('unshuffleBtn');
+    if(un) un.addEventListener('click',()=>{ rounds[c.id].pairings=null; renderComp(); save('comp'); });
+    host.querySelectorAll('[data-fmt]').forEach(b=>b.addEventListener('click',()=>{
+      rd.format=b.dataset.fmt; renderRoundTabs(); renderRoundPanel(); renderCupBoard(); save('comp');
+    }));
+  }
+
+  host.querySelectorAll('[data-sess]').forEach(b=>b.addEventListener('click',()=>{
+    rd.type=b.dataset.sess;
+    if(rd.type==='singles') rd.pairings=null;   // singles has no partners to shuffle
+    renderComp(); save('comp');
+  }));
+  host.querySelectorAll('[data-score]').forEach(inp=>{
+    inp.addEventListener('input',e=>{
+      const pid=e.target.dataset.score, v=e.target.value;
+      if(v===''||v==null) delete rounds[c.id].scores[pid];
+      else rounds[c.id].scores[pid]=parseInt(v,10);
+      // live-update without dropping input focus
+      renderCupBoard(); renderIndivBoard(); renderRoundTabs();
+      if(roundType(c.id)==='singles') updateSinglesLines(c.id); else updateRoundResultLines(c.id);
+      save('comp');
+    });
+  });
+}
+
+function pairCardsHtml(c){
+  const rd=rounds[c.id]; const shuffled=isShuffled(c.id);
   const res=roundResult(c.id);
-  const cards=pairings.map((pl,i)=>{
+  return pairingsForRound(c.id).map((pl,i)=>{
     const e=res[i];
     const color = shuffled ? '#5a6b64' : pairColor(i);
     const nmeRows=pl.map(pid=>{
       if(!pid) return `<div class="nm" style="color:var(--ink-faint)">— empty —</div><div></div><div class="netcell"></div>`;
       const g = rounds[c.id].scores[pid];
-      const n = playerNet(pid,c);
-      const ch = roundCourseHcp(pid,c);
+      const n = playerNet(pid,c); const ch = roundCourseHcp(pid,c);
       const netTxt = n && n.net!=null ? `<b>${n.net}</b> net` : (ch==null?'<span style="color:var(--danger)">need HI</span>':'—');
-      const chTxt = ch!=null ? `CH ${ch}` : 'CH —';
       return `<div class="nm">${escapeHtml(playerName(pid))}</div>
         <input class="grossin" type="number" inputmode="numeric" placeholder="gross" value="${g==null?'':g}" data-score="${pid}">
-        <div class="netcell">${chTxt} · ${netTxt}</div>`;
+        <div class="netcell">${ch!=null?'CH '+ch:'CH —'} · ${netTxt}</div>`;
     }).join('');
     const scoreTxt = e.score!=null ? `${e.score} ${rd.format==='aggregate'?'agg':'net'}` : 'incomplete';
     const ptsTxt = e.points!=null ? `${half(e.points)} pt${e.points===1?'':'s'}` : '—';
@@ -707,31 +781,28 @@ function renderRoundPanel(){
       <div class="sgp-players">${nmeRows}</div>
     </div>`;
   }).join('');
-
-  host.innerHTML=top+`<div class="scoregrid">${cards}</div>`;
-
-  host.querySelectorAll('[data-fmt]').forEach(b=>b.addEventListener('click',()=>{
-    rd.format=b.dataset.fmt; renderRoundTabs(); renderRoundPanel(); renderCupBoard(); save('comp');
-  }));
-  const sh=document.getElementById('shuffleBtn');
-  if(sh) sh.addEventListener('click',()=>{ rounds[c.id].pairings=shufflePairs(); renderComp(); save('comp'); });
-  const un=document.getElementById('unshuffleBtn');
-  if(un) un.addEventListener('click',()=>{ rounds[c.id].pairings=null; renderComp(); save('comp'); });
-  host.querySelectorAll('[data-score]').forEach(inp=>{
-    inp.addEventListener('input',e=>{
-      const pid=e.target.dataset.score;
-      const v=e.target.value;
-      if(v===''||v==null) delete rounds[c.id].scores[pid];
-      else rounds[c.id].scores[pid]=parseInt(v,10);
-      // live-update result line + boards without dropping focus
-      renderCupBoard(); renderIndivBoard(); renderRoundTabs();
-      updateRoundResultLines(c.id);
-      save('comp');
-    });
-  });
 }
 
-// update just the per-pair score/points lines so typing doesn't lose focus
+function singlesCardsHtml(c){
+  const rank=singlesRanking(c.id);
+  // pair lookup for the tag
+  const pairOf={}; pairs.forEach((pr,i)=>pr.players.forEach(pid=>{ if(pid) pairOf[pid]={i,pr}; }));
+  return `<div class="sgpair"><div class="sgp-players" style="grid-template-columns:1fr 74px auto">
+    ${players.map(p=>{
+      const g=rounds[c.id].scores[p.id];
+      const n=playerNet(p.id,c); const ch=roundCourseHcp(p.id,c);
+      const netTxt = n && n.net!=null ? `<b>${n.net}</b> net` : (ch==null?'<span style="color:var(--danger)">need HI</span>':'—');
+      const pts = rank[p.id];
+      const po = pairOf[p.id];
+      const tag = po ? `<span class="teamtag" style="background:${pairColor(po.i)};font-size:9px">${escapeHtml(pairName(po.pr))}</span>` : '';
+      return `<div class="nm">${escapeHtml(p.name)||'unnamed'} ${tag}</div>
+        <input class="grossin" type="number" inputmode="numeric" placeholder="gross" value="${g==null?'':g}" data-score="${p.id}">
+        <div class="netcell" data-netfor="${p.id}">${ch!=null?'CH '+ch:'CH —'} · ${netTxt} · <b style="color:var(--gorse-deep)">${pts!=null?half(pts)+' pt'+(pts===1?'':'s'):'—'}</b></div>`;
+    }).join('')}
+  </div></div>`;
+}
+
+// update per-pair score/points lines in place so typing doesn't lose focus
 function updateRoundResultLines(cid){
   const c=courseById(cid); const rd=rounds[cid];
   const res=roundResult(cid);
@@ -742,7 +813,6 @@ function updateRoundResultLines(cid){
     const ptsTxt = e.points!=null ? `${half(e.points)} pt${e.points===1?'':'s'}` : '—';
     const resEl=card.querySelector('.sgp-res');
     if(resEl) resEl.innerHTML=`${scoreTxt}<br><b>${ptsTxt}</b>`;
-    // refresh net cells
     const pids=pairingsForRound(cid)[i];
     const netCells=card.querySelectorAll('.netcell');
     pids.forEach((pid,k)=>{
@@ -751,6 +821,17 @@ function updateRoundResultLines(cid){
       const netTxt = n && n.net!=null ? `<b>${n.net}</b> net` : (ch==null?'<span style="color:var(--danger)">need HI</span>':'—');
       netCells[k].innerHTML=`${ch!=null?'CH '+ch:'CH —'} · ${netTxt}`;
     });
+  });
+}
+// update singles net/points cells in place
+function updateSinglesLines(cid){
+  const c=courseById(cid); const rank=singlesRanking(cid);
+  const host=document.getElementById('roundPanel');
+  players.forEach(p=>{
+    const cell=host.querySelector(`[data-netfor="${p.id}"]`); if(!cell) return;
+    const n=playerNet(p.id,c); const ch=roundCourseHcp(p.id,c); const pts=rank[p.id];
+    const netTxt = n && n.net!=null ? `<b>${n.net}</b> net` : (ch==null?'<span style="color:var(--danger)">need HI</span>':'—');
+    cell.innerHTML=`${ch!=null?'CH '+ch:'CH —'} · ${netTxt} · <b style="color:var(--gorse-deep)">${pts!=null?half(pts)+' pt'+(pts===1?'':'s'):'—'}</b>`;
   });
 }
 
