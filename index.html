@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fife &amp; Angus — Scotland Golf Tour 2026</title>
+<title>Fife &amp; Angus Golf Tour · Scotland 2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --paper:#e7eee7; --card:#f5f8f3; --ink:#182823; --ink-soft:#4d5c56;
-    --ink-faint:#8a968f; --rule:#ccd6cd; --rule-soft:#dde4dc;
-    --gorse:#e3a81f; --gorse-deep:#a9790c; --sea:#2f6b63; --danger:#b4472e;
-    --teamA:#2f6b63; --teamB:#b4472e;
+    --paper:#e7ecf3; --card:#f7f9fc; --ink:#16243f; --ink-soft:#3a496a;
+    --ink-faint:#6a7590; --rule:#cbd4e3; --rule-soft:#dde3ee;
+    --gorse:#3f5c8c; --gorse-deep:#2a4272; --sea:#34527e; --danger:#b4472e;
+    --teamA:#16243f; --teamB:#8a3b46;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{-webkit-text-size-adjust:100%}
@@ -26,14 +26,18 @@
   .mast{border:2px solid var(--ink);background:var(--card);padding:22px 24px 20px;position:relative}
   .mast::before{content:"";position:absolute;left:0;right:0;top:0;height:6px;
     background:repeating-linear-gradient(90deg,var(--gorse) 0 18px,var(--ink) 18px 20px)}
-  .eyebrow{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.28em;
+  .mast-row{display:flex;align-items:center;gap:22px}
+  .crest{flex:none;width:104px;height:104px}
+  .crest-img,.crest-svg{width:100%;height:100%;object-fit:contain;display:block}
+  .mast-titles{min-width:0}
+  .eyebrow{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.16em;
     text-transform:uppercase;color:var(--sea);margin-top:6px}
   h1{font-family:'Space Grotesk',sans-serif;font-weight:700;
     font-size:clamp(28px,5.4vw,44px);line-height:1.02;letter-spacing:-.01em;margin:6px 0 4px}
   .sub{font-size:14px;color:var(--ink-soft);max-width:64ch}
   .sub b{color:var(--ink);font-weight:600}
 
-  /* tour strip — the living signature: countdown, live cup, the links */
+  /* tour strip – the living signature: countdown, live cup, the links */
   .tourstrip{display:flex;flex-wrap:wrap;margin-top:18px;border-top:2px solid var(--ink)}
   .tcell{flex:1 1 150px;padding:11px 20px 3px 0}
   .tcell + .tcell{border-left:1px solid var(--rule);padding-left:20px}
@@ -48,14 +52,16 @@
 
   /* top-level app tabs */
   .apptabs{display:flex;gap:0;border:2px solid var(--ink);border-top:none;background:var(--ink)}
-  .apptab{flex:1 1 0;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;
-    color:#b9c6bf;background:var(--ink);border:none;cursor:pointer;padding:14px 10px 13px;
-    border-right:1px solid #2b423b;text-align:center;line-height:1.15;transition:color .12s,background .12s}
+  .apptab{flex:1 1 0;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14.5px;
+    color:#b3bed6;background:var(--ink);border:none;cursor:pointer;padding:14px 10px 13px;
+    border-right:1px solid #2a3a5c;text-align:center;line-height:1.15;position:relative;
+    transition:color .12s,background .12s}
   .apptab:last-child{border-right:none}
-  .apptab small{display:block;font-family:'Space Mono',monospace;font-weight:400;font-size:9.5px;opacity:.7;margin-top:3px}
-  .apptab:hover{color:#fff}
-  .apptab.active{background:var(--gorse);color:var(--ink)}
-  .apptab.active small{opacity:.85}
+  .apptab small{display:block;font-family:'Space Mono',monospace;font-weight:400;font-size:9.5px;opacity:.75;margin-top:3px}
+  .apptab:hover{color:#fff;background:#1d2f52}
+  .apptab.active{background:var(--gorse);color:#fff}
+  .apptab.active small{opacity:.95;color:#fff}
+  .apptab.active::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--gorse-deep)}
   .view{display:none}
   .view.active{display:block}
 
@@ -90,13 +96,13 @@
   .saved.show{opacity:1}
   .tabs{display:flex;border:2px solid var(--ink);border-top:none;background:var(--ink);overflow-x:auto}
   .tab{flex:1 0 auto;min-width:118px;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:13px;
-    color:#b9c6bf;background:var(--ink);border:none;cursor:pointer;padding:12px 10px 11px;
-    border-right:1px solid #2b423b;text-align:left;line-height:1.15;transition:color .12s,background .12s}
+    color:#b3bed6;background:var(--ink);border:none;cursor:pointer;padding:12px 10px 11px;
+    border-right:1px solid #2a3a5c;text-align:left;line-height:1.15;transition:color .12s,background .12s}
   .tab:last-child{border-right:none}
-  .tab small{display:block;font-family:'Space Mono',monospace;font-weight:400;font-size:10px;opacity:.7;margin-top:3px}
-  .tab:hover{color:#fff}
-  .tab.active{background:var(--gorse);color:var(--ink)}
-  .tab.active small{opacity:.85}
+  .tab small{display:block;font-family:'Space Mono',monospace;font-weight:400;font-size:10px;opacity:.75;margin-top:3px}
+  .tab:hover{color:#fff;background:#1d2f52}
+  .tab.active{background:var(--gorse);color:#fff}
+  .tab.active small{opacity:.95}
   .board{border:2px solid var(--ink);border-top:none;background:var(--card);padding:20px 24px 24px}
   .formula{margin:0;border:2px solid var(--ink);border-top:none;background:var(--paper);
     font-family:'Space Mono',monospace;font-size:12.5px;color:var(--ink-soft);padding:9px 24px}
@@ -104,7 +110,7 @@
   .board-top{display:flex;flex-wrap:wrap;gap:14px 24px;align-items:flex-end;justify-content:space-between;
     padding-bottom:16px;border-bottom:1px solid var(--rule);margin-bottom:4px}
   .course-name{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;letter-spacing:-.01em}
-  .course-meta{font-family:'Space Mono',monospace;font-size:12px;color:var(--ink-soft);margin-top:3px}
+  .course-meta{font-family:'Space Mono',monospace;font-size:12.5px;color:var(--ink-soft);margin-top:4px}
   .controls{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end}
   .ctl label{display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);
     margin-bottom:4px;font-weight:600}
@@ -124,7 +130,7 @@
     .lb tbody tr:hover td{background:rgba(47,107,99,.05)}
   }
   .p-name{font-weight:600;font-size:14.5px}
-  .p-idx{font-family:'Space Mono',monospace;font-size:12px;color:var(--ink-faint);margin-top:1px}
+  .p-idx{font-family:'Space Mono',monospace;font-size:12px;color:var(--ink-soft);margin-top:2px}
   .tee-sel select{min-width:150px}
   .rs{font-family:'Space Mono',monospace;font-size:12px;color:var(--ink-soft);text-align:center;white-space:nowrap}
   .chcp{text-align:center}
@@ -134,7 +140,7 @@
   .phcp .big{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:22px;line-height:1;color:var(--gorse-deep)}
   .plus{color:var(--sea)}
   .tbd{color:var(--ink-faint);font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:16px}
-  /* .k labels are the mobile card headers only — never show them on desktop */
+  /* .k labels are the mobile card headers only – never show them on desktop */
   .card-line .k{display:none}
   .foot{margin-top:18px;font-size:12px;color:var(--ink-faint);line-height:1.55;display:flex;gap:8px;align-items:flex-start}
   .foot .dot{color:var(--gorse-deep);font-weight:700}
@@ -262,10 +268,129 @@
   .lb .netbig{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:15px}
   .emptyc{padding:18px 0;text-align:center;color:var(--ink-faint);font-size:13px}
 
+  /* format-at-a-glance table */
+  .ftable{width:100%;border-collapse:collapse;margin-top:2px}
+  .ftable th{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--ink-faint);text-align:left;padding:0 12px 9px;border-bottom:1.5px solid var(--ink);font-weight:700}
+  .ftable td{padding:12px;border-bottom:1px solid var(--rule-soft);font-size:13.5px;vertical-align:top;line-height:1.4}
+  .ftable tbody tr:last-child td{border-bottom:none}
+  .ftable .fr{font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--gorse-deep);white-space:nowrap}
+  .fc-course{font-weight:600}
+  .fc-sub{font-family:'Space Mono',monospace;font-size:10.5px;color:var(--ink-faint);margin-top:2px}
+  .fc-fmt b{font-weight:600}
+  .fc-rule{color:var(--ink-soft)}
+  .ftag{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:11px;padding:3px 10px;border-radius:20px;
+    white-space:nowrap;display:inline-block;line-height:1.3}
+  .ftag.cup{background:var(--gorse);color:var(--ink)}
+  .ftag.ind{background:var(--paper);color:var(--ink-soft);border:1px solid var(--rule)}
+
+  /* ---- schedule summary (teams + format up top) ---- */
+  .schedsum{border:2px solid var(--ink);border-top:none;background:var(--card)}
+  .ss-grid{display:grid;grid-template-columns:minmax(220px,1fr) 1.4fr}
+  .ss-block{padding:16px 20px}
+  .ss-block+.ss-block{border-left:1px solid var(--rule)}
+  .ss-h{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--sea);font-weight:700;margin-bottom:12px}
+  .ss-teams{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .ss-tname{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;display:flex;align-items:center;gap:7px;margin-bottom:6px}
+  .ss-tname .dotc{width:10px;height:10px;border-radius:50%}
+  .ss-duo{font-size:13px;color:var(--ink-soft);padding:2px 0}
+  .ss-round{display:grid;grid-template-columns:34px 92px 1fr auto;gap:10px;align-items:center;
+    padding:7px 0;border-bottom:1px solid var(--rule-soft)}
+  .ss-round:last-child{border-bottom:none}
+  .ss-r{font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--gorse-deep)}
+  .ss-course{font-weight:600;font-size:13.5px}
+  .ss-fmt{font-size:13px;color:var(--ink-soft)}
+  .ss-pts{font-family:'Space Mono',monospace;font-size:11px;color:var(--ink-faint);white-space:nowrap}
+
+  /* ---- locked team display ---- */
+  .duo-locked{display:flex;align-items:baseline;gap:10px;padding:5px 0;border-bottom:1px solid var(--rule-soft)}
+  .duo-locked:last-child{border-bottom:none}
+  .duo-names{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px}
+
+  /* ---- dinner links ---- */
+  a.chip{text-decoration:none;transition:border-color .12s,background .12s}
+  a.chip:hover{border-color:var(--sea);background:#fff}
+  .dinlink{color:var(--sea);text-decoration:none;border-bottom:1px solid var(--rule);font-weight:600}
+  .dinlink:hover{border-bottom-color:var(--sea)}
+
+  /* ---- match play: winner toggle ---- */
+  .round-pts{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:12px;color:#fff;
+    background:var(--gorse);padding:5px 12px;border-radius:20px;white-space:nowrap;align-self:flex-start}
+  .matchcard{border:1px solid var(--rule);border-radius:9px;background:var(--paper);padding:13px 14px;margin-bottom:11px}
+  .matchcard.settled{border-color:var(--sea)}
+  .mc-head{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px;margin-bottom:11px}
+  .mc-team{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14.5px}
+  .mc-team.b{text-align:right}
+  .mc-v{font-family:'Space Mono',monospace;font-size:11px;color:var(--ink-faint)}
+  .wintoggle{display:grid;grid-template-columns:1fr auto 1fr;gap:8px}
+  .wintoggle button{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:13px;cursor:pointer;
+    border:1.5px solid var(--rule);background:var(--card);color:var(--ink-soft);padding:10px 8px;border-radius:7px;
+    transition:background .12s,color .12s,border-color .12s}
+  .wintoggle button:hover{border-color:var(--ink-faint)}
+  .wintoggle button.on.wa{background:var(--teamA);border-color:var(--teamA);color:#fff}
+  .wintoggle button.on.wb{background:var(--teamB);border-color:var(--teamB);color:#fff}
+  .wintoggle button.on.wh{background:var(--ink-faint);border-color:var(--ink-faint);color:#fff}
+  .mc-scores{display:grid;grid-template-columns:1fr 1fr;gap:6px 16px;margin-top:12px;padding-top:11px;border-top:1px dashed var(--rule)}
+  .mc-hint{font-size:12px;color:var(--ink-faint);margin-top:2px;line-height:1.5}
+  .osc{display:grid;grid-template-columns:1fr 66px auto;gap:8px;align-items:center}
+  .osc-n{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .osc-net{font-family:'Space Mono',monospace;font-size:11px;color:var(--ink-faint);text-align:right;white-space:nowrap}
+
+  /* ---- foursome stroke round ---- */
+  .fsgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .fscol{border:1px solid var(--rule);border-radius:9px;background:var(--paper);padding:13px 14px}
+  .fscol.won{border-color:var(--gorse);box-shadow:inset 0 0 0 1px var(--gorse)}
+  .fscol-h{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;display:flex;align-items:center;gap:7px;margin-bottom:10px;flex-wrap:wrap}
+  .fscol-h .dotc{width:10px;height:10px;border-radius:50%}
+  .fscol .osc{margin-bottom:6px}
+  .fs-tag{font-family:'Space Mono',monospace;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px}
+  .fs-tag.win{background:var(--gorse);color:#fff}
+  .fs-tag.half{background:var(--ink-faint);color:#fff}
+  .fscol-tot{margin-top:10px;padding-top:10px;border-top:1px solid var(--rule);font-family:'Space Mono',monospace;
+    font-size:12px;color:var(--ink-soft);display:flex;justify-content:space-between;align-items:center}
+  .fscol-tot b{font-family:'Space Grotesk',sans-serif;font-size:18px;color:var(--ink)}
+
+  /* ---- individual low-net shout-out ---- */
+  .champ{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;padding:14px 16px;margin-bottom:14px;
+    background:var(--paper);border:1px solid var(--rule);border-left:4px solid var(--gorse);border-radius:7px}
+  .champ-lbl{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--sea);font-weight:700}
+  .champ-name{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:22px;line-height:1}
+  .champ-net{font-family:'Space Mono',monospace;font-size:12px;color:var(--ink-soft)}
+  .champ-net b{font-family:'Space Grotesk',sans-serif;font-size:16px;color:var(--ink)}
+
+  /* ---- groupings ---- */
+  .grp-rounds{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+  .grp-round{border:1px solid var(--rule);border-radius:8px;background:var(--paper);padding:11px 12px}
+  .grp-r{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:12.5px;color:var(--gorse-deep);margin-bottom:8px}
+  .grp-ball{margin-bottom:9px}
+  .grp-ball:last-child{margin-bottom:0}
+  .grp-n{display:block;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:4px}
+  .grp-p{display:inline-block;font-size:12px;font-weight:600;background:var(--card);border:1px solid var(--rule);
+    border-left-width:3px;border-radius:5px;padding:2px 7px;margin:0 4px 4px 0}
+  .gm-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .gm{border-collapse:collapse;font-family:'Space Mono',monospace}
+  .gm th,.gm td{border:1px solid var(--rule-soft);text-align:center;font-size:11px;width:30px;height:28px}
+  .gm .gm-name{text-align:left;padding:0 8px;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:12px;white-space:nowrap;width:auto}
+  .gm .gm-h{font-size:9.5px;color:var(--ink-faint);font-weight:700}
+  .gm .gm-corner{border:none}
+  .gm .gm-x{color:var(--rule)}
+  .gm .gm-c{color:var(--ink)}
+  .gm .gm-0{background:var(--card);color:var(--rule)}
+  .gm .gm-1{background:rgba(63,92,140,.14)}
+  .gm .gm-2{background:rgba(63,92,140,.30)}
+  .gm .gm-3{background:rgba(63,92,140,.52);color:#fff}
+
   @media (max-width:640px){
     body{padding:18px 10px 50px;background-size:100% 30px}
+    .ss-grid{grid-template-columns:1fr}
+    .ss-block+.ss-block{border-left:none;border-top:1px solid var(--rule)}
+    .fsgrid{grid-template-columns:1fr}
+    .mc-scores{grid-template-columns:1fr}
     .mast,.panel-head,.roster,.board,.csection,.formula,.scoreboard,.sref{padding-left:16px;padding-right:16px}
     .roster-row{grid-template-columns:1fr 82px 34px}
+    .mast-row{gap:14px}
+    .crest{width:66px;height:66px}
     .tourstrip{display:grid;grid-template-columns:1fr 1fr}
     .tcell{padding:9px 12px 7px 0}
     .tcell + .tcell{border-left:none;padding-left:0}
@@ -292,7 +417,9 @@
     input[type=text],input[type=number],select{font-size:16px}
     .grossin{width:58px;padding:7px 4px}
     /* keep wide leaderboard tables tidy, and let them scroll if a phone is very narrow */
-    #indivBoard,#roundPanel{overflow-x:auto;-webkit-overflow-scrolling:touch}
+    #indivBoard,#roundPanel,#formatTable{overflow-x:auto;-webkit-overflow-scrolling:touch}
+    .ftable{min-width:560px}
+    .ftable th,.ftable td{padding:10px 8px}
     .lb th,.lb td{padding:8px 6px;font-size:13px}
     .lb th{font-size:9.5px}
     .lb .teamtag{font-size:9px;padding:2px 6px}
@@ -307,40 +434,56 @@
 <div class="wrap">
 
   <header class="mast">
-    <div class="eyebrow">Scotland Golf Tour · Jul 8–14 2026</div>
-    <h1>Fife &amp; Angus Golf Tour</h1>
-    <p class="sub">The trip HQ. <b>Schedule</b> is the day-by-day; <b>Handicaps</b> works out course &amp; playing handicaps; <b>Competition</b> runs the two-team cup — a mix of match-play and individual rounds, everyone always playing their own ball — with a live scoreboard and a personal net leaderboard. Everything saves to this device.</p>
+    <div class="mast-row">
+      <div class="crest">
+        <img class="crest-img" src="assets/logo.png" alt="The 2nd Eagle Father &amp; Son Invitational, St Andrews 2026" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+        <svg class="crest-svg" viewBox="0 0 100 100" style="display:none" aria-hidden="true">
+          <circle cx="50" cy="50" r="48" fill="none" stroke="var(--ink)" stroke-width="2"/>
+          <circle cx="50" cy="50" r="43" fill="none" stroke="var(--ink)" stroke-width="1"/>
+          <g stroke="var(--gorse)" stroke-width="7" opacity=".85"><line x1="24" y1="24" x2="76" y2="76"/><line x1="76" y1="24" x2="24" y2="76"/></g>
+          <circle cx="50" cy="50" r="29" fill="var(--card)" stroke="var(--ink)" stroke-width="1"/>
+          <text x="50" y="47" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-weight="700" font-size="19" fill="var(--ink)">F&amp;S</text>
+          <text x="50" y="61" text-anchor="middle" font-family="'Space Mono',monospace" font-size="7" letter-spacing="1.5" fill="var(--ink-soft)">2026</text>
+        </svg>
+      </div>
+      <div class="mast-titles">
+        <div class="eyebrow">The 2nd Eagle · St Andrews 2026</div>
+        <h1>Father &amp; Son Invitational</h1>
+        <p class="sub">Eight players, two teams, five rounds across Fife and Angus. Fife against Angus for the cup.</p>
+      </div>
+    </div>
     <div class="tourstrip" id="tourStrip"></div>
   </header>
 
-  <nav class="apptabs">
+  <nav class="apptabs" role="tablist">
     <button class="apptab active" data-app="sched">Schedule<small>day by day</small></button>
+    <button class="apptab" data-app="comp">Competition<small>the cup + leaderboard</small></button>
     <button class="apptab" data-app="hcp">Handicaps<small>course &amp; playing HCP</small></button>
-    <button class="apptab" data-app="comp">Competition<small>Ryder Cup + leaderboard</small></button>
   </nav>
 
   <!-- ============ SCHEDULE VIEW ============ -->
   <div class="view active" id="view-sched">
+    <section class="schedsum" id="schedSummary"></section>
     <section class="sched" id="schedList"></section>
     <section class="sched" style="border-top:1px solid var(--rule);margin-top:-2px">
       <div class="sref">
         <h4>Dinners &amp; bars worth knowing</h4>
         <div class="chips">
-          <span class="chip"><b>18 St Andrews</b> · rooftop, Old Course views</span>
-          <span class="chip"><b>The Jigger Inn</b> · Old Course hotel pub</span>
-          <span class="chip"><b>Dunvegan</b> · famous caddy bar</span>
-          <span class="chip"><b>The Keys</b> · classic St Andrews bar</span>
-          <span class="chip"><b>Swilcan Loft</b> · views over the Old Course</span>
-          <span class="chip"><b>Rogue</b> · steak</span>
-          <span class="chip"><b>Little Italy</b> · popular Italian</span>
-          <span class="chip"><b>The Criterion</b> · famous chicken pot pies</span>
-          <span class="chip"><b>The Seafood Restaurant</b> · on the water</span>
+          <a class="chip" href="https://www.google.com/maps/search/?api=1&amp;query=18%20Restaurant%20St%20Andrews%20Scotland" target="_blank" rel="noopener"><b>18 St Andrews</b> · rooftop, Old Course views</a>
+          <a class="chip" href="https://www.google.com/maps/search/?api=1&amp;query=The%20Jigger%20Inn%20St%20Andrews%20Scotland" target="_blank" rel="noopener"><b>The Jigger Inn</b> · Old Course hotel pub</a>
+          <a class="chip" href="https://www.google.com/maps/search/?api=1&amp;query=The%20Dunvegan%20St%20Andrews%20Scotland" target="_blank" rel="noopener"><b>Dunvegan</b> · famous caddy bar</a>
+          <a class="chip" href="https://www.google.com/maps/search/?api=1&amp;query=The%20Keys%20Bar%20St%20Andrews%20Scotland" target="_blank" rel="noopener"><b>The Keys</b> · classic St Andrews bar</a>
+          <a class="chip" href="https://www.google.com/maps/search/?api=1&amp;query=Swilcan%20Loft%20St%20Andrews%20Scotland" target="_blank" rel="noopener"><b>Swilcan Loft</b> · views over the Old Course</a>
+          <a class="chip" href="https://www.google.com/maps/search/?api=1&amp;query=Rogue%20Restaurant%20St%20Andrews%20Scotland" target="_blank" rel="noopener"><b>Rogue</b> · steak</a>
+          <a class="chip" href="https://www.google.com/maps/search/?api=1&amp;query=Little%20Italy%20St%20Andrews%20Scotland" target="_blank" rel="noopener"><b>Little Italy</b> · popular Italian</a>
+          <a class="chip" href="https://www.google.com/maps/search/?api=1&amp;query=The%20Criterion%20St%20Andrews%20Scotland" target="_blank" rel="noopener"><b>The Criterion</b> · famous chicken pot pies</a>
+          <a class="chip" href="https://www.google.com/maps/search/?api=1&amp;query=The%20Seafood%20Ristorante%20St%20Andrews%20Scotland" target="_blank" rel="noopener"><b>The Seafood Restaurant</b> · on the water</a>
         </div>
       </div>
     </section>
     <div class="foot">
       <span class="dot">▪</span>
-      <span>Tee times and travel from the trip sheet — confirm each morning. Golf days are marked and map straight to the five competition rounds: New Course is the <b>swap</b> round, the Old Course is the <b>singles finale</b>.</span>
+      <span>Tee times and travel come off the trip sheet, so confirm them each morning. The golf days map straight to the five cup rounds: two <b>pairs</b> matches, two <b>team foursomes</b>, and the <b>singles finale</b> on the Old Course.</span>
     </div>
   </div>
 
@@ -368,7 +511,7 @@
 
     <div class="foot">
       <span class="dot">▪</span>
-      <span>Realistic tees only (blacks/golds/tips removed). Ratings from published scorecards — cross-check the physical card on the day. Carnoustie plays par 70 off the Yellows, which the sheet accounts for. Old Course "Blue" is the medal tee most visitors get.</span>
+      <span>Realistic tees only, no blacks or golds or tips. Ratings come from the published scorecards, so cross-check the physical card on the day. Carnoustie plays par 70 off the Yellows and the sheet already accounts for it. Blue is the medal tee most visitors get on the Old Course.</span>
     </div>
   </div>
 
@@ -378,15 +521,29 @@
       <div class="scoreboard" id="scoreboard"></div>
 
       <div class="csection">
+        <h3>The format at a glance</h3>
+        <div class="csub">Five rounds, every one worth cup points. Two pairs matches, two team foursomes, and the singles finale.</div>
+        <div id="formatTable"></div>
+        <div class="divide"></div>
+      </div>
+
+      <div class="csection">
         <h3>Teams</h3>
-        <div class="csub">Two sides, two father-son duos each. Tap a team name to rename; swap a player if the roster changes.</div>
+        <div class="csub">Two sides, two father-son duos each. Locked for the week.</div>
         <div id="teamSetup"></div>
         <div class="divide"></div>
       </div>
 
       <div class="csection">
-        <h3>Rounds &amp; matches</h3>
-        <div class="csub">Each round is <b>Individual</b> (own ball, group with anyone — personal board only), <b>Pairs</b> match play (Better Ball / Aggregate, standing or swapped), or <b>Singles</b>. Enter each player's gross; low net wins match-play — 1 point, ½ if tied.</div>
+        <h3>Groupings &amp; who plays with who</h3>
+        <div class="csub">The playing groups each round on the current format, plus a count of how often each pair shares a group. Use it to spot who never crosses paths before you finalise the days.</div>
+        <div id="groupings"></div>
+        <div class="divide"></div>
+      </div>
+
+      <div class="csection">
+        <h3>Rounds &amp; results</h3>
+        <div class="csub">Match play rounds: play it out, then tap the winner. Foursome rounds: enter each gross and the low team net total takes the point.</div>
         <div class="rtabs" id="roundTabs"></div>
         <div id="roundPanel"></div>
         <div class="divide"></div>
@@ -394,7 +551,7 @@
 
       <div class="csection">
         <h3>Individual net leaderboard</h3>
-        <div class="csub">Every player ranked by cumulative net across all rounds played.</div>
+        <div class="csub">Every player ranked by cumulative net across every round they post a score. The overall low net gets the shout-out up top.</div>
         <div id="indivBoard"></div>
         <div class="divide"></div>
       </div>
@@ -409,7 +566,7 @@
 
     <div class="foot">
       <span class="dot">▪</span>
-      <span>The team cup is decided by the <b>match-play</b> rounds — pairs = two duo matches, singles = four 1‑v‑1s, each match a point; most points wins, an even split retains. <b>Individual</b> rounds let everyone play their own ball in any group and count only toward the personal net leaderboard. Better Ball takes a duo's lower net; Aggregate adds both. Every format here is own-ball — no alternate shot.</span>
+      <span>Every round feeds the cup. The two pairs matches are worth a point per duo, the two team foursomes a point each on best net, and the singles finale four points, so ten are in play and five and a half wins it. Scores you post anywhere also build the individual net board.</span>
     </div>
   </div>
 
@@ -430,18 +587,18 @@ const COURSES = [
       {name:'Blue',  yds:6421, cr:71.0, sl:128},
       {name:'White', yds:5901, cr:68.0, sl:125},
     ], def:'Blue' },
-  { id:'carn', name:'Carnoustie — Championship', short:'Carnoustie', par:72,
-    note:'Off the Yellows/Greens the men\'s par is 70, not 72 — that\'s why the numbers run higher here.',
+  { id:'carn', name:'Carnoustie Championship', short:'Carnoustie', par:72,
+    note:'Off the Yellows and Greens the men\'s par is 70, not 72, so the numbers run higher here.',
     tees:[
       {name:'Yellow', yds:6589, cr:73.6, sl:135, par:70},
       {name:'Green',  yds:6139, cr:71.5, sl:130, par:70},
     ], def:'Yellow' },
-  { id:'new', name:'St Andrews — New Course', short:'St A. New', par:71,
+  { id:'new', name:'St Andrews New Course', short:'St A. New', par:71,
     tees:[
       {name:'Blue',  yds:6362, cr:71.6, sl:125},
       {name:'Green', yds:5992, cr:69.9, sl:121},
     ], def:'Blue' },
-  { id:'old', name:'St Andrews — Old Course', short:'St A. Old', par:72,
+  { id:'old', name:'St Andrews Old Course', short:'St A. Old', par:72,
     tees:[
       {name:'Blue (Medal)', yds:null, cr:71.8, sl:133},
       {name:'Green',        yds:null, cr:70.2, sl:127},
@@ -473,17 +630,19 @@ const SEED_DUOS = [
   {id:'d3', team:'B', players:['p7','p8']}, // Justin & Robert (Angus)
   {id:'d4', team:'B', players:['p5','p6']}, // Andrew & Mike   (Angus)
 ];
-const TEAM_COLORS = {A:'#2f6b63', B:'#b4472e'};
-const FORMATS = {betterball:'Better Ball', aggregate:'Aggregate'};
-// default 5-round mix — all own-ball formats, blending match play and individual rounds
-const ROUND_DEFAULTS = {
-  kings:{type:'pairs',      format:'betterball', pairMode:'standing'}, // partner opener
-  dumb: {type:'individual', format:'betterball', pairMode:'standing'}, // mix the groups
-  carn: {type:'pairs',      format:'betterball', pairMode:'swap'},     // swap partners in team
-  new:  {type:'individual', format:'betterball', pairMode:'standing'}, // mix the groups
-  old:  {type:'singles',    format:'betterball', pairMode:'standing'}, // singles finale
+const TEAM_COLORS = {A:'#16243f', B:'#8a3b46'};
+const FORMATS = {betterball:'Better Ball', aggregate:'Combined'};
+// Locked 5-round format, one source of truth. To change a round later, edit one line here.
+//   team: 'pairs' | 'singles' (match play, tap the winner)  or  'foursome' (stroke, enter scores)
+//   ball: 'betterball' | 'aggregate'  (pairs only)   bestN: how many team nets count (foursome only)
+const ROUND_CFG = {
+  kings:{team:'pairs',    ball:'betterball', play:'match',  label:'Pairs · Better Ball'},
+  dumb: {team:'pairs',    ball:'aggregate',  play:'match',  label:'Pairs · Combined'},
+  carn: {team:'foursome', bestN:2,           play:'stroke', label:'Team · Best 2 net'},
+  new:  {team:'foursome', bestN:4,           play:'stroke', label:'Team · Best 4 net'},
+  old:  {team:'singles',                     play:'match',  label:'Singles'},
 };
-const roundDefault = id => ROUND_DEFAULTS[id] || {type:'pairs', format:'betterball', pairMode:'standing'};
+const cfg = id => ROUND_CFG[id] || ROUND_CFG.kings;
 
 // day-by-day schedule (Jul 8–14 2026)
 const SCHEDULE = [
@@ -491,12 +650,12 @@ const SCHEDULE = [
   {n:'Day 2', d:'Thu · Jul 9',  theme:'Kingsbarns',            golf:{id:'kings', tee:'1:20pm',  travel:'~20 min from hotel'}, dinner:'Dunvegan / The Criterion'},
   {n:'Day 3', d:'Fri · Jul 10', theme:'Dumbarnie Links',       golf:{id:'dumb',  tee:'11:10am', travel:'~30 min from hotel'}, dinner:'Little Italy', time:'9:00pm'},
   {n:'Day 4', d:'Sat · Jul 11', theme:'Carnoustie',            golf:{id:'carn',  tee:'2:40pm',  travel:'~1 hr from hotel'},   dinner:'Carnoustie clubhouse bar'},
-  {n:'Day 5', d:'Sun · Jul 12', theme:'St Andrews — New Course', golf:{id:'new', tee:'10:32am', travel:'On site'},            dinner:'The Steak Barn'},
-  {n:'Day 6', d:'Mon · Jul 13', theme:'St Andrews — Old Course', golf:{id:'old', tee:'2:10pm',  travel:'On site'},            dinner:'The Jigger Inn', time:'8:30pm'},
+  {n:'Day 5', d:'Sun · Jul 12', theme:'St Andrews New Course', golf:{id:'new', tee:'10:32am', travel:'On site'},            dinner:'The Steak Barn'},
+  {n:'Day 6', d:'Mon · Jul 13', theme:'St Andrews Old Course', golf:{id:'old', tee:'2:10pm',  travel:'On site'},            dinner:'The Jigger Inn', time:'8:30pm'},
   {n:'Day 7', d:'Tue · Jul 14', theme:'Departure', note:'Optional early Kingsbarns 6:50am before flights'},
 ];
 
-const LS_KEY = 'fife-hcp-v8';
+const LS_KEY = 'fs-invitational-v9';
 
 // ---------- State ----------
 let players = [];
@@ -513,7 +672,7 @@ const newId = () => 'p' + (++uid);
 
 function freshRounds(){
   rounds = {};
-  COURSES.forEach(c => { const d=roundDefault(c.id); rounds[c.id] = {type:d.type, format:d.format, pairMode:d.pairMode, scores:{}}; });
+  COURSES.forEach(c => { rounds[c.id] = {scores:{}, results:{}}; });
 }
 function freshDefaults(){
   players = SEED_PLAYERS.map(p => ({...p}));
@@ -533,16 +692,13 @@ function ensureShape(){
   COURSES.forEach(c => {
     if(!teeChoice[c.id]) teeChoice[c.id] = {};
     if(allowance[c.id] == null) allowance[c.id] = 1.00;
-    if(!rounds[c.id]) rounds[c.id] = {type:'pairs', format:'betterball', pairMode:'standing', scores:{}};
-    const rd = rounds[c.id];
-    if(!rd.scores) rd.scores = {};
-    const dd=roundDefault(c.id);
-    if(rd.type==null) rd.type = dd.type;
-    if(rd.format==null) rd.format = dd.format;
-    if(rd.pairMode==null) rd.pairMode = dd.pairMode;
+    if(!rounds[c.id]) rounds[c.id] = {scores:{}, results:{}};
+    if(!rounds[c.id].scores) rounds[c.id].scores = {};
+    if(!rounds[c.id].results) rounds[c.id].results = {};
   });
-  if(!teams || !teams.A || !teams.B) teams = {A:{name:'Fife'}, B:{name:'Angus'}};
-  if(!Array.isArray(duos) || duos.length===0) duos = SEED_DUOS.map(d => ({id:d.id, team:d.team, players:[...d.players]}));
+  // teams are locked to the seed roster, no in-app editing
+  teams = {A:{name:SEED_TEAMS.A.name}, B:{name:SEED_TEAMS.B.name}};
+  duos = SEED_DUOS.map(d => ({id:d.id, team:d.team, players:[...d.players]}));
   uid = players.reduce((m,p)=>{ const n=parseInt(String(p.id).slice(1)); return isNaN(n)?m:Math.max(m,n); }, players.length);
 }
 function save(which){
@@ -550,7 +706,7 @@ function save(which){
     localStorage.setItem(LS_KEY, JSON.stringify({players, teeChoice, allowance, active, teams, duos, rounds, compRound, appTab}));
     const t = document.getElementById(which==='comp'?'savedTagC':'savedTag');
     if(t){ t.classList.add('show'); clearTimeout(window.__st); window.__st = setTimeout(()=>t.classList.remove('show'),1100); }
-  }catch(e){/* preview sandbox — persistence resumes once hosted */}
+  }catch(e){/* preview sandbox – persistence resumes once hosted */}
 }
 function load(){
   try{
@@ -572,7 +728,7 @@ function load(){
 // ---------- Helpers ----------
 const courseById = id => COURSES.find(c=>c.id===id) || COURSES[0];
 const playerById = id => players.find(p=>p.id===id);
-const playerName = id => { const p=playerById(id); return p ? (p.name||'unnamed') : '—'; };
+const playerName = id => { const p=playerById(id); return p ? (p.name||'unnamed') : '–'; };
 const teeFor = (course,pid) => teeChoice[course.id][pid] || course.def;
 const teeObj = (course,name) => course.tees.find(t=>t.name===name) || course.tees[0];
 function courseHcp(index,course,tee){
@@ -582,6 +738,12 @@ function courseHcp(index,course,tee){
 const fmt = n => { const r=Math.round(n); return r<0 ? '+'+Math.abs(r) : String(r); };
 const escapeHtml = s => String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 const half = n => { const v=Math.round(n*2)/2; return (v%1===0) ? String(v) : (Math.floor(v)>0?Math.floor(v)+'½':'½'); };
+const mapUrl = place => 'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(place+' Scotland');
+function dinnerLinks(str){
+  return String(str).split(' / ').map(s=>{ const name=s.trim();
+    return `<a class="dinlink" href="${mapUrl(name)}" target="_blank" rel="noopener">${escapeHtml(name)}</a>`;
+  }).join(' / ');
+}
 
 // ---------- Teams / matches ----------
 const teamDuos = t => duos.filter(d=>d.team===t);
@@ -589,22 +751,18 @@ const teamPlayers = t => teamDuos(t).flatMap(d=>d.players.filter(Boolean));
 function teamOfPlayer(pid){ const d=duos.find(x=>x.players.includes(pid)); return d?d.team:null; }
 const teamName = t => (teams[t] && teams[t].name) || t;
 
-function partnerships(cid, t){
-  const ds = teamDuos(t).map(d=>d.players.filter(Boolean));
-  if(rounds[cid].pairMode==='swap' && ds.length===2 && ds[0].length===2 && ds[1].length===2){
-    return [[ds[0][0], ds[1][0]], [ds[0][1], ds[1][1]]];   // cross partners within the side
-  }
-  return ds;
-}
 function matchesForRound(cid){
-  const rd = rounds[cid];
-  if(rd.type==='individual') return [];   // no matches — scores the personal board only
-  if(rd.type==='singles'){
+  const t = cfg(cid).team;
+  if(t==='foursome') return [];   // scored by team total, not head-to-head matches
+  if(t==='singles'){
     const a=teamPlayers('A'), b=teamPlayers('B'), n=Math.min(a.length,b.length);
     return Array.from({length:n},(_,i)=>({a:[a[i]], b:[b[i]]}));
   }
-  const pa=partnerships(cid,'A'), pb=partnerships(cid,'B'), n=Math.min(pa.length,pb.length);
-  return Array.from({length:n},(_,i)=>({a:pa[i], b:pb[i]}));
+  // pairs: Fife duo i vs Angus duo i (standing father-son duos)
+  const da=teamDuos('A').map(d=>d.players.filter(Boolean));
+  const db=teamDuos('B').map(d=>d.players.filter(Boolean));
+  const n=Math.min(da.length,db.length);
+  return Array.from({length:n},(_,i)=>({a:da[i], b:db[i]}));
 }
 
 // ---------- Net / scoring ----------
@@ -622,38 +780,41 @@ function playerNet(pid, course){
   if(ch==null) return {gross:Number(g), ch:null, net:null};
   return {gross:Number(g), ch, net:Number(g)-ch};
 }
-function sideNet(ids, course, format){
-  const nets = ids.map(pid=>{ const n=playerNet(pid,course); return n?n.net:null; });
-  if(nets.length===0 || nets.some(x=>x==null)) return null;
-  if(nets.length===1) return nets[0];
-  return format==='aggregate' ? nets.reduce((a,b)=>a+b,0) : Math.min(...nets);
+// foursome stroke rounds: add a team's lowest N nets, low total wins the point
+function teamFoursomeNet(t, course, bestN){
+  const nets = teamPlayers(t).map(pid=>{ const n=playerNet(pid,course); return n?n.net:null; }).filter(x=>x!=null);
+  if(nets.length < bestN) return null;   // not enough scores in yet
+  nets.sort((a,b)=>a-b);
+  return nets.slice(0,bestN).reduce((a,b)=>a+b,0);
 }
-function matchResult(m, course, format){
-  const na=sideNet(m.a,course,format), nb=sideNet(m.b,course,format);
+function foursomeResult(cid){
+  const c=courseById(cid), bestN=cfg(cid).bestN;
+  const na=teamFoursomeNet('A',c,bestN), nb=teamFoursomeNet('B',c,bestN);
   if(na==null || nb==null) return {na, nb, winner:null};
   if(na<nb) return {na, nb, winner:'A'};
   if(nb<na) return {na, nb, winner:'B'};
   return {na, nb, winner:'half'};
 }
+function award(res, acc){
+  if(res==='A'){ acc.A+=1; acc.decided++; }
+  else if(res==='B'){ acc.B+=1; acc.decided++; }
+  else if(res==='half'){ acc.A+=0.5; acc.B+=0.5; acc.decided++; }
+}
 function cupTotals(){
-  let A=0, B=0, total=0, decided=0;
+  const acc={A:0, B:0, decided:0}; let total=0;
   COURSES.forEach(c=>{
-    const f=rounds[c.id].format;
-    matchesForRound(c.id).forEach(m=>{
-      total++;
-      const r=matchResult(m,c,f);
-      if(r.winner==='A'){ A+=1; decided++; }
-      else if(r.winner==='B'){ B+=1; decided++; }
-      else if(r.winner==='half'){ A+=0.5; B+=0.5; decided++; }
-    });
+    if(cfg(c.id).team==='foursome'){ total++; award(foursomeResult(c.id).winner, acc); }
+    else matchesForRound(c.id).forEach((m,i)=>{ total++; award(rounds[c.id].results[i], acc); });
   });
   const need = total ? (total%2===0 ? total/2 + 0.5 : (total+1)/2) : 0;
-  return {A, B, total, decided, need};
+  return {A:acc.A, B:acc.B, total, decided:acc.decided, need};
+}
+function roundPoints(cid){   // how many cup points this round is worth
+  return cfg(cid).team==='foursome' ? 1 : matchesForRound(cid).length;
 }
 function roundDone(cid){
-  const c=courseById(cid), rd=rounds[cid];
-  if(rd.type==='individual') return players.some(p=>{ const n=playerNet(p.id,c); return n && n.net!=null; });
-  return matchesForRound(cid).some(m=>matchResult(m,c,rd.format).winner!=null);
+  if(cfg(cid).team==='foursome') return foursomeResult(cid).winner!=null;
+  return matchesForRound(cid).some((m,i)=>rounds[cid].results[i]!=null);
 }
 function indivStandings(){
   return players.map(p=>{
@@ -667,7 +828,7 @@ function indivStandings(){
 }
 
 // ---------- Render: tour strip (masthead signature) ----------
-const TEE_OFF = new Date(2026, 6, 8);   // first tee — Kingsbarns, Jul 8 2026 (month is 0-based)
+const TEE_OFF = new Date(2026, 6, 8);   // first tee – Kingsbarns, Jul 8 2026 (month is 0-based)
 const TOUR_END = new Date(2026, 6, 14); // departure, Jul 14 2026
 function daysToTee(){
   const now = new Date();
@@ -680,7 +841,7 @@ function countdownHtml(){
   if(n > 1)  return `<span class="big">${n}</span> <span class="u">days to first tee</span>`;
   if(n === 1) return `<span class="big">1</span> <span class="u">day to first tee</span>`;
   if(today <= TOUR_END) return `<span class="big">Live</span> <span class="u">tour underway</span>`;
-  return `<span class="u">tour wrapped — until next year</span>`;
+  return `<span class="u">tour wrapped, until next year</span>`;
 }
 function renderTourStrip(){
   const host = document.getElementById('tourStrip'); if(!host) return;
@@ -694,26 +855,89 @@ function renderTourStrip(){
     <div class="tcell"><div class="tlbl">The Links</div><div class="tval"><span class="big">5</span> <span class="u">courses · 7 days</span></div></div>`;
 }
 
+// ---------- Render: format-at-a-glance ----------
+function formatLabel(id){
+  const cf=cfg(id);
+  if(cf.team==='foursome') return `Team foursome, best ${cf.bestN} net`;
+  if(cf.team==='singles')  return 'Singles, one on one';
+  return `Pairs, ${FORMATS[cf.ball]}, standing duos`;
+}
+function scoringLabel(id){
+  const cf=cfg(id);
+  if(cf.team==='foursome') return `Add each team's ${cf.bestN} lowest nets, low total wins the point`;
+  if(cf.team==='singles')  return 'Play it out, tap each winner, a point per match';
+  return cf.ball==='aggregate'
+    ? 'Combined match play, tap the winning pair, a point per match'
+    : 'Better ball match play, tap the winning pair, a point per match';
+}
+function pointsLabel(id){
+  const n = roundPoints(id);
+  return n===1 ? '1 pt' : n+' pts';
+}
+function shortFormat(id){
+  const cf=cfg(id);
+  return cf.team==='foursome' ? `Best ${cf.bestN}` : cf.team==='singles' ? 'Singles' : FORMATS[cf.ball];
+}
+function renderFormatTable(){
+  const host=document.getElementById('formatTable'); if(!host) return;
+  const rows=COURSES.map((c,i)=>`<tr>
+      <td class="fr">R${i+1}</td>
+      <td><div class="fc-course">${escapeHtml(c.name)}</div><div class="fc-sub">par ${c.par}${c.id==='carn'?' off the Yellows':''}</div></td>
+      <td class="fc-fmt">${escapeHtml(formatLabel(c.id))}</td>
+      <td><span class="ftag cup">${pointsLabel(c.id)}</span></td>
+      <td class="fc-rule">${escapeHtml(scoringLabel(c.id))}</td>
+    </tr>`).join('');
+  host.innerHTML=`<table class="ftable"><thead><tr>
+      <th>Round</th><th>Course</th><th>Format</th><th>Cup</th><th>How it scores</th></tr></thead>
+    <tbody>${rows}</tbody></table>`;
+}
+
+// ---------- Render: schedule summary (teams + format up top) ----------
+const cupTotalPts = () => COURSES.reduce((s,c)=>s+roundPoints(c.id),0);
+function renderSchedSummary(){
+  const host=document.getElementById('schedSummary'); if(!host) return;
+  const teamCol=t=>`<div class="ss-team">
+      <div class="ss-tname" style="color:${TEAM_COLORS[t]}"><span class="dotc" style="background:${TEAM_COLORS[t]}"></span>${escapeHtml(teamName(t))}</div>
+      ${teamDuos(t).map(d=>`<div class="ss-duo">${d.players.map(pid=>escapeHtml(playerName(pid))).join(' &amp; ')}</div>`).join('')}
+    </div>`;
+  const rows=COURSES.map((c,i)=>`<div class="ss-round">
+      <span class="ss-r">R${i+1}</span>
+      <span class="ss-course">${escapeHtml(c.short)}</span>
+      <span class="ss-fmt">${escapeHtml(formatLabel(c.id))}</span>
+      <span class="ss-pts">${pointsLabel(c.id)}</span>
+    </div>`).join('');
+  host.innerHTML=`
+    <div class="ss-grid">
+      <div class="ss-block">
+        <div class="ss-h">The teams</div>
+        <div class="ss-teams">${teamCol('A')}${teamCol('B')}</div>
+      </div>
+      <div class="ss-block">
+        <div class="ss-h">The format · ${escapeHtml(teamName('A'))} against ${escapeHtml(teamName('B'))}, ${cupTotalPts()} points</div>
+        <div class="ss-rounds">${rows}</div>
+      </div>
+    </div>`;
+}
+
 // ---------- Render: schedule ----------
 function renderSchedule(){
+  renderSchedSummary();
   const host=document.getElementById('schedList');
   host.innerHTML = SCHEDULE.map(day=>{
     const isGolf = !!day.golf;
     let lines='';
     if(isGolf){
       const c=courseById(day.golf.id);
-      const rd=rounds[c.id];
+      const cf=cfg(c.id);
       const rNo=COURSES.findIndex(x=>x.id===c.id)+1;
-      let badge;
-      if(rd.type==='singles') badge=`<span class="rbadge fin">R${rNo} · Singles finale</span>`;
-      else if(rd.type==='individual') badge=`<span class="rbadge">R${rNo} · Individual</span>`;
-      else if(rd.pairMode==='swap') badge=`<span class="rbadge swap">R${rNo} · Swap round</span>`;
-      else badge=`<span class="rbadge">R${rNo} · ${FORMATS[rd.format]}</span>`;
+      const badge = cf.team==='singles'
+        ? `<span class="rbadge fin">R${rNo} · Singles finale</span>`
+        : `<span class="rbadge${cf.team==='foursome'?' swap':''}">R${rNo} · ${escapeHtml(shortFormat(c.id))}</span>`;
       lines += `<div class="sday-line"><span class="lbl">Golf</span><span class="tee">${day.golf.tee}</span>
         <span class="travel">${day.golf.travel}</span>${badge}</div>`;
     }
     if(day.dinner){
-      lines += `<div class="sday-line"><span class="lbl">Dinner</span><span>${escapeHtml(day.dinner)}${day.time?` <b style="color:var(--ink)">· ${day.time}</b>`:''}</span></div>`;
+      lines += `<div class="sday-line"><span class="lbl">Dinner</span><span>${dinnerLinks(day.dinner)}${day.time?` <b style="color:var(--ink)">· ${day.time}</b>`:''}</span></div>`;
     }
     if(day.note){
       lines += `<div class="sday-line"><span class="lbl">Note</span><span style="color:var(--ink-faint)">${escapeHtml(day.note)}</span></div>`;
@@ -772,7 +996,7 @@ function renderBoard(){
   const host=document.getElementById('board');
   const alw=allowance[c.id];
   const teeOpts = teeName => c.tees.map(t=>
-    `<option value="${t.name}" ${t.name===teeName?'selected':''}>${t.name} — ${t.cr}/${t.sl}${t.par!=null&&t.par!==c.par?' · par '+t.par:''}</option>`).join('');
+    `<option value="${t.name}" ${t.name===teeName?'selected':''}>${t.name} · ${t.cr}/${t.sl}${t.par!=null&&t.par!==c.par?' · par '+t.par:''}</option>`).join('');
 
   let head=`
     <div class="board-top">
@@ -782,7 +1006,7 @@ function renderBoard(){
       </div>
       <div class="controls">
         <div class="ctl"><label>Set all tees</label>
-          <select id="allTees"><option value="">— choose —</option>
+          <select id="allTees"><option value="">Pick a tee</option>
             ${c.tees.map(t=>`<option value="${t.name}">${t.name}</option>`).join('')}
           </select></div>
         <div class="ctl"><label>Comp allowance</label>
@@ -811,7 +1035,7 @@ function renderBoard(){
       return `<tr>
         <td><div class="card-line"><span class="k">Player</span>
           <div><div class="p-name">${escapeHtml(p.name)||'unnamed'}</div>
-          <div class="p-idx">HI ${idxNum!==null?idxNum.toFixed(1):'—'}</div></div></div></td>
+          <div class="p-idx">HI ${idxNum!==null?idxNum.toFixed(1):'–'}</div></div></div></td>
         <td class="tee-sel"><div class="card-line"><span class="k">Tee</span>
           <select data-id="${p.id}">${teeOpts(teeName)}</select></div></td>
         <td class="rs"><div class="card-line"><span class="k">CR / Slope / Par</span><span>${t.cr} / ${t.sl} / ${parUsed}</span></div></td>
@@ -838,7 +1062,9 @@ function renderBoard(){
 // ---------- Render: competition ----------
 function renderComp(){
   renderScoreboard();
+  renderFormatTable();
   renderTeamSetup();
+  renderGroupings();
   renderRoundTabs();
   renderRoundPanel();
   renderIndivBoard();
@@ -848,18 +1074,18 @@ function renderScoreboard(){
   const host=document.getElementById('scoreboard');
   const {A,B,total,decided,need}=cupTotals();
   let status, won=false;
-  if(total===0){ status='Set up teams to start the cup'; }
-  else if(A>=need){ status=`${escapeHtml(teamName('A'))} win the cup 🏆`; won=true; }
-  else if(B>=need){ status=`${escapeHtml(teamName('B'))} win the cup 🏆`; won=true; }
-  else if(decided===total && A===B){ status='Cup halved — honours even'; }
-  else { status=`${half(need)} to win · ${decided}/${total} matches decided`; }
+  if(total===0){ status='Enter results to start the cup'; }
+  else if(A>=need){ status=`${escapeHtml(teamName('A'))} win the cup`; won=true; }
+  else if(B>=need){ status=`${escapeHtml(teamName('B'))} win the cup`; won=true; }
+  else if(decided===total && A===B){ status='Cup halved, honours even'; }
+  else { status=`${half(need)} to win · ${decided}/${total} points decided`; }
   const aw=total?A/total*100:0, bw=total?B/total*100:0, hw=total?(total-A-B)/total*100:100;
   host.innerHTML=`
     <div class="sb-team a">
       <div class="sb-name"><span class="dotc" style="background:${TEAM_COLORS.A}"></span>${escapeHtml(teamName('A'))}</div>
       <div class="sb-score" style="color:${TEAM_COLORS.A}">${half(A)}</div>
     </div>
-    <div class="sb-mid">Match play<span class="vs">vs</span>${total?half(total)+' pts':'—'}</div>
+    <div class="sb-mid">The Cup<span class="vs">vs</span>${total?half(total)+' pts':'–'}</div>
     <div class="sb-team b">
       <div class="sb-name"><span class="dotc" style="background:${TEAM_COLORS.B}"></span>${escapeHtml(teamName('B'))}</div>
       <div class="sb-score" style="color:${TEAM_COLORS.B}">${half(B)}</div>
@@ -871,34 +1097,22 @@ function renderScoreboard(){
 
 function renderTeamSetup(){
   const host=document.getElementById('teamSetup');
-  const opts=(sel)=>`<option value="">—</option>`+players.map(p=>`<option value="${p.id}" ${p.id===sel?'selected':''}>${escapeHtml(p.name)||'unnamed'}</option>`).join('');
   const col=t=>{
     const ds=teamDuos(t);
     return `<div class="teamcol">
-      <h4><span class="dotc" style="background:${TEAM_COLORS[t]}"></span>
-        <input class="nameinput" data-tname="${t}" value="${escapeHtml(teamName(t))}" maxlength="20"></h4>
-      ${ds.map((d,i)=>`<div class="duo"><span class="duolbl">Duo ${i+1}</span>
-        <select data-duo="${d.id}" data-slot="0">${opts(d.players[0])}</select>
-        <select data-duo="${d.id}" data-slot="1">${opts(d.players[1])}</select></div>`).join('')}
+      <h4><span class="dotc" style="background:${TEAM_COLORS[t]}"></span>${escapeHtml(teamName(t))}</h4>
+      ${ds.map((d,i)=>`<div class="duo-locked"><span class="duolbl">Duo ${i+1}</span>
+        <span class="duo-names">${d.players.map(pid=>escapeHtml(playerName(pid))).join(' &amp; ')}</span></div>`).join('')}
     </div>`;
   };
   host.innerHTML=`<div class="teamgrid">${col('A')}${col('B')}</div>`;
-  host.querySelectorAll('[data-tname]').forEach(inp=>inp.addEventListener('input',e=>{
-    teams[e.target.dataset.tname].name=e.target.value;
-    renderScoreboard(); renderRoundPanel(); renderIndivBoard(); renderSchedule(); save('comp');
-  }));
-  host.querySelectorAll('[data-duo]').forEach(sel=>sel.addEventListener('change',e=>{
-    const d=duos.find(x=>x.id===e.target.dataset.duo); if(!d) return;
-    d.players[+e.target.dataset.slot]=e.target.value||null;
-    renderComp(); save('comp');
-  }));
 }
 
 function renderRoundTabs(){
   const host=document.getElementById('roundTabs'); host.innerHTML='';
   COURSES.forEach((c,i)=>{
-    const rd=rounds[c.id];
-    const sub = rd.type==='individual' ? 'Individual' : rd.type==='singles' ? 'Singles' : (rd.pairMode==='swap'?'Swap':FORMATS[rd.format]);
+    const cf=cfg(c.id);
+    const sub = cf.team==='foursome' ? 'Best '+cf.bestN : cf.team==='singles' ? 'Singles' : FORMATS[cf.ball];
     const b=document.createElement('button');
     b.className='rtab'+(c.id===compRound?' active':'')+(roundDone(c.id)?' done':'');
     b.innerHTML=`R${i+1} · ${c.short}<small>${sub}</small>`;
@@ -907,146 +1121,150 @@ function renderRoundTabs(){
   });
 }
 
-function playerScoreRow(pid, course){
-  if(!pid) return `<div class="mp"><span class="mpn" style="color:var(--ink-faint)">— empty —</span><span></span></div>`;
-  const g=rounds[course.id].scores[pid];
-  const n=playerNet(pid,course); const ch=roundCourseHcp(pid,course);
-  const netTxt = n && n.net!=null ? `<b>${n.net}</b>` : (ch==null?'<span class="warn">need HI</span>':'—');
-  return `<div class="mp"><span class="mpn">${escapeHtml(playerName(pid))}</span>
-      <input class="grossin" type="number" inputmode="numeric" placeholder="—" value="${g==null?'':g}" data-score="${pid}">
-    </div><div class="mpnet" data-netfor="${pid}">${ch!=null?'CH '+ch:'CH —'} · ${netTxt} <span class="u">net</span></div>`;
+// optional per-player gross → net input, feeds the individual board (never sets a cup result)
+function optScoreInput(pid, course){
+  const g=rounds[course.id].scores[pid]; const n=playerNet(pid,course); const ch=roundCourseHcp(pid,course);
+  const net = n&&n.net!=null ? ('net '+n.net) : (ch==null?'<span class="warn">need HI</span>':'net –');
+  return `<label class="osc"><span class="osc-n">${escapeHtml(playerName(pid))}</span>
+    <input class="grossin" type="number" inputmode="numeric" placeholder="gross" value="${g==null?'':g}" data-score="${pid}">
+    <span class="osc-net" data-inet="${pid}">${net}</span></label>`;
 }
-function matchCard(m, idx, course, format){
-  const r=matchResult(m,course,format);
-  const badge = r.winner==null ? '<span class="mbadge none">to play</span>'
-    : r.winner==='half' ? '<span class="mbadge half">Halved · ½ each</span>'
-    : `<span class="mbadge ${r.winner==='A'?'wa':'wb'}">${escapeHtml(teamName(r.winner))} win</span>`;
-  const sub = m.a.length>1 ? (format==='aggregate'?'aggregate':'better ball') : 'net';
-  const na = r.na!=null?r.na:'–', nb = r.nb!=null?r.nb:'–';
-  return `<div class="matchcard"><div class="mc-grid">
-    <div class="mc-side a">
-      <div class="mc-team" style="color:${TEAM_COLORS.A}">${escapeHtml(teamName('A'))}</div>
-      ${m.a.map(pid=>playerScoreRow(pid,course)).join('')}
-      <div class="mc-sub">${sub}: <b data-sidenet="${idx}:A">${na}</b></div>
+
+// match play (pairs / singles): tap the winner, scores optional
+function matchCard(m, i, course){
+  const res=rounds[course.id].results[i];
+  const nameA=m.a.map(playerName).join(' & '), nameB=m.b.map(playerName).join(' & ');
+  return `<div class="matchcard ${res?'settled':''}">
+    <div class="mc-head">
+      <div class="mc-team" style="color:${TEAM_COLORS.A}">${escapeHtml(nameA)}</div>
+      <div class="mc-v">v</div>
+      <div class="mc-team b" style="color:${TEAM_COLORS.B}">${escapeHtml(nameB)}</div>
     </div>
-    <div class="mc-res">
-      <div data-resfor="${idx}">${badge}</div>
-      <div class="mc-nets"><span data-net2="${idx}:A">${na}</span> v <span data-net2="${idx}:B">${nb}</span></div>
+    <div class="wintoggle" data-match="${i}">
+      <button data-win="A" class="${res==='A'?'on wa':''}">${escapeHtml(teamName('A'))} win</button>
+      <button data-win="half" class="${res==='half'?'on wh':''}">Halved</button>
+      <button data-win="B" class="${res==='B'?'on wb':''}">${escapeHtml(teamName('B'))} win</button>
     </div>
-    <div class="mc-side b">
-      <div class="mc-team" style="color:${TEAM_COLORS.B}">${escapeHtml(teamName('B'))}</div>
-      ${m.b.map(pid=>playerScoreRow(pid,course)).join('')}
-      <div class="mc-sub">${sub}: <b data-sidenet="${idx}:B">${nb}</b></div>
-    </div>
-  </div></div>`;
+    <div class="mc-scores">${[...m.a,...m.b].map(pid=>optScoreInput(pid,course)).join('')}</div>
+  </div>`;
+}
+
+// foursome stroke round: enter scores, best-N team net wins the point
+function foursomePanel(course){
+  const cf=cfg(course.id), r=foursomeResult(course.id);
+  const col=t=>{
+    const tot=teamFoursomeNet(t,course,cf.bestN);
+    const tag = r.winner===t ? '<span class="fs-tag win">wins the point</span>'
+      : (r.winner==='half' ? '<span class="fs-tag half">halved</span>' : '');
+    return `<div class="fscol ${r.winner===t?'won':''}">
+      <div class="fscol-h" style="color:${TEAM_COLORS[t]}"><span class="dotc" style="background:${TEAM_COLORS[t]}"></span>${escapeHtml(teamName(t))} ${tag}</div>
+      ${teamPlayers(t).map(pid=>optScoreInput(pid,course)).join('')}
+      <div class="fscol-tot">Best ${cf.bestN} net <b data-fstot="${t}">${tot!=null?tot:'–'}</b></div>
+    </div>`;
+  };
+  return `<div class="fsgrid">${col('A')}${col('B')}</div>`;
 }
 
 function renderRoundPanel(){
   const host=document.getElementById('roundPanel');
-  const c=courseById(compRound); const rd=rounds[c.id];
-  const isInd=rd.type==='individual', isPairs=rd.type==='pairs', isSingles=rd.type==='singles';
-
-  const MODES=[['individual','Individual'],['pairs','Pairs'],['singles','Singles']];
-  const sess=`<div class="fmt-toggle">${MODES.map(([v,l])=>`<button data-sess="${v}" class="${rd.type===v?'on':''}">${l}</button>`).join('')}</div>`;
-  const fmtT = isPairs ? `<div class="fmt-toggle">${Object.keys(FORMATS).map(f=>`<button data-fmt="${f}" class="${rd.format===f?'on':''}">${FORMATS[f]}</button>`).join('')}</div>` : '';
-  const pairT = isPairs ? `<div class="fmt-toggle"><button data-pm="standing" class="${rd.pairMode!=='swap'?'on':''}">Standing</button><button data-pm="swap" class="${rd.pairMode==='swap'?'on':''}">Swap in team</button></div>` : '';
-  const desc = isInd
-    ? 'Individual — everyone plays their own ball, group with anyone. Counts toward the personal leaderboard only, not the team cup.'
-    : isSingles
-      ? 'Singles — every player vs the other side, low net wins the match (1 pt, ½ if tied)'
-      : `${FORMATS[rd.format]} — ${rd.pairMode==='swap'?'partners swapped within each side':'standing father-son duos'}; low net wins the match`;
-
-  let top=`<div class="round-top">
-    <div><div class="round-name">${c.name}</div><div class="round-meta">Par ${c.par} · ${desc}</div></div>
-    <div style="display:flex;flex-wrap:wrap;gap:8px">${sess}${fmtT}${pairT}</div>
+  const c=courseById(compRound); const cf=cfg(c.id);
+  const desc = cf.team==='foursome'
+    ? `Each team adds its best ${cf.bestN} net scores. Low team total wins the point. Play in any groups you like.`
+    : cf.team==='singles'
+      ? 'Every player one on one against the other side. Play it out, then tap each winner. Four points up for grabs.'
+      : `${FORMATS[cf.ball]} match play, standing duos. Play it out on the course, then tap the winning pair.`;
+  const top=`<div class="round-top">
+    <div><div class="round-name">${escapeHtml(c.name)}</div><div class="round-meta">Par ${c.par} · ${desc}</div></div>
+    <div class="round-pts">${pointsLabel(c.id)}</div>
   </div>`;
-
-  let body;
-  if(isInd){
-    body = individualCardHtml(c);
-  } else {
-    const ms=matchesForRound(c.id);
-    body = `<div class="matchlist">${ms.length ? ms.map((m,i)=>matchCard(m,i,c,rd.format)).join('')
-      : '<div class="emptyc">Assign players to both sides to create matches.</div>'}</div>`;
-  }
+  const body = cf.team==='foursome' ? foursomePanel(c)
+    : `<div class="matchlist">${matchesForRound(c.id).map((m,i)=>matchCard(m,i,c)).join('')}</div>
+       <div class="mc-hint">Scores are optional. Enter a gross to feed the individual net board; the match result is whatever you tap.</div>`;
   host.innerHTML=top+body;
+  wireRoundPanel(c);
+}
 
-  host.querySelectorAll('[data-sess]').forEach(b=>b.addEventListener('click',()=>{ rd.type=b.dataset.sess; renderComp(); renderSchedule(); save('comp'); }));
-  host.querySelectorAll('[data-fmt]').forEach(b=>b.addEventListener('click',()=>{ rd.format=b.dataset.fmt; renderComp(); renderSchedule(); save('comp'); }));
-  host.querySelectorAll('[data-pm]').forEach(b=>b.addEventListener('click',()=>{ rd.pairMode=b.dataset.pm; renderComp(); renderSchedule(); save('comp'); }));
+function wireRoundPanel(c){
+  const host=document.getElementById('roundPanel');
+  host.querySelectorAll('[data-win]').forEach(b=>b.addEventListener('click',()=>{
+    const i=+b.closest('[data-match]').dataset.match, w=b.dataset.win;
+    if(rounds[c.id].results[i]===w) delete rounds[c.id].results[i]; else rounds[c.id].results[i]=w;
+    renderScoreboard(); renderRoundTabs(); renderRoundPanel(); save('comp');
+  }));
   host.querySelectorAll('[data-score]').forEach(inp=>inp.addEventListener('input',e=>{
     const pid=e.target.dataset.score, v=e.target.value;
-    if(v===''||v==null) delete rounds[c.id].scores[pid];
-    else rounds[c.id].scores[pid]=parseInt(v,10);
-    renderScoreboard(); renderIndivBoard(); renderRoundTabs();
-    if(rounds[c.id].type==='individual') updateIndividualLive(c.id); else updateMatchLive(c.id);
+    if(v===''||v==null) delete rounds[c.id].scores[pid]; else rounds[c.id].scores[pid]=parseInt(v,10);
+    renderScoreboard(); renderIndivBoard(); updateRoundNets(c);
+    if(cfg(c.id).team==='foursome') renderRoundTabs();
     save('comp');
   }));
 }
-
-function individualRanks(c){
-  const ranked=players.map(p=>({pid:p.id, net:(playerNet(p.id,c)||{}).net})).filter(x=>x.net!=null).sort((a,b)=>a.net-b.net);
-  const rank={}; let i=0;
-  while(i<ranked.length){ let j=i; while(j+1<ranked.length && ranked[j+1].net===ranked[i].net) j++; for(let k=i;k<=j;k++) rank[ranked[k].pid]=i+1; i=j+1; }
-  return rank;
-}
-function individualCardHtml(c){
-  const rank=individualRanks(c);
-  const rows=players.map(p=>{
-    const g=rounds[c.id].scores[p.id];
-    const n=playerNet(p.id,c), ch=roundCourseHcp(p.id,c);
-    const t=teamOfPlayer(p.id);
-    const tag=t?`<span class="teamtag" style="background:${TEAM_COLORS[t]}">${escapeHtml(teamName(t))}</span>`:'';
-    const netTxt=n&&n.net!=null?`<b>${n.net}</b>`:(ch==null?'<span class="warn">need HI</span>':'—');
-    return `<tr>
-      <td>${escapeHtml(p.name)||'unnamed'}</td>
-      <td>${tag}</td>
-      <td class="num"><input class="grossin" type="number" inputmode="numeric" placeholder="—" value="${g==null?'':g}" data-score="${p.id}"></td>
-      <td class="num" data-inet="${p.id}">${ch!=null?'CH '+ch+' · ':''}${netTxt}</td>
-      <td class="num" data-irank="${p.id}">${rank[p.id]||'—'}</td>
-    </tr>`;
-  }).join('');
-  return `<table class="lb"><thead><tr><th>Player</th><th>Team</th><th class="num">Gross</th><th class="num">Net</th><th class="num">Rd rank</th></tr></thead><tbody>${rows}</tbody></table>`;
-}
-function updateIndividualLive(cid){
-  const c=courseById(cid); const host=document.getElementById('roundPanel'); const rank=individualRanks(c);
-  players.forEach(p=>{
-    const n=playerNet(p.id,c), ch=roundCourseHcp(p.id,c);
-    const netTxt=n&&n.net!=null?`<b>${n.net}</b>`:(ch==null?'<span class="warn">need HI</span>':'—');
-    const ne=host.querySelector(`[data-inet="${p.id}"]`); if(ne) ne.innerHTML=`${ch!=null?'CH '+ch+' · ':''}${netTxt}`;
-    const re=host.querySelector(`[data-irank="${p.id}"]`); if(re) re.textContent=rank[p.id]||'—';
-  });
-}
-
-// in-place refresh so typing a score doesn't drop input focus
-function updateMatchLive(cid){
-  const c=courseById(cid), f=rounds[cid].format;
+// in-place net refresh so typing a score doesn't drop input focus
+function updateRoundNets(c){
   const host=document.getElementById('roundPanel');
-  host.querySelectorAll('[data-netfor]').forEach(el=>{
-    const pid=el.dataset.netfor; const n=playerNet(pid,c); const ch=roundCourseHcp(pid,c);
-    const netTxt = n && n.net!=null ? `<b>${n.net}</b>` : (ch==null?'<span class="warn">need HI</span>':'—');
-    el.innerHTML=`${ch!=null?'CH '+ch:'CH —'} · ${netTxt} <span class="u">net</span>`;
+  host.querySelectorAll('[data-inet]').forEach(el=>{
+    const pid=el.dataset.inet; const n=playerNet(pid,c); const ch=roundCourseHcp(pid,c);
+    el.innerHTML = n&&n.net!=null ? ('net '+n.net) : (ch==null?'<span class="warn">need HI</span>':'net –');
   });
-  matchesForRound(cid).forEach((m,idx)=>{
-    const r=matchResult(m,c,f);
-    const rf=host.querySelector(`[data-resfor="${idx}"]`);
-    if(rf) rf.innerHTML = r.winner==null ? '<span class="mbadge none">to play</span>'
-      : r.winner==='half' ? '<span class="mbadge half">Halved · ½ each</span>'
-      : `<span class="mbadge ${r.winner==='A'?'wa':'wb'}">${escapeHtml(teamName(r.winner))} win</span>`;
-    const na=r.na!=null?r.na:'–', nb=r.nb!=null?r.nb:'–';
-    host.querySelectorAll(`[data-sidenet="${idx}:A"]`).forEach(e=>e.textContent=na);
-    host.querySelectorAll(`[data-sidenet="${idx}:B"]`).forEach(e=>e.textContent=nb);
-    const a2=host.querySelector(`[data-net2="${idx}:A"]`); if(a2)a2.textContent=na;
-    const b2=host.querySelector(`[data-net2="${idx}:B"]`); if(b2)b2.textContent=nb;
-  });
+  if(cfg(c.id).team==='foursome'){
+    const cf=cfg(c.id), r=foursomeResult(c.id), cols=host.querySelectorAll('.fscol');
+    ['A','B'].forEach((t,idx)=>{
+      const el=host.querySelector(`[data-fstot="${t}"]`); if(el){ const tot=teamFoursomeNet(t,c,cf.bestN); el.textContent=tot!=null?tot:'–'; }
+      if(cols[idx]) cols[idx].classList.toggle('won', r.winner===t);
+    });
+  }
+}
+
+// ---------- Groupings: who plays alongside whom ----------
+function groupsForRound(cid){
+  const cf=cfg(cid);
+  if(cf.team==='pairs')    return matchesForRound(cid).map(m=>[...m.a, ...m.b]);   // duo v duo = a fourball
+  if(cf.team==='foursome') return [teamPlayers('A'), teamPlayers('B')];            // each team as a group
+  const ms=matchesForRound(cid), groups=[];                                        // singles: two matches per group
+  for(let i=0;i<ms.length;i+=2){
+    const g=[...ms[i].a, ...ms[i].b];
+    if(ms[i+1]) g.push(...ms[i+1].a, ...ms[i+1].b);
+    groups.push(g);
+  }
+  return groups;
+}
+function renderGroupings(){
+  const host=document.getElementById('groupings'); if(!host) return;
+  const roundsHtml=COURSES.map((c,i)=>{
+    const gs=groupsForRound(c.id);
+    return `<div class="grp-round">
+      <div class="grp-r">R${i+1} · ${escapeHtml(c.short)}</div>
+      <div class="grp-groups">${gs.map((g,gi)=>`<div class="grp-ball"><span class="grp-n">Group ${gi+1}</span>${g.map(pid=>`<span class="grp-p" style="border-color:${TEAM_COLORS[teamOfPlayer(pid)]||'var(--rule)'}">${escapeHtml(playerName(pid))}</span>`).join('')}</div>`).join('')}</div>
+    </div>`;
+  }).join('');
+  const ids=players.map(p=>p.id), pairCount={};
+  COURSES.forEach(c=>groupsForRound(c.id).forEach(g=>{
+    for(let a=0;a<g.length;a++) for(let b=a+1;b<g.length;b++){ const k=[g[a],g[b]].sort().join('|'); pairCount[k]=(pairCount[k]||0)+1; }
+  }));
+  const head=`<th class="gm-corner"></th>`+ids.map(pid=>`<th class="gm-h">${escapeHtml(playerName(pid)).slice(0,3)}</th>`).join('');
+  const rowsM=ids.map(ra=>`<tr><td class="gm-name">${escapeHtml(playerName(ra))}</td>`+ids.map(rb=>{
+    if(ra===rb) return `<td class="gm-x">·</td>`;
+    const n=pairCount[[ra,rb].sort().join('|')]||0;
+    return `<td class="gm-c gm-${Math.min(n,3)}">${n||''}</td>`;
+  }).join('')+`</tr>`).join('');
+  host.innerHTML=`
+    <div class="grp-rounds">${roundsHtml}</div>
+    <div class="csub" style="margin:16px 0 8px">How many rounds each pair shares a group, on the current format. Darker means they play together more, so it is easy to spot who never crosses paths.</div>
+    <div class="gm-wrap"><table class="gm"><thead><tr>${head}</tr></thead><tbody>${rowsM}</tbody></table></div>`;
 }
 
 function renderIndivBoard(){
   const host=document.getElementById('indivBoard');
   const st=indivStandings();
-  if(st.length===0){ host.innerHTML=`<div class="emptyc">Enter round scores to build the leaderboard.</div>`; return; }
-  host.innerHTML=`<table class="lb"><thead><tr>
-      <th class="rk">#</th><th>Player</th><th>Team</th><th class="num">Rounds</th><th class="num">Gross</th><th class="num">Net</th></tr></thead>
+  if(st.length===0){ host.innerHTML=`<div class="emptyc">Enter any round's scores to crown the individual low net.</div>`; return; }
+  const leader=st.find(x=>x.played>0);
+  const champ = leader ? `<div class="champ">
+      <div class="champ-lbl">Low net so far</div>
+      <div class="champ-name" style="color:${TEAM_COLORS[teamOfPlayer(leader.p.id)]||'var(--ink)'}">${escapeHtml(leader.p.name)||'unnamed'}</div>
+      <div class="champ-net"><b>${leader.net}</b> net over ${leader.played} round${leader.played>1?'s':''}</div>
+    </div>` : '';
+  host.innerHTML=champ+`<table class="lb"><thead><tr>
+      <th class="rk">#</th><th>Player</th><th>Team</th><th class="num">Rds</th><th class="num">Gross</th><th class="num">Net</th></tr></thead>
     <tbody>${st.map((r,i)=>{
       const lead=i===0 && r.played>0;
       const t=teamOfPlayer(r.p.id);
@@ -1056,8 +1274,8 @@ function renderIndivBoard(){
         <td>${escapeHtml(r.p.name)||'unnamed'}${r.missingHI?' <span style="color:var(--danger);font-size:11px">·needs HI</span>':''}</td>
         <td>${tag}</td>
         <td class="num">${r.played}</td>
-        <td class="num">${r.played>0?r.gross:'—'}</td>
-        <td class="num netbig">${r.played>0?r.net:'—'}</td></tr>`;
+        <td class="num">${r.played>0?r.gross:'–'}</td>
+        <td class="num netbig">${r.played>0?r.net:'–'}</td></tr>`;
     }).join('')}</tbody></table>`;
 }
 
