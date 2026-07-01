@@ -269,7 +269,11 @@
   .lb .netbig{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:15px}
   .emptyc{padding:18px 0;text-align:center;color:var(--ink-faint);font-size:13px}
 
-  /* format-at-a-glance table */
+  /* format explainer + table */
+  .fexplain{display:grid;gap:10px;margin:4px 0 18px}
+  .fex{font-size:14.5px;color:var(--ink-soft);line-height:1.55;padding-left:14px;border-left:3px solid var(--gorse)}
+  .fex-t{font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--ink);margin-right:5px}
+  .fex b{color:var(--ink);font-weight:600}
   .ftable{width:100%;border-collapse:collapse;margin-top:2px}
   .ftable th{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;
     color:var(--ink-faint);text-align:left;padding:0 12px 9px;border-bottom:1.5px solid var(--ink);font-weight:700}
@@ -523,7 +527,12 @@
 
       <div class="csection">
         <h3>The format at a glance</h3>
-        <div class="csub">Five rounds, every one worth cup points. Two pairings rounds with your partner, two team foursomes on the best courses, and a mixed singles on the New Course.</div>
+        <div class="csub">Fife against Angus over five rounds. Every round is worth cup points, and the first side to 5½ of the 10 keeps the cup. You play three formats:</div>
+        <div class="fexplain">
+          <div class="fex"><span class="fex-t">Pairings</span> at Kingsbarns and Dumbarnie. You and your partner take on another pair, match play. <b>Better Ball</b> counts your lower net on each hole, <b>Combined</b> counts both of you. Win the match to win a point, two points on offer each round.</div>
+          <div class="fex"><span class="fex-t">Team foursome</span> at Carnoustie and the Old Course. Your whole team plays their own ball and we add the best nets, the best two at Carnoustie and the best four on the Old. Lowest team total wins the point.</div>
+          <div class="fex"><span class="fex-t">Singles</span> at the New Course. Everyone leaves their partner and plays one on one against the other side. Win your match to win a point, four up for grabs.</div>
+        </div>
         <div id="formatTable"></div>
         <div class="divide"></div>
       </div>
@@ -652,7 +661,7 @@ const ROUND_GROUPS = {
   kings:[['p1','p2','p7','p8'],['p3','p4','p5','p6']],   // pairings: Brett+Bruce v Justin+Robert
   dumb: [['p3','p4','p7','p8'],['p1','p2','p5','p6']],   // pairings: rotated opponents + tee order
   carn: [['p1','p2','p3','p4'],['p5','p6','p7','p8']],   // team foursome: Fife together, Angus together
-  new:  [['p1','p7','p4','p6'],['p2','p8','p3','p5']],   // singles, mixed so nobody is with their partner
+  new:  [['p1','p7','p4','p5'],['p2','p8','p3','p6']],   // singles, mixed so nobody is with their partner (Andrew & Mike traded)
   old:  [['p1','p2','p3','p4'],['p5','p6','p7','p8']],   // team foursome: full teams
 };
 
@@ -767,6 +776,14 @@ function matchesForRound(cid){
   const t = cfg(cid).team;
   if(t==='foursome') return [];   // scored by team total, not head-to-head matches
   if(t==='singles'){
+    // matchups follow the round's groups: within each group, pair Fife vs Angus in order
+    if(ROUND_GROUPS[cid]){
+      return ROUND_GROUPS[cid].flatMap(g=>{
+        const as=g.filter(p=>teamOfPlayer(p)==='A'), bs=g.filter(p=>teamOfPlayer(p)==='B');
+        const n=Math.min(as.length,bs.length);
+        return Array.from({length:n},(_,i)=>({a:[as[i]], b:[bs[i]]}));
+      });
+    }
     const a=teamPlayers('A'), b=teamPlayers('B'), n=Math.min(a.length,b.length);
     return Array.from({length:n},(_,i)=>({a:[a[i]], b:[b[i]]}));
   }
