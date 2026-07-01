@@ -33,6 +33,19 @@
   .sub{font-size:14px;color:var(--ink-soft);max-width:64ch}
   .sub b{color:var(--ink);font-weight:600}
 
+  /* tour strip — the living signature: countdown, live cup, the links */
+  .tourstrip{display:flex;flex-wrap:wrap;margin-top:18px;border-top:2px solid var(--ink)}
+  .tcell{flex:1 1 150px;padding:11px 20px 3px 0}
+  .tcell + .tcell{border-left:1px solid var(--rule);padding-left:20px}
+  .tlbl{font-family:'Space Mono',monospace;font-size:9.5px;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--sea);font-weight:700}
+  .tval{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:21px;line-height:1.1;
+    margin-top:5px;letter-spacing:-.01em;display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
+  .tval .u{font-family:'Space Mono',monospace;font-weight:400;font-size:11.5px;color:var(--ink-soft);letter-spacing:0}
+  .tval .big{color:var(--gorse-deep)}
+  .tval .dotc{width:9px;height:9px;border-radius:50%;flex:none;align-self:center}
+  .tval.cup{font-size:16px}
+
   /* top-level app tabs */
   .apptabs{display:flex;gap:0;border:2px solid var(--ink);border-top:none;background:var(--ink)}
   .apptab{flex:1 1 0;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;
@@ -105,6 +118,11 @@
   .rt thead th.num{text-align:center}
   .rt tbody td{padding:10px;border-bottom:1px solid var(--rule-soft);vertical-align:middle}
   .rt tbody tr:last-child td{border-bottom:none}
+  @media (hover:hover) and (min-width:641px){
+    .rt tbody tr{transition:background .1s}
+    .rt tbody tr:hover{background:rgba(47,107,99,.05)}
+    .lb tbody tr:hover td{background:rgba(47,107,99,.05)}
+  }
   .p-name{font-weight:600;font-size:14.5px}
   .p-idx{font-family:'Space Mono',monospace;font-size:12px;color:var(--ink-faint);margin-top:1px}
   .tee-sel select{min-width:150px}
@@ -116,6 +134,8 @@
   .phcp .big{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:22px;line-height:1;color:var(--gorse-deep)}
   .plus{color:var(--sea)}
   .tbd{color:var(--ink-faint);font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:16px}
+  /* .k labels are the mobile card headers only — never show them on desktop */
+  .card-line .k{display:none}
   .foot{margin-top:18px;font-size:12px;color:var(--ink-faint);line-height:1.55;display:flex;gap:8px;align-items:flex-start}
   .foot .dot{color:var(--gorse-deep);font-weight:700}
 
@@ -154,17 +174,20 @@
   .sb-name{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;display:flex;align-items:center;gap:8px}
   .sb-name .dotc{width:11px;height:11px;border-radius:50%;flex:none}
   .sb-team.b .sb-name{flex-direction:row-reverse}
-  .sb-score{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:44px;line-height:1}
+  .sb-score{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:56px;line-height:.92;letter-spacing:-.03em}
   .sb-mid{font-family:'Space Mono',monospace;font-size:11px;color:var(--ink-faint);text-align:center;
     letter-spacing:.06em;text-transform:uppercase}
   .sb-mid .vs{font-size:14px;color:var(--ink-soft);display:block;margin:2px 0}
   .sb-status{grid-column:1/-1;text-align:center;font-family:'Space Mono',monospace;font-size:12px;
-    color:var(--sea);margin-top:8px;font-weight:700}
-  .sb-status.won{color:var(--gorse-deep)}
-  .barwrap{grid-column:1/-1;height:8px;border-radius:4px;background:var(--rule);overflow:hidden;margin-top:12px;display:flex}
+    color:var(--sea);margin-top:10px;font-weight:700;letter-spacing:.02em}
+  .sb-status.won{color:var(--gorse-deep);font-family:'Space Grotesk',sans-serif;font-size:15px;letter-spacing:-.01em}
+  .barwrap{grid-column:1/-1;height:11px;border-radius:6px;background:var(--rule);overflow:hidden;
+    margin-top:14px;display:flex;position:relative;box-shadow:inset 0 1px 2px rgba(24,40,35,.12)}
+  .barwrap::after{content:"";position:absolute;left:50%;top:-3px;bottom:-3px;width:2px;
+    background:var(--card);transform:translateX(-50%);z-index:2}
   .barwrap .ba{background:var(--teamA)}
   .barwrap .bb{background:var(--teamB)}
-  .barwrap .bh{background:var(--ink-faint)}
+  .barwrap .bh{background:var(--ink-faint);opacity:.4}
 
   .csection{padding:18px 24px 4px}
   .csection h3{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;margin-bottom:2px}
@@ -243,12 +266,17 @@
     body{padding:18px 10px 50px;background-size:100% 30px}
     .mast,.panel-head,.roster,.board,.csection,.formula,.scoreboard,.sref{padding-left:16px;padding-right:16px}
     .roster-row{grid-template-columns:1fr 82px 34px}
+    .tourstrip{display:grid;grid-template-columns:1fr 1fr}
+    .tcell{padding:9px 12px 7px 0}
+    .tcell + .tcell{border-left:none;padding-left:0}
+    .tcell:nth-child(2){border-left:1px solid var(--rule);padding-left:14px}
+    .tcell:last-child{grid-column:1/-1;border-top:1px solid var(--rule);margin-top:2px;padding-top:9px}
     .rt thead{display:none}
     .rt tbody td{display:block;border:none;padding:3px 0}
     .rt tbody tr{display:block;padding:14px 0;border-bottom:1px solid var(--rule)}
     .rt tbody tr:last-child{border-bottom:none}
     .card-line{display:flex;justify-content:space-between;align-items:center;gap:12px}
-    .card-line .k{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint)}
+    .card-line .k{display:block;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint)}
     .teamgrid{grid-template-columns:1fr}
     .rtab small{display:none}
     .sb-score{font-size:36px}
@@ -282,6 +310,7 @@
     <div class="eyebrow">Scotland Golf Tour · Jul 8–14 2026</div>
     <h1>Fife &amp; Angus Golf Tour</h1>
     <p class="sub">The trip HQ. <b>Schedule</b> is the day-by-day; <b>Handicaps</b> works out course &amp; playing handicaps; <b>Competition</b> runs the two-team cup — a mix of match-play and individual rounds, everyone always playing their own ball — with a live scoreboard and a personal net leaderboard. Everything saves to this device.</p>
+    <div class="tourstrip" id="tourStrip"></div>
   </header>
 
   <nav class="apptabs">
@@ -637,6 +666,34 @@ function indivStandings(){
   }).filter(x=>x.played>0 || x.missingHI).sort((a,b)=> a.net-b.net);
 }
 
+// ---------- Render: tour strip (masthead signature) ----------
+const TEE_OFF = new Date(2026, 6, 8);   // first tee — Kingsbarns, Jul 8 2026 (month is 0-based)
+const TOUR_END = new Date(2026, 6, 14); // departure, Jul 14 2026
+function daysToTee(){
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  return Math.round((TEE_OFF - today) / 86400000);
+}
+function countdownHtml(){
+  const now = new Date(), today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const n = daysToTee();
+  if(n > 1)  return `<span class="big">${n}</span> <span class="u">days to first tee</span>`;
+  if(n === 1) return `<span class="big">1</span> <span class="u">day to first tee</span>`;
+  if(today <= TOUR_END) return `<span class="big">Live</span> <span class="u">tour underway</span>`;
+  return `<span class="u">tour wrapped — until next year</span>`;
+}
+function renderTourStrip(){
+  const host = document.getElementById('tourStrip'); if(!host) return;
+  const {A, B, decided} = cupTotals();
+  const cup = decided === 0
+    ? `<span class="dotc" style="background:${TEAM_COLORS.A}"></span> ${escapeHtml(teamName('A'))} <span class="u">vs</span> ${escapeHtml(teamName('B'))} <span class="dotc" style="background:${TEAM_COLORS.B}"></span>`
+    : `${escapeHtml(teamName('A'))} <span class="big">${half(A)}–${half(B)}</span> ${escapeHtml(teamName('B'))}`;
+  host.innerHTML = `
+    <div class="tcell"><div class="tlbl">Countdown</div><div class="tval">${countdownHtml()}</div></div>
+    <div class="tcell"><div class="tlbl">The Cup</div><div class="tval cup">${cup}</div></div>
+    <div class="tcell"><div class="tlbl">The Links</div><div class="tval"><span class="big">5</span> <span class="u">courses · 7 days</span></div></div>`;
+}
+
 // ---------- Render: schedule ----------
 function renderSchedule(){
   const host=document.getElementById('schedList');
@@ -809,6 +866,7 @@ function renderScoreboard(){
     </div>
     <div class="barwrap"><div class="ba" style="width:${aw}%"></div><div class="bh" style="width:${hw}%"></div><div class="bb" style="width:${bw}%"></div></div>
     <div class="sb-status${won?' won':''}">${status}</div>`;
+  renderTourStrip();   // keep the masthead's live cup in sync with the scoreboard
 }
 
 function renderTeamSetup(){
@@ -1023,6 +1081,7 @@ document.querySelectorAll('.apptab').forEach(b=>b.addEventListener('click',()=>s
 freshDefaults();
 load();               // overrides defaults if saved state exists on this device
 renderSchedule(); renderRoster(); renderTabs(); renderBoard(); renderComp();
+renderTourStrip();
 setAppTab(appTab);
 </script>
 </body>
