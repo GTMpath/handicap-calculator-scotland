@@ -21,8 +21,14 @@ palette); the app still lives in the `handicap-calculator-scotland` repo.
 - `SCHEDULE` — the seven trip days; golf days link to a course by `id`.
 - `ROUND_CFG` — the 5-round cup format, ONE source of truth. To change a round, edit one line.
   `team: 'pairs'|'singles'` are match play (tap the winner); `'foursome'` is stroke (enter
-  scores, best-N team net wins the point). Current: R1 pairs better ball, R2 pairs combined,
-  R3 foursome best-2, R4 foursome best-4, R5 singles. Points 2/2/1/1/4 = 10, 5½ to win.
+  scores, best-N team net wins the point). LOCKED plan (confirmed 2026-07-01): R1 Kingsbarns
+  pairings better ball, R2 Dumbarnie pairings combined, R3 Carnoustie team foursome best-2,
+  R4 St Andrews New singles (the mix round), R5 St Andrews Old team foursome best-4. Points
+  2/2/1/4/1 = 10, 5½ to win. Everyone plays with their partner/team 4 of 5 rounds.
+- `ROUND_GROUPS` — playing groups per round (who walks together). Pairings rounds rotate
+  opponents; team rounds put each full team together; the New singles mixes so nobody is with
+  their partner. `matchesForRound` (pairs) and `groupsForRound` both read this. UI calls them
+  "pairings," not "duos" (internal `duos`/`teamDuos`/`SEED_DUOS` names kept).
 - State: `players`, `teeChoice`, `allowance`, `rounds` where each round is
   `{scores:{pid:gross}, results:{matchIdx:'A'|'B'|'half'}}`, saved under `LS_KEY`
   (`fs-invitational-v9`; bump the suffix when the shape changes). Teams are LOCKED to the seed.
