@@ -270,7 +270,7 @@
   <header class="mast">
     <div class="eyebrow">Scotland Golf Tour · Jul 8–14 2026</div>
     <h1>Fife &amp; Angus Golf Tour</h1>
-    <p class="sub">The trip HQ. <b>Schedule</b> is the day-by-day; <b>Handicap Calculator</b> works out course &amp; playing handicaps; <b>Competition</b> runs the two-team Ryder Cup — 4 partner rounds + a Sunday singles finale — with a live scoreboard and an individual net leaderboard. Everything saves to this device.</p>
+    <p class="sub">The trip HQ. <b>Schedule</b> is the day-by-day; <b>Handicaps</b> works out course &amp; playing handicaps; <b>Competition</b> runs the two-team cup — a mix of match-play and individual rounds, everyone always playing their own ball — with a live scoreboard and a personal net leaderboard. Everything saves to this device.</p>
   </header>
 
   <nav class="apptabs">
@@ -346,7 +346,7 @@
 
       <div class="csection">
         <h3>Rounds &amp; matches</h3>
-        <div class="csub">Pick a round, set Pairs (Better Ball / Aggregate, standing or swapped) or Singles, then enter each player's gross. Low net wins the match — 1 point, ½ each if tied.</div>
+        <div class="csub">Each round is <b>Individual</b> (own ball, group with anyone — personal board only), <b>Pairs</b> match play (Better Ball / Aggregate, standing or swapped), or <b>Singles</b>. Enter each player's gross; low net wins match-play — 1 point, ½ if tied.</div>
         <div class="rtabs" id="roundTabs"></div>
         <div id="roundPanel"></div>
         <div class="divide"></div>
@@ -369,7 +369,7 @@
 
     <div class="foot">
       <span class="dot">▪</span>
-      <span>Ryder Cup match play: each pairs round is two duo matches, the singles finale is four 1‑v‑1 matches — 12 points in all, <b>6½ to win the cup</b> (6–6 retains it). Better Ball takes a duo's lower net; Aggregate adds both. New Course swaps partners within each side; the Old Course is singles.</span>
+      <span>The team cup is decided by the <b>match-play</b> rounds — pairs = two duo matches, singles = four 1‑v‑1s, each match a point; most points wins, an even split retains. <b>Individual</b> rounds let everyone play their own ball in any group and count only toward the personal net leaderboard. Better Ball takes a duo's lower net; Aggregate adds both. Every format here is own-ball — no alternate shot.</span>
     </div>
   </div>
 
@@ -435,8 +435,15 @@ const SEED_DUOS = [
 ];
 const TEAM_COLORS = {A:'#2f6b63', B:'#b4472e'};
 const FORMATS = {betterball:'Better Ball', aggregate:'Aggregate'};
-const DEFAULT_SINGLES = ['old'];   // singles finale on the last day
-const DEFAULT_SWAP    = ['new'];   // swap partners within team on the New Course
+// default 5-round mix — all own-ball formats, blending match play and individual rounds
+const ROUND_DEFAULTS = {
+  kings:{type:'pairs',      format:'betterball', pairMode:'standing'}, // partner opener
+  dumb: {type:'individual', format:'betterball', pairMode:'standing'}, // mix the groups
+  carn: {type:'pairs',      format:'betterball', pairMode:'swap'},     // swap partners in team
+  new:  {type:'individual', format:'betterball', pairMode:'standing'}, // mix the groups
+  old:  {type:'singles',    format:'betterball', pairMode:'standing'}, // singles finale
+};
+const roundDefault = id => ROUND_DEFAULTS[id] || {type:'pairs', format:'betterball', pairMode:'standing'};
 
 // day-by-day schedule (Jul 8–14 2026)
 const SCHEDULE = [
@@ -449,7 +456,7 @@ const SCHEDULE = [
   {n:'Day 7', d:'Tue · Jul 14', theme:'Departure', note:'Optional early Kingsbarns 6:50am before flights'},
 ];
 
-const LS_KEY = 'fife-hcp-v6';
+const LS_KEY = 'fife-hcp-v7';
 
 // ---------- State ----------
 let players = [];
@@ -466,12 +473,7 @@ const newId = () => 'p' + (++uid);
 
 function freshRounds(){
   rounds = {};
-  COURSES.forEach(c => { rounds[c.id] = {
-    type: DEFAULT_SINGLES.includes(c.id) ? 'singles' : 'pairs',
-    format: 'betterball',
-    pairMode: DEFAULT_SWAP.includes(c.id) ? 'swap' : 'standing',
-    scores: {}
-  }; });
+  COURSES.forEach(c => { const d=roundDefault(c.id); rounds[c.id] = {type:d.type, format:d.format, pairMode:d.pairMode, scores:{}}; });
 }
 function freshDefaults(){
   players = SEED_PLAYERS.map(p => ({...p}));
@@ -494,9 +496,10 @@ function ensureShape(){
     if(!rounds[c.id]) rounds[c.id] = {type:'pairs', format:'betterball', pairMode:'standing', scores:{}};
     const rd = rounds[c.id];
     if(!rd.scores) rd.scores = {};
-    if(rd.type==null) rd.type = DEFAULT_SINGLES.includes(c.id)?'singles':'pairs';
-    if(rd.format==null) rd.format = 'betterball';
-    if(rd.pairMode==null) rd.pairMode = DEFAULT_SWAP.includes(c.id)?'swap':'standing';
+    const dd=roundDefault(c.id);
+    if(rd.type==null) rd.type = dd.type;
+    if(rd.format==null) rd.format = dd.format;
+    if(rd.pairMode==null) rd.pairMode = dd.pairMode;
   });
   if(!teams || !teams.A || !teams.B) teams = {A:{name:'Fife'}, B:{name:'Angus'}};
   if(!Array.isArray(duos) || duos.length===0) duos = SEED_DUOS.map(d => ({id:d.id, team:d.team, players:[...d.players]}));
@@ -555,6 +558,7 @@ function partnerships(cid, t){
 }
 function matchesForRound(cid){
   const rd = rounds[cid];
+  if(rd.type==='individual') return [];   // no matches — scores the personal board only
   if(rd.type==='singles'){
     const a=teamPlayers('A'), b=teamPlayers('B'), n=Math.min(a.length,b.length);
     return Array.from({length:n},(_,i)=>({a:[a[i]], b:[b[i]]}));
@@ -607,8 +611,9 @@ function cupTotals(){
   return {A, B, total, decided, need};
 }
 function roundDone(cid){
-  const c=courseById(cid), f=rounds[cid].format;
-  return matchesForRound(cid).some(m=>matchResult(m,c,f).winner!=null);
+  const c=courseById(cid), rd=rounds[cid];
+  if(rd.type==='individual') return players.some(p=>{ const n=playerNet(p.id,c); return n && n.net!=null; });
+  return matchesForRound(cid).some(m=>matchResult(m,c,rd.format).winner!=null);
 }
 function indivStandings(){
   return players.map(p=>{
@@ -633,6 +638,7 @@ function renderSchedule(){
       const rNo=COURSES.findIndex(x=>x.id===c.id)+1;
       let badge;
       if(rd.type==='singles') badge=`<span class="rbadge fin">R${rNo} · Singles finale</span>`;
+      else if(rd.type==='individual') badge=`<span class="rbadge">R${rNo} · Individual</span>`;
       else if(rd.pairMode==='swap') badge=`<span class="rbadge swap">R${rNo} · Swap round</span>`;
       else badge=`<span class="rbadge">R${rNo} · ${FORMATS[rd.format]}</span>`;
       lines += `<div class="sday-line"><span class="lbl">Golf</span><span class="tee">${day.golf.tee}</span>
@@ -823,7 +829,7 @@ function renderRoundTabs(){
   const host=document.getElementById('roundTabs'); host.innerHTML='';
   COURSES.forEach((c,i)=>{
     const rd=rounds[c.id];
-    const sub = rd.type==='singles' ? 'Singles' : (rd.pairMode==='swap'?'Swap':FORMATS[rd.format]);
+    const sub = rd.type==='individual' ? 'Individual' : rd.type==='singles' ? 'Singles' : (rd.pairMode==='swap'?'Swap':FORMATS[rd.format]);
     const b=document.createElement('button');
     b.className='rtab'+(c.id===compRound?' active':'')+(roundDone(c.id)?' done':'');
     b.innerHTML=`R${i+1} · ${c.short}<small>${sub}</small>`;
@@ -869,33 +875,78 @@ function matchCard(m, idx, course, format){
 function renderRoundPanel(){
   const host=document.getElementById('roundPanel');
   const c=courseById(compRound); const rd=rounds[c.id];
-  const singles = rd.type==='singles';
-  const sess=`<div class="fmt-toggle"><button data-sess="pairs" class="${!singles?'on':''}">Pairs</button><button data-sess="singles" class="${singles?'on':''}">Singles</button></div>`;
-  const fmtT = singles ? '' : `<div class="fmt-toggle">${Object.keys(FORMATS).map(f=>`<button data-fmt="${f}" class="${rd.format===f?'on':''}">${FORMATS[f]}</button>`).join('')}</div>`;
-  const pairT = singles ? '' : `<div class="fmt-toggle"><button data-pm="standing" class="${rd.pairMode!=='swap'?'on':''}">Standing</button><button data-pm="swap" class="${rd.pairMode==='swap'?'on':''}">Swap in team</button></div>`;
-  const desc = singles
-    ? 'Singles — every player vs the other side, low net wins the match (1 pt, ½ if tied)'
-    : `${FORMATS[rd.format]} — ${rd.pairMode==='swap'?'partners swapped within each side':'standing father-son duos'}; low net wins the match`;
+  const isInd=rd.type==='individual', isPairs=rd.type==='pairs', isSingles=rd.type==='singles';
+
+  const MODES=[['individual','Individual'],['pairs','Pairs'],['singles','Singles']];
+  const sess=`<div class="fmt-toggle">${MODES.map(([v,l])=>`<button data-sess="${v}" class="${rd.type===v?'on':''}">${l}</button>`).join('')}</div>`;
+  const fmtT = isPairs ? `<div class="fmt-toggle">${Object.keys(FORMATS).map(f=>`<button data-fmt="${f}" class="${rd.format===f?'on':''}">${FORMATS[f]}</button>`).join('')}</div>` : '';
+  const pairT = isPairs ? `<div class="fmt-toggle"><button data-pm="standing" class="${rd.pairMode!=='swap'?'on':''}">Standing</button><button data-pm="swap" class="${rd.pairMode==='swap'?'on':''}">Swap in team</button></div>` : '';
+  const desc = isInd
+    ? 'Individual — everyone plays their own ball, group with anyone. Counts toward the personal leaderboard only, not the team cup.'
+    : isSingles
+      ? 'Singles — every player vs the other side, low net wins the match (1 pt, ½ if tied)'
+      : `${FORMATS[rd.format]} — ${rd.pairMode==='swap'?'partners swapped within each side':'standing father-son duos'}; low net wins the match`;
 
   let top=`<div class="round-top">
     <div><div class="round-name">${c.name}</div><div class="round-meta">Par ${c.par} · ${desc}</div></div>
     <div style="display:flex;flex-wrap:wrap;gap:8px">${sess}${fmtT}${pairT}</div>
   </div>`;
 
-  const ms=matchesForRound(c.id);
-  const cards = ms.length ? ms.map((m,i)=>matchCard(m,i,c,rd.format)).join('')
-    : `<div class="emptyc">Assign players to both sides to create matches.</div>`;
-  host.innerHTML=top+`<div class="matchlist">${cards}</div>`;
+  let body;
+  if(isInd){
+    body = individualCardHtml(c);
+  } else {
+    const ms=matchesForRound(c.id);
+    body = `<div class="matchlist">${ms.length ? ms.map((m,i)=>matchCard(m,i,c,rd.format)).join('')
+      : '<div class="emptyc">Assign players to both sides to create matches.</div>'}</div>`;
+  }
+  host.innerHTML=top+body;
 
-  host.querySelectorAll('[data-sess]').forEach(b=>b.addEventListener('click',()=>{ rd.type=b.dataset.sess; renderComp(); save('comp'); }));
-  host.querySelectorAll('[data-fmt]').forEach(b=>b.addEventListener('click',()=>{ rd.format=b.dataset.fmt; renderComp(); save('comp'); }));
-  host.querySelectorAll('[data-pm]').forEach(b=>b.addEventListener('click',()=>{ rd.pairMode=b.dataset.pm; renderComp(); save('comp'); }));
+  host.querySelectorAll('[data-sess]').forEach(b=>b.addEventListener('click',()=>{ rd.type=b.dataset.sess; renderComp(); renderSchedule(); save('comp'); }));
+  host.querySelectorAll('[data-fmt]').forEach(b=>b.addEventListener('click',()=>{ rd.format=b.dataset.fmt; renderComp(); renderSchedule(); save('comp'); }));
+  host.querySelectorAll('[data-pm]').forEach(b=>b.addEventListener('click',()=>{ rd.pairMode=b.dataset.pm; renderComp(); renderSchedule(); save('comp'); }));
   host.querySelectorAll('[data-score]').forEach(inp=>inp.addEventListener('input',e=>{
     const pid=e.target.dataset.score, v=e.target.value;
     if(v===''||v==null) delete rounds[c.id].scores[pid];
     else rounds[c.id].scores[pid]=parseInt(v,10);
-    renderScoreboard(); renderIndivBoard(); renderRoundTabs(); updateMatchLive(c.id); save('comp');
+    renderScoreboard(); renderIndivBoard(); renderRoundTabs();
+    if(rounds[c.id].type==='individual') updateIndividualLive(c.id); else updateMatchLive(c.id);
+    save('comp');
   }));
+}
+
+function individualRanks(c){
+  const ranked=players.map(p=>({pid:p.id, net:(playerNet(p.id,c)||{}).net})).filter(x=>x.net!=null).sort((a,b)=>a.net-b.net);
+  const rank={}; let i=0;
+  while(i<ranked.length){ let j=i; while(j+1<ranked.length && ranked[j+1].net===ranked[i].net) j++; for(let k=i;k<=j;k++) rank[ranked[k].pid]=i+1; i=j+1; }
+  return rank;
+}
+function individualCardHtml(c){
+  const rank=individualRanks(c);
+  const rows=players.map(p=>{
+    const g=rounds[c.id].scores[p.id];
+    const n=playerNet(p.id,c), ch=roundCourseHcp(p.id,c);
+    const t=teamOfPlayer(p.id);
+    const tag=t?`<span class="teamtag" style="background:${TEAM_COLORS[t]}">${escapeHtml(teamName(t))}</span>`:'';
+    const netTxt=n&&n.net!=null?`<b>${n.net}</b>`:(ch==null?'<span class="warn">need HI</span>':'—');
+    return `<tr>
+      <td>${escapeHtml(p.name)||'unnamed'}</td>
+      <td>${tag}</td>
+      <td class="num"><input class="grossin" type="number" inputmode="numeric" placeholder="—" value="${g==null?'':g}" data-score="${p.id}"></td>
+      <td class="num" data-inet="${p.id}">${ch!=null?'CH '+ch+' · ':''}${netTxt}</td>
+      <td class="num" data-irank="${p.id}">${rank[p.id]||'—'}</td>
+    </tr>`;
+  }).join('');
+  return `<table class="lb"><thead><tr><th>Player</th><th>Team</th><th class="num">Gross</th><th class="num">Net</th><th class="num">Rd rank</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+function updateIndividualLive(cid){
+  const c=courseById(cid); const host=document.getElementById('roundPanel'); const rank=individualRanks(c);
+  players.forEach(p=>{
+    const n=playerNet(p.id,c), ch=roundCourseHcp(p.id,c);
+    const netTxt=n&&n.net!=null?`<b>${n.net}</b>`:(ch==null?'<span class="warn">need HI</span>':'—');
+    const ne=host.querySelector(`[data-inet="${p.id}"]`); if(ne) ne.innerHTML=`${ch!=null?'CH '+ch+' · ':''}${netTxt}`;
+    const re=host.querySelector(`[data-irank="${p.id}"]`); if(re) re.textContent=rank[p.id]||'—';
+  });
 }
 
 // in-place refresh so typing a score doesn't drop input focus
