@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fife &amp; Angus — Handicap Sheet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#e7eee7; --card:#f5f8f3; --ink:#182823; --ink-soft:#4d5c56;
+    --ink-faint:#8a968f; --rule:#ccd6cd; --rule-soft:#dde4dc;
+    --gorse:#e3a81f; --gorse-deep:#a9790c; --sea:#2f6b63; --danger:#b4472e;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    font-family:'Inter',system-ui,sans-serif;background:var(--paper);color:var(--ink);
+    line-height:1.5;padding:28px 18px 60px;
+    background-image:linear-gradient(var(--rule-soft) 1px,transparent 1px);
+    background-size:100% 34px;background-position:0 -1px;
+  }
+  .wrap{max-width:980px;margin:0 auto}
+  .mast{border:2px solid var(--ink);background:var(--card);padding:22px 24px 20px;position:relative}
+  .mast::before{content:"";position:absolute;left:0;right:0;top:0;height:6px;
+    background:repeating-linear-gradient(90deg,var(--gorse) 0 18px,var(--ink) 18px 20px)}
+  .eyebrow{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.28em;
+    text-transform:uppercase;color:var(--sea);margin-top:6px}
+  h1{font-family:'Space Grotesk',sans-serif;font-weight:700;
+    font-size:clamp(28px,5.4vw,44px);line-height:1.02;letter-spacing:-.01em;margin:6px 0 4px}
+  .sub{font-size:14px;color:var(--ink-soft);max-width:62ch}
+  .sub b{color:var(--ink);font-weight:600}
+  .formula{margin-top:14px;padding:9px 12px;border:1px dashed var(--rule);background:var(--paper);
+    font-family:'Space Mono',monospace;font-size:12.5px;color:var(--ink-soft);border-radius:3px}
+  .formula b{color:var(--gorse-deep)}
+  .panel{border:2px solid var(--ink);border-top:none;background:var(--card)}
+  .panel-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;
+    padding:14px 24px;border-bottom:1px solid var(--rule);background:var(--card)}
+  .panel-head h2{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600}
+  .panel-head .hint{font-size:12.5px;color:var(--ink-faint)}
+  .roster{padding:16px 24px 20px}
+  .roster-row{display:grid;grid-template-columns:1fr 96px 34px;gap:10px;align-items:center;margin-bottom:9px}
+  input[type=text],input[type=number],select{font-family:'Inter',sans-serif;font-size:14px;color:var(--ink);
+    background:var(--paper);border:1px solid var(--rule);border-radius:4px;padding:8px 10px;width:100%;
+    transition:border-color .12s,box-shadow .12s}
+  input[type=number]{font-family:'Space Mono',monospace;text-align:center}
+  input:focus,select:focus{outline:none;border-color:var(--sea);box-shadow:0 0 0 3px rgba(47,107,99,.16)}
+  .idx-wrap{position:relative}
+  .idx-wrap::after{content:"HI";position:absolute;right:8px;top:50%;transform:translateY(-50%);
+    font-family:'Space Mono',monospace;font-size:9px;color:var(--ink-faint);pointer-events:none}
+  .btn-x{border:1px solid var(--rule);background:var(--paper);border-radius:4px;height:36px;cursor:pointer;
+    color:var(--ink-faint);font-size:16px;line-height:1;transition:color .12s,border-color .12s}
+  .btn-x:hover{color:var(--danger);border-color:var(--danger)}
+  .btn{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:13.5px;
+    border:1.5px solid var(--ink);background:var(--ink);color:var(--card);padding:9px 16px;border-radius:5px;
+    cursor:pointer;transition:transform .08s,background .12s}
+  .btn:hover{background:#233a33}
+  .btn:active{transform:translateY(1px)}
+  .btn.ghost{background:transparent;color:var(--ink)}
+  .btn.ghost:hover{background:var(--paper)}
+  .roster-actions{margin-top:6px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .saved{font-family:'Space Mono',monospace;font-size:11px;color:var(--sea);opacity:0;transition:opacity .2s}
+  .saved.show{opacity:1}
+  .tabs{display:flex;border:2px solid var(--ink);border-top:none;background:var(--ink);overflow-x:auto}
+  .tab{flex:1 0 auto;min-width:118px;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:13px;
+    color:#b9c6bf;background:var(--ink);border:none;cursor:pointer;padding:12px 10px 11px;
+    border-right:1px solid #2b423b;text-align:left;line-height:1.15;transition:color .12s,background .12s}
+  .tab:last-child{border-right:none}
+  .tab small{display:block;font-family:'Space Mono',monospace;font-weight:400;font-size:10px;opacity:.7;margin-top:3px}
+  .tab:hover{color:#fff}
+  .tab.active{background:var(--gorse);color:var(--ink)}
+  .tab.active small{opacity:.85}
+  .board{border:2px solid var(--ink);border-top:none;background:var(--card);padding:20px 24px 24px}
+  .board-top{display:flex;flex-wrap:wrap;gap:14px 24px;align-items:flex-end;justify-content:space-between;
+    padding-bottom:16px;border-bottom:1px solid var(--rule);margin-bottom:4px}
+  .course-name{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;letter-spacing:-.01em}
+  .course-meta{font-family:'Space Mono',monospace;font-size:12px;color:var(--ink-soft);margin-top:3px}
+  .controls{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end}
+  .ctl label{display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);
+    margin-bottom:4px;font-weight:600}
+  .ctl select{min-width:130px}
+  .flag{margin:14px 0 2px;padding:9px 13px;border-left:3px solid var(--gorse);background:var(--paper);
+    font-size:12.5px;color:var(--ink-soft)}
+  .flag b{color:var(--ink)}
+  .rt{width:100%;border-collapse:collapse;margin-top:16px}
+  .rt thead th{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--ink-faint);text-align:left;padding:0 10px 8px;border-bottom:1.5px solid var(--ink);font-weight:700}
+  .rt thead th.num{text-align:center}
+  .rt tbody td{padding:10px;border-bottom:1px solid var(--rule-soft);vertical-align:middle}
+  .rt tbody tr:last-child td{border-bottom:none}
+  .p-name{font-weight:600;font-size:14.5px}
+  .p-idx{font-family:'Space Mono',monospace;font-size:12px;color:var(--ink-faint);margin-top:1px}
+  .tee-sel select{min-width:150px}
+  .rs{font-family:'Space Mono',monospace;font-size:12px;color:var(--ink-soft);text-align:center;white-space:nowrap}
+  .chcp{text-align:center}
+  .chcp .big{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:22px;line-height:1}
+  .chcp .raw{font-family:'Space Mono',monospace;font-size:10px;color:var(--ink-faint);margin-top:2px}
+  .phcp{text-align:center}
+  .phcp .big{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:22px;line-height:1;color:var(--gorse-deep)}
+  .plus{color:var(--sea)}
+  .tbd{color:var(--ink-faint);font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:16px}
+  .foot{margin-top:18px;font-size:12px;color:var(--ink-faint);line-height:1.55;display:flex;gap:8px;align-items:flex-start}
+  .foot .dot{color:var(--gorse-deep);font-weight:700}
+  @media (max-width:640px){
+    body{padding:18px 10px 50px;background-size:100% 30px}
+    .mast,.panel-head,.roster,.board{padding-left:16px;padding-right:16px}
+    .roster-row{grid-template-columns:1fr 82px 34px}
+    .rt thead{display:none}
+    .rt tbody td{display:block;border:none;padding:3px 0}
+    .rt tbody tr{display:block;padding:14px 0;border-bottom:1px solid var(--rule)}
+    .rt tbody tr:last-child{border-bottom:none}
+    .card-line{display:flex;justify-content:space-between;align-items:center;gap:12px}
+    .card-line .k{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint)}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="mast">
+    <div class="eyebrow">Scotland Golf Tour · Course Handicaps</div>
+    <h1>Fife &amp; Angus Handicap Sheet</h1>
+    <p class="sub">Your roster is loaded. Fill in the two missing indexes, tap a course, tweak tees if anyone moves up or back — every <b>Course Handicap</b> recalculates live and saves to this device.</p>
+    <div class="formula">Course HCP = Index × (Slope ÷ 113) + (Course Rating − Par) → rounded. <b>Playing HCP</b> applies your comp allowance.</div>
+  </header>
+
+  <section class="panel">
+    <div class="panel-head">
+      <h2>The Roster</h2>
+      <span class="hint">edits save automatically</span>
+    </div>
+    <div class="roster">
+      <div id="rosterList"></div>
+      <div class="roster-actions">
+        <button class="btn" id="addBtn">+ Add player</button>
+        <button class="btn ghost" id="resetBtn">Reset to original roster</button>
+        <span class="saved" id="savedTag">saved ✓</span>
+      </div>
+    </div>
+  </section>
+
+  <nav class="tabs" id="tabs"></nav>
+  <section class="board" id="board"></section>
+
+  <div class="foot">
+    <span class="dot">▪</span>
+    <span>Realistic tees only (blacks/golds/tips removed). Ratings from published scorecards — cross-check the physical card on the day. Carnoustie plays par 70 off the Yellows, which the sheet accounts for. Old Course "Blue" is the medal tee most visitors get.</span>
+  </div>
+</div>
+
+<script>
+// ---------- Course data (realistic tees only) ----------
+const COURSES = [
+  { id:'kings', name:'Kingsbarns', short:'Kingsbarns', par:72,
+    tees:[
+      {name:'White', yds:6853, cr:73.6, sl:138},
+      {name:'Green', yds:6408, cr:71.3, sl:133},
+      {name:'Blue',  yds:null, cr:70.0, sl:128},
+      {name:'Red (fwd)', yds:null, cr:66.1, sl:119},
+    ], def:'Green' },
+  { id:'dumb', name:'Dumbarnie Links', short:'Dumbarnie', par:72,
+    tees:[
+      {name:'Blue',  yds:6421, cr:71.0, sl:128},
+      {name:'White', yds:5901, cr:68.0, sl:125},
+    ], def:'Blue' },
+  { id:'carn', name:'Carnoustie — Championship', short:'Carnoustie', par:72,
+    note:'Off the Yellows/Greens the men\'s par is 70, not 72 — that\'s why the numbers run higher here.',
+    tees:[
+      {name:'Yellow', yds:6589, cr:73.6, sl:135, par:70},
+      {name:'Green',  yds:6139, cr:71.5, sl:130, par:70},
+    ], def:'Yellow' },
+  { id:'new', name:'St Andrews — New Course', short:'St A. New', par:71,
+    tees:[
+      {name:'Blue',  yds:6362, cr:71.6, sl:125},
+      {name:'Green', yds:5992, cr:69.9, sl:121},
+    ], def:'Blue' },
+  { id:'old', name:'St Andrews — Old Course', short:'St A. Old', par:72,
+    tees:[
+      {name:'Blue (Medal)', yds:null, cr:71.8, sl:133},
+      {name:'Green',        yds:null, cr:70.2, sl:127},
+    ], def:'Blue (Medal)' },
+];
+
+const ALLOWANCES = [
+  {label:'Full (100%)', v:1.00},
+  {label:'Singles stroke play (95%)', v:0.95},
+  {label:'4BBB / better ball (90%)', v:0.90},
+  {label:'Foursomes combined (85%)', v:0.85},
+];
+
+const SEED_PLAYERS = [
+  {id:'p1', name:'Brett',        index:0},
+  {id:'p2', name:"Brett's Dad",  index:11.7},
+  {id:'p3', name:'Kyle',         index:16},
+  {id:'p4', name:"Kyle's Dad",   index:18},
+  {id:'p5', name:'Wasik',        index:15.7},
+  {id:'p6', name:'Mike',         index:5},
+  {id:'p7', name:'Justin',       index:9.7},
+  {id:'p8', name:'Robert',       index:16},
+];
+
+const LS_KEY = 'fife-hcp-v2';
+
+// ---------- State ----------
+let players = [];
+let active = 'kings';
+let teeChoice = {};
+let allowance = {};
+let uid = 0;
+const newId = () => 'p' + (++uid);
+
+function freshDefaults(){
+  players = SEED_PLAYERS.map(p => ({...p}));
+  active = 'kings';
+  teeChoice = {}; allowance = {};
+  COURSES.forEach(c => { teeChoice[c.id] = {}; allowance[c.id] = 1.00; });
+  uid = players.length;
+}
+function ensureShape(){
+  COURSES.forEach(c => {
+    if(!teeChoice[c.id]) teeChoice[c.id] = {};
+    if(allowance[c.id] == null) allowance[c.id] = 1.00;
+  });
+  uid = players.reduce((m,p)=>{ const n=parseInt(String(p.id).slice(1)); return isNaN(n)?m:Math.max(m,n); }, players.length);
+}
+function save(){
+  try{
+    localStorage.setItem(LS_KEY, JSON.stringify({players, teeChoice, allowance, active}));
+    const t = document.getElementById('savedTag');
+    if(t){ t.classList.add('show'); clearTimeout(window.__st); window.__st = setTimeout(()=>t.classList.remove('show'),1100); }
+  }catch(e){/* preview sandbox — persistence resumes once hosted */}
+}
+function load(){
+  try{
+    const s = localStorage.getItem(LS_KEY);
+    if(!s) return false;
+    const d = JSON.parse(s);
+    if(!d || !Array.isArray(d.players)) return false;
+    players = d.players; teeChoice = d.teeChoice||{}; allowance = d.allowance||{}; active = d.active||'kings';
+    ensureShape();
+    return true;
+  }catch(e){ return false; }
+}
+
+// ---------- Calc ----------
+const teeFor = (course,pid) => teeChoice[course.id][pid] || course.def;
+const teeObj = (course,name) => course.tees.find(t=>t.name===name) || course.tees[0];
+function courseHcp(index,course,tee){
+  const par = (tee.par!=null)?tee.par:course.par;
+  return index*(tee.sl/113) + (tee.cr-par);
+}
+const fmt = n => { const r=Math.round(n); return r<0 ? '+'+Math.abs(r) : String(r); };
+const escapeHtml = s => String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+
+// ---------- Render ----------
+function renderRoster(){
+  const host = document.getElementById('rosterList');
+  host.innerHTML='';
+  players.forEach(p=>{
+    const row=document.createElement('div');
+    row.className='roster-row';
+    const idxVal = (p.index===''||p.index==null) ? '' : p.index;
+    row.innerHTML=`
+      <input type="text" placeholder="Player name" value="${escapeHtml(p.name)}" data-id="${p.id}" data-f="name">
+      <div class="idx-wrap"><input type="number" step="0.1" placeholder="TBD" value="${idxVal}" data-id="${p.id}" data-f="index"></div>
+      <button class="btn-x" title="Remove" data-del="${p.id}">×</button>`;
+    host.appendChild(row);
+  });
+  host.querySelectorAll('input').forEach(inp=>{
+    inp.addEventListener('input',e=>{
+      const p=players.find(x=>x.id===e.target.dataset.id); if(!p)return;
+      if(e.target.dataset.f==='name') p.name=e.target.value;
+      else p.index = e.target.value==='' ? '' : parseFloat(e.target.value);
+      renderBoard(); save();
+    });
+  });
+  host.querySelectorAll('[data-del]').forEach(b=>{
+    b.addEventListener('click',()=>{ players=players.filter(x=>x.id!==b.dataset.del); renderRoster(); renderBoard(); save(); });
+  });
+}
+function renderTabs(){
+  const host=document.getElementById('tabs'); host.innerHTML='';
+  COURSES.forEach(c=>{
+    const b=document.createElement('button');
+    b.className='tab'+(c.id===active?' active':'');
+    b.innerHTML=`${c.short}<small>par ${c.par}${c.id==='carn'?' *':''}</small>`;
+    b.addEventListener('click',()=>{ active=c.id; renderTabs(); renderBoard(); save(); });
+    host.appendChild(b);
+  });
+}
+function renderBoard(){
+  const c=COURSES.find(x=>x.id===active);
+  const host=document.getElementById('board');
+  const alw=allowance[c.id];
+  const teeOpts = teeName => c.tees.map(t=>
+    `<option value="${t.name}" ${t.name===teeName?'selected':''}>${t.name} — ${t.cr}/${t.sl}${t.par!=null&&t.par!==c.par?' · par '+t.par:''}</option>`).join('');
+
+  let head=`
+    <div class="board-top">
+      <div>
+        <div class="course-name">${c.name}</div>
+        <div class="course-meta">Par ${c.par} · ${c.tees.length} tees · CR/Slope shown per tee</div>
+      </div>
+      <div class="controls">
+        <div class="ctl"><label>Set all tees</label>
+          <select id="allTees"><option value="">— choose —</option>
+            ${c.tees.map(t=>`<option value="${t.name}">${t.name}</option>`).join('')}
+          </select></div>
+        <div class="ctl"><label>Comp allowance</label>
+          <select id="alw">${ALLOWANCES.map(a=>`<option value="${a.v}" ${a.v===alw?'selected':''}>${a.label}</option>`).join('')}</select></div>
+      </div>
+    </div>`;
+  if(c.note) head+=`<div class="flag"><b>Heads up:</b> ${c.note}</div>`;
+
+  let body;
+  if(players.length===0){
+    body=`<div class="foot" style="padding:34px 0;justify-content:center">No players. Add some above.</div>`;
+  } else {
+    const rows=players.map(p=>{
+      const teeName=teeFor(c,p.id); const t=teeObj(c,teeName);
+      const parUsed=(t.par!=null)?t.par:c.par;
+      const idxNum=(p.index===''||p.index==null||isNaN(p.index))?null:Number(p.index);
+      let chCell, phCell;
+      if(idxNum===null){
+        chCell=`<span class="tbd">TBD</span>`; phCell=`<span class="tbd">TBD</span>`;
+      }else{
+        const ch=courseHcp(idxNum,c,t);
+        const chB=fmt(ch), phB=fmt(Math.round(ch)*alw);
+        chCell=`<div class="big${chB.startsWith('+')?' plus':''}">${chB}</div><div class="raw">${ch.toFixed(1)}</div>`;
+        phCell=`<div class="big${phB.startsWith('+')?' plus':''}">${phB}</div>`;
+      }
+      return `<tr>
+        <td><div class="card-line"><span class="k">Player</span>
+          <div><div class="p-name">${escapeHtml(p.name)||'unnamed'}</div>
+          <div class="p-idx">HI ${idxNum!==null?idxNum.toFixed(1):'—'}</div></div></div></td>
+        <td class="tee-sel"><div class="card-line"><span class="k">Tee</span>
+          <select data-id="${p.id}">${teeOpts(teeName)}</select></div></td>
+        <td class="rs"><div class="card-line"><span class="k">CR / Slope / Par</span><span>${t.cr} / ${t.sl} / ${parUsed}</span></div></td>
+        <td class="chcp"><div class="card-line"><span class="k">Course HCP</span><div>${chCell}</div></div></td>
+        <td class="phcp"><div class="card-line"><span class="k">Playing HCP</span><div>${phCell}</div></div></td>
+      </tr>`;
+    }).join('');
+    body=`<table class="rt"><thead><tr>
+        <th>Player</th><th>Tee</th><th class="num">CR / Slope / Par</th>
+        <th class="num">Course HCP</th><th class="num">Playing HCP</th></tr></thead>
+      <tbody>${rows}</tbody></table>`;
+  }
+  host.innerHTML=head+body;
+
+  const allSel=document.getElementById('allTees');
+  if(allSel) allSel.addEventListener('change',e=>{ if(e.target.value){ players.forEach(p=>teeChoice[c.id][p.id]=e.target.value); renderBoard(); save(); }});
+  const alwSel=document.getElementById('alw');
+  if(alwSel) alwSel.addEventListener('change',e=>{ allowance[c.id]=parseFloat(e.target.value); renderBoard(); save(); });
+  host.querySelectorAll('.tee-sel select').forEach(sel=>{
+    sel.addEventListener('change',e=>{ teeChoice[c.id][e.target.dataset.id]=e.target.value; renderBoard(); save(); });
+  });
+}
+
+// ---------- Actions ----------
+document.getElementById('addBtn').addEventListener('click',()=>{ players.push({id:newId(),name:'',index:''}); renderRoster(); renderBoard(); save(); });
+document.getElementById('resetBtn').addEventListener('click',()=>{ if(confirm('Reset roster and tee choices to the original eight?')){ freshDefaults(); renderRoster(); renderTabs(); renderBoard(); save(); }});
+
+// ---------- Init ----------
+freshDefaults();
+load();               // overrides defaults if saved state exists on this device
+renderRoster(); renderTabs(); renderBoard();
+</script>
+</body>
+</html>
