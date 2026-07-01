@@ -12,7 +12,6 @@
     --paper:#e7eee7; --card:#f5f8f3; --ink:#182823; --ink-soft:#4d5c56;
     --ink-faint:#8a968f; --rule:#ccd6cd; --rule-soft:#dde4dc;
     --gorse:#e3a81f; --gorse-deep:#a9790c; --sea:#2f6b63; --danger:#b4472e;
-    --teamA:#2f6b63; --teamB:#b4472e;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{-webkit-text-size-adjust:100%}
@@ -30,11 +29,8 @@
     text-transform:uppercase;color:var(--sea);margin-top:6px}
   h1{font-family:'Space Grotesk',sans-serif;font-weight:700;
     font-size:clamp(28px,5.4vw,44px);line-height:1.02;letter-spacing:-.01em;margin:6px 0 4px}
-  .sub{font-size:14px;color:var(--ink-soft);max-width:62ch}
+  .sub{font-size:14px;color:var(--ink-soft);max-width:64ch}
   .sub b{color:var(--ink);font-weight:600}
-  .formula{margin-top:14px;padding:9px 12px;border:1px dashed var(--rule);background:var(--paper);
-    font-family:'Space Mono',monospace;font-size:12.5px;color:var(--ink-soft);border-radius:3px}
-  .formula b{color:var(--gorse-deep)}
 
   /* ---- top-level app tabs ---- */
   .apptabs{display:flex;gap:0;border:2px solid var(--ink);border-top:none;background:var(--ink)}
@@ -88,6 +84,9 @@
   .tab.active{background:var(--gorse);color:var(--ink)}
   .tab.active small{opacity:.85}
   .board{border:2px solid var(--ink);border-top:none;background:var(--card);padding:20px 24px 24px}
+  .formula{margin:0;border:2px solid var(--ink);border-top:none;background:var(--paper);
+    font-family:'Space Mono',monospace;font-size:12.5px;color:var(--ink-soft);padding:9px 24px}
+  .formula b{color:var(--gorse-deep)}
   .board-top{display:flex;flex-wrap:wrap;gap:14px 24px;align-items:flex-end;justify-content:space-between;
     padding-bottom:16px;border-bottom:1px solid var(--rule);margin-bottom:4px}
   .course-name{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;letter-spacing:-.01em}
@@ -121,76 +120,73 @@
 
   /* ---- competition ---- */
   .comp{border:2px solid var(--ink);border-top:none;background:var(--card);padding:0}
-  .scoreboard{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;
-    padding:22px 24px;border-bottom:1px solid var(--rule);background:var(--paper)}
-  .sb-team{display:flex;flex-direction:column;gap:4px}
-  .sb-team.b{align-items:flex-end;text-align:right}
-  .sb-name{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;display:flex;align-items:center;gap:8px}
-  .sb-name .dotc{width:11px;height:11px;border-radius:50%;flex:none}
-  .sb-team.b .sb-name{flex-direction:row-reverse}
-  .sb-score{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:44px;line-height:1}
-  .sb-mid{font-family:'Space Mono',monospace;font-size:11px;color:var(--ink-faint);text-align:center;
-    letter-spacing:.06em;text-transform:uppercase}
-  .sb-mid .vs{font-size:14px;color:var(--ink-soft);display:block;margin:2px 0}
-  .sb-status{grid-column:1/-1;text-align:center;font-family:'Space Mono',monospace;font-size:12px;
-    color:var(--sea);margin-top:6px;font-weight:700}
-  .sb-status.won{color:var(--gorse-deep)}
-  .barwrap{grid-column:1/-1;height:8px;border-radius:4px;background:var(--rule);overflow:hidden;
-    margin-top:12px;display:flex}
-  .barwrap .ba{background:var(--teamA)}
-  .barwrap .bb{background:var(--teamB)}
-  .barwrap .bh{background:var(--ink-faint)}
-
   .csection{padding:18px 24px 4px}
   .csection h3{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;margin-bottom:2px}
   .csection .csub{font-size:12.5px;color:var(--ink-faint);margin-bottom:14px}
-  .divide{border-top:1px solid var(--rule);margin:8px 0 0}
+  .divide{border-top:1px solid var(--rule);margin:10px 0 0}
 
-  .teamgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:6px}
-  .teamcol{border:1px solid var(--rule);border-radius:6px;background:var(--paper);padding:12px}
-  .teamcol h4{font-family:'Space Grotesk',sans-serif;font-size:13px;display:flex;align-items:center;gap:7px;margin-bottom:9px}
-  .teamcol .cnt{font-family:'Space Mono',monospace;font-size:11px;color:var(--ink-faint);font-weight:400}
-  .teamcol .nameinput{border:none;border-bottom:1px dashed var(--rule);background:transparent;border-radius:0;
-    font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;padding:2px 0;width:auto;flex:1}
-  .teamcol .nameinput:focus{box-shadow:none;border-bottom-color:var(--sea)}
-  .assign-row{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:13.5px}
-  .assign-row .an{flex:1;font-weight:500}
-  .assign-row select{width:auto;min-width:96px;padding:5px 8px;font-size:12.5px}
-  .pill{font-family:'Space Mono',monospace;font-size:10px;padding:2px 7px;border-radius:20px;
-    border:1px solid var(--rule);color:var(--ink-faint)}
+  /* pairs setup */
+  .pairgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .paircard{border:1px solid var(--rule);border-radius:7px;background:var(--paper);padding:11px 13px}
+  .paircard h4{font-family:'Space Grotesk',sans-serif;font-size:13px;display:flex;align-items:center;gap:7px;margin-bottom:9px}
+  .paircard .dotc{width:11px;height:11px;border-radius:50%;flex:none}
+  .paircard .prow{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+  .paircard .prow:last-child{margin-bottom:0}
+  .paircard select{font-size:12.5px;padding:6px 8px}
 
-  .sesspick{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
-  .matchcard{border:1px solid var(--rule);border-radius:7px;background:var(--paper);padding:12px 14px;margin-bottom:10px}
-  .matchcard .mc-top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
-  .matchcard .mc-sess{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;
-    color:var(--sea);font-weight:700}
-  .mc-body{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center}
-  .mc-side{display:flex;flex-direction:column;gap:6px}
-  .mc-side.b{align-items:stretch}
-  .mc-side select{font-size:12.5px;padding:6px 8px}
-  .mc-result{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:96px}
-  .mc-result .seg{display:flex;border:1px solid var(--rule);border-radius:5px;overflow:hidden}
-  .mc-result .seg button{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:12px;border:none;
-    background:var(--card);color:var(--ink-soft);padding:6px 9px;cursor:pointer;border-right:1px solid var(--rule)}
-  .mc-result .seg button:last-child{border-right:none}
-  .mc-result .seg button.on-a{background:var(--teamA);color:#fff}
-  .mc-result .seg button.on-b{background:var(--teamB);color:#fff}
-  .mc-result .seg button.on-h{background:var(--ink-faint);color:#fff}
-  .mc-result .pts{font-family:'Space Mono',monospace;font-size:10px;color:var(--ink-faint)}
-  .emptyc{padding:20px 0;text-align:center;color:var(--ink-faint);font-size:13px}
+  /* round tabs */
+  .rtabs{display:flex;border:1px solid var(--rule);border-radius:7px;overflow:hidden;margin-bottom:14px;background:var(--paper)}
+  .rtab{flex:1 1 0;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:12px;color:var(--ink-soft);
+    background:var(--paper);border:none;border-right:1px solid var(--rule);cursor:pointer;padding:9px 6px;line-height:1.2;
+    text-align:center;transition:background .12s,color .12s}
+  .rtab:last-child{border-right:none}
+  .rtab small{display:block;font-family:'Space Mono',monospace;font-weight:400;font-size:9px;opacity:.7;margin-top:2px}
+  .rtab.active{background:var(--sea);color:#fff}
+  .rtab.done{color:var(--gorse-deep)}
+  .rtab.active.done{color:#fff}
 
-  .lb{width:100%;border-collapse:collapse;margin-top:6px}
+  .round-top{display:flex;flex-wrap:wrap;gap:12px 18px;align-items:flex-end;justify-content:space-between;margin-bottom:6px}
+  .round-name{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700}
+  .round-meta{font-family:'Space Mono',monospace;font-size:11.5px;color:var(--ink-soft);margin-top:2px}
+  .fmt-toggle{display:flex;border:1px solid var(--rule);border-radius:6px;overflow:hidden}
+  .fmt-toggle button{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:12px;border:none;
+    background:var(--paper);color:var(--ink-soft);padding:8px 12px;cursor:pointer;border-right:1px solid var(--rule)}
+  .fmt-toggle button:last-child{border-right:none}
+  .fmt-toggle button.on{background:var(--gorse);color:var(--ink)}
+  .shufrow{display:flex;gap:8px;align-items:center;margin:4px 0 12px}
+  .shufbadge{font-family:'Space Mono',monospace;font-size:10px;padding:3px 8px;border-radius:20px;
+    background:var(--gorse);color:var(--ink);font-weight:700}
+
+  .scoregrid{margin-top:6px}
+  .sgpair{border:1px solid var(--rule);border-radius:7px;background:var(--paper);padding:10px 12px;margin-bottom:10px}
+  .sgpair .sgp-top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px}
+  .sgpair .sgp-name{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13.5px;display:flex;align-items:center;gap:7px}
+  .sgpair .sgp-name .dotc{width:10px;height:10px;border-radius:50%}
+  .sgpair .sgp-res{font-family:'Space Mono',monospace;font-size:11px;color:var(--ink-soft);text-align:right}
+  .sgpair .sgp-res b{font-family:'Space Grotesk',sans-serif;font-size:15px;color:var(--ink)}
+  .sgp-players{display:grid;grid-template-columns:1fr auto auto;gap:6px 10px;align-items:center}
+  .sgp-players .nm{font-size:13px;font-weight:500}
+  .sgp-players .grossin{width:74px}
+  .sgp-players .netcell{font-family:'Space Mono',monospace;font-size:11.5px;color:var(--ink-faint);white-space:nowrap;min-width:104px;text-align:right}
+  .sgp-players .netcell b{color:var(--sea);font-family:'Space Grotesk',sans-serif;font-size:14px}
+
+  /* leaderboards */
+  .lb{width:100%;border-collapse:collapse;margin-top:4px}
   .lb th{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;
     color:var(--ink-faint);text-align:left;padding:0 10px 8px;border-bottom:1.5px solid var(--ink);font-weight:700}
   .lb th.num,.lb td.num{text-align:center}
   .lb td{padding:9px 10px;border-bottom:1px solid var(--rule-soft);font-size:13.5px}
   .lb tbody tr:last-child td{border-bottom:none}
+  .lb .rk{font-family:'Space Mono',monospace;color:var(--ink-faint);width:26px}
+  .lb .lead{background:rgba(227,168,31,.13)}
   .lb .lb-pts{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:15px}
   .lb .teamtag{font-family:'Space Mono',monospace;font-size:10px;padding:2px 7px;border-radius:20px;color:#fff}
+  .lb .netbig{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:15px}
+  .emptyc{padding:18px 0;text-align:center;color:var(--ink-faint);font-size:13px}
 
   @media (max-width:640px){
     body{padding:18px 10px 50px;background-size:100% 30px}
-    .mast,.panel-head,.roster,.board,.csection,.scoreboard{padding-left:16px;padding-right:16px}
+    .mast,.panel-head,.roster,.board,.csection,.formula{padding-left:16px;padding-right:16px}
     .roster-row{grid-template-columns:1fr 82px 34px}
     .rt thead{display:none}
     .rt tbody td{display:block;border:none;padding:3px 0}
@@ -198,10 +194,8 @@
     .rt tbody tr:last-child{border-bottom:none}
     .card-line{display:flex;justify-content:space-between;align-items:center;gap:12px}
     .card-line .k{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint)}
-    .teamgrid{grid-template-columns:1fr}
-    .mc-body{grid-template-columns:1fr;gap:12px}
-    .mc-result{flex-direction:row;justify-content:space-between;min-width:0}
-    .sb-score{font-size:36px}
+    .pairgrid{grid-template-columns:1fr}
+    .rtab small{display:none}
   }
   @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -212,12 +206,12 @@
   <header class="mast">
     <div class="eyebrow">Scotland Golf Tour · Fife &amp; Angus</div>
     <h1>Fife &amp; Angus Golf Tour</h1>
-    <p class="sub">Two tools, one trip. The <b>Handicap Calculator</b> works out course &amp; playing handicaps for every course; the <b>Competition</b> tab runs a Ryder&nbsp;Cup–style team match with a live leaderboard. Everything saves to this device.</p>
+    <p class="sub">Two tools, one trip. The <b>Handicap Calculator</b> works out course &amp; playing handicaps for every course; the <b>Competition</b> tab runs a 4‑pairs match over 5 rounds with a live team cup <em>and</em> an individual net leaderboard. Everything saves to this device.</p>
   </header>
 
   <nav class="apptabs">
     <button class="apptab active" data-app="hcp">Handicap Calculator<small>course &amp; playing HCP</small></button>
-    <button class="apptab" data-app="comp">Competition<small>Ryder Cup · leaderboard</small></button>
+    <button class="apptab" data-app="comp">Competition<small>pairs cup + net leaderboard</small></button>
   </nav>
 
   <!-- ============ HANDICAP CALCULATOR VIEW ============ -->
@@ -237,7 +231,7 @@
       </div>
     </section>
 
-    <div class="formula" style="margin:0;border-top:none;border-radius:0;border:2px solid var(--ink);border-top:none">Course HCP = Index × (Slope ÷ 113) + (Course Rating − Par) → rounded. <b>Playing HCP</b> applies your comp allowance.</div>
+    <div class="formula">Course HCP = Index × (Slope ÷ 113) + (Course Rating − Par) → rounded. <b>Playing HCP</b> applies your comp allowance.</div>
 
     <nav class="tabs" id="tabs"></nav>
     <section class="board" id="board"></section>
@@ -251,30 +245,34 @@
   <!-- ============ COMPETITION VIEW ============ -->
   <div class="view" id="view-comp">
     <section class="comp">
-      <div class="scoreboard" id="scoreboard"></div>
 
       <div class="csection">
-        <h3>Teams</h3>
-        <div class="csub">Assign every player to a side. Tap a team name to rename it.</div>
-        <div id="teamSetup"></div>
+        <h3>Pairs Cup — standings</h3>
+        <div class="csub">Cumulative points across all counting rounds. Win a round on points; most points takes the cup.</div>
+        <div id="cupBoard"></div>
         <div class="divide"></div>
       </div>
 
       <div class="csection">
-        <h3>Matches</h3>
-        <div class="csub">Add a match for a session, pick the players, then set the result. Points roll straight up to the scoreboard.</div>
-        <div class="sesspick">
-          <select id="sessSelect" style="max-width:180px"></select>
-          <button class="btn sm" id="addMatchBtn">+ Add match</button>
-        </div>
-        <div id="matchList"></div>
+        <h3>The Pairs</h3>
+        <div class="csub">Four standing pairs for the trip. Swap a player if someone drops in or out.</div>
+        <div id="pairSetup"></div>
         <div class="divide"></div>
       </div>
 
       <div class="csection">
-        <h3>Player leaderboard</h3>
-        <div class="csub">Points won across every match — win = 1, halved = ½.</div>
-        <div id="playerBoard"></div>
+        <h3>Rounds &amp; scoring</h3>
+        <div class="csub">Pick a round, choose Better Ball or Aggregate, enter each player's gross. Net = gross − that round's Course Handicap.</div>
+        <div class="rtabs" id="roundTabs"></div>
+        <div id="roundPanel"></div>
+        <div class="divide"></div>
+      </div>
+
+      <div class="csection">
+        <h3>Individual net leaderboard</h3>
+        <div class="csub">Every player ranked by cumulative net across all rounds played.</div>
+        <div id="indivBoard"></div>
+        <div class="divide"></div>
       </div>
 
       <div class="csection" style="padding-bottom:20px">
@@ -287,7 +285,7 @@
 
     <div class="foot">
       <span class="dot">▪</span>
-      <span>Classic match-play scoring: each match is worth 1 point (½ each if halved). Foursomes = alternate shot, Fourballs = best ball, Singles = 1‑v‑1. A team needs more than half the available points to win the cup outright; an even split retains it.</span>
+      <span><b>Better Ball</b> = the pair takes the lower of the two partners' net scores. <b>Aggregate</b> = both net scores added. Each round the four pairs are ranked and earn <b>3 / 2 / 1 / 0</b> points (ties share). Use <b>Shuffle pairings</b> on one round for a wildcard — a shuffled round scores for the individual leaderboard but sits out of the Pairs Cup.</span>
     </div>
   </div>
 
@@ -334,66 +332,73 @@ const ALLOWANCES = [
 ];
 
 const SEED_PLAYERS = [
-  {id:'p1', name:'Brett',        index:0,    team:'a'},
-  {id:'p2', name:"Bruce",        index:11.7, team:'a'},
-  {id:'p3', name:'Kyle',         index:16,   team:'a'},
-  {id:'p4', name:"Ron",          index:18,   team:'a'},
-  {id:'p5', name:'Wasik',        index:15.7, team:'b'},
-  {id:'p6', name:'Mike',         index:5,    team:'b'},
-  {id:'p7', name:'Justin',       index:9.7,  team:'b'},
-  {id:'p8', name:'Robert',       index:16,   team:'b'},
+  {id:'p1', name:'Brett',  index:0},
+  {id:'p2', name:'Bruce',  index:11.7},
+  {id:'p3', name:'Kyle',   index:16},
+  {id:'p4', name:'Ron',    index:18},
+  {id:'p5', name:'Andrew', index:''},
+  {id:'p6', name:'Mike',   index:5},
+  {id:'p7', name:'Justin', index:9.7},
+  {id:'p8', name:'Robert', index:16},
 ];
-
-const SESSIONS = [
-  {id:'foursomes', name:'Foursomes',  per:2, blurb:'alternate shot'},
-  {id:'fourballs', name:'Fourballs',  per:2, blurb:'best ball'},
-  {id:'singles',   name:'Singles',    per:1, blurb:'1‑v‑1'},
+// standing pairs (by player id)
+const SEED_PAIRS = [
+  {id:'t1', players:['p8','p7']}, // Robert & Justin
+  {id:'t2', players:['p1','p2']}, // Brett & Bruce
+  {id:'t3', players:['p3','p4']}, // Kyle & Ron
+  {id:'t4', players:['p5','p6']}, // Andrew & Mike
 ];
-const sessionById = id => SESSIONS.find(s=>s.id===id) || SESSIONS[0];
+const PAIR_COLORS = ['#2f6b63','#b4472e','#a9790c','#3f6b8f'];
+const ROUND_POINTS = [3,2,1,0];
+const FORMATS = {betterball:'Better Ball', aggregate:'Aggregate'};
 
-const LS_KEY = 'fife-hcp-v3';
+const LS_KEY = 'fife-hcp-v4';
 
 // ---------- State ----------
 let players = [];
-let active = 'kings';
+let active = 'kings';         // handicap-tab active course
 let teeChoice = {};
 let allowance = {};
-let teams = {a:{name:'Fife'}, b:{name:'Angus'}};
-let matches = [];
+let pairs = [];               // standing pairs
+let rounds = {};              // rounds[courseId] = {format, scores:{pid:gross}, pairings:null|[[pid,pid]...]}
+let compRound = 'kings';      // competition-tab active round
 let appTab = 'hcp';
-let uid = 0, mid = 0;
+let uid = 0;
 const newId = () => 'p' + (++uid);
-const newMid = () => 'm' + (++mid);
 
+function freshRounds(){
+  rounds = {};
+  COURSES.forEach(c => { rounds[c.id] = {format:'betterball', scores:{}, pairings:null}; });
+}
 function freshDefaults(){
   players = SEED_PLAYERS.map(p => ({...p}));
-  active = 'kings';
+  active = 'kings'; compRound = 'kings';
   teeChoice = {}; allowance = {};
   COURSES.forEach(c => { teeChoice[c.id] = {}; allowance[c.id] = 1.00; });
-  teams = {a:{name:'Fife'}, b:{name:'Angus'}};
-  matches = [];
-  uid = players.length; mid = 0;
+  pairs = SEED_PAIRS.map(p => ({id:p.id, players:[...p.players]}));
+  freshRounds();
+  uid = players.length;
 }
 function freshComp(){
-  teams = {a:{name:'Fife'}, b:{name:'Angus'}};
-  matches = [];
-  players.forEach((p,i)=>{ p.team = i < players.length/2 ? 'a' : 'b'; });
-  mid = 0;
+  pairs = SEED_PAIRS.map(p => ({id:p.id, players:[...p.players]}));
+  freshRounds();
+  compRound = 'kings';
 }
 function ensureShape(){
   COURSES.forEach(c => {
     if(!teeChoice[c.id]) teeChoice[c.id] = {};
     if(allowance[c.id] == null) allowance[c.id] = 1.00;
+    if(!rounds[c.id]) rounds[c.id] = {format:'betterball', scores:{}, pairings:null};
+    if(!rounds[c.id].scores) rounds[c.id].scores = {};
+    if(rounds[c.id].format==null) rounds[c.id].format='betterball';
+    if(rounds[c.id].pairings===undefined) rounds[c.id].pairings=null;
   });
-  if(!teams || !teams.a || !teams.b) teams = {a:{name:'Fife'}, b:{name:'Angus'}};
-  if(!Array.isArray(matches)) matches = [];
-  players.forEach(p=>{ if(p.team!=='a' && p.team!=='b') p.team=null; });
+  if(!Array.isArray(pairs) || pairs.length===0) pairs = SEED_PAIRS.map(p => ({id:p.id, players:[...p.players]}));
   uid = players.reduce((m,p)=>{ const n=parseInt(String(p.id).slice(1)); return isNaN(n)?m:Math.max(m,n); }, players.length);
-  mid = matches.reduce((m,x)=>{ const n=parseInt(String(x.id).slice(1)); return isNaN(n)?m:Math.max(m,n); }, 0);
 }
 function save(which){
   try{
-    localStorage.setItem(LS_KEY, JSON.stringify({players, teeChoice, allowance, active, teams, matches, appTab}));
+    localStorage.setItem(LS_KEY, JSON.stringify({players, teeChoice, allowance, active, pairs, rounds, compRound, appTab}));
     const t = document.getElementById(which==='comp'?'savedTagC':'savedTag');
     if(t){ t.classList.add('show'); clearTimeout(window.__st); window.__st = setTimeout(()=>t.classList.remove('show'),1100); }
   }catch(e){/* preview sandbox — persistence resumes once hosted */}
@@ -405,15 +410,19 @@ function load(){
     const d = JSON.parse(s);
     if(!d || !Array.isArray(d.players)) return false;
     players = d.players; teeChoice = d.teeChoice||{}; allowance = d.allowance||{}; active = d.active||'kings';
-    teams = d.teams || {a:{name:'Fife'}, b:{name:'Angus'}};
-    matches = d.matches || [];
+    pairs = d.pairs || SEED_PAIRS.map(p => ({id:p.id, players:[...p.players]}));
+    rounds = d.rounds || {};
+    compRound = d.compRound || 'kings';
     appTab = d.appTab || 'hcp';
     ensureShape();
     return true;
   }catch(e){ return false; }
 }
 
-// ---------- Calc (handicaps) ----------
+// ---------- Helpers ----------
+const courseById = id => COURSES.find(c=>c.id===id) || COURSES[0];
+const playerById = id => players.find(p=>p.id===id);
+const playerName = id => { const p=playerById(id); return p ? (p.name||'unnamed') : '—'; };
 const teeFor = (course,pid) => teeChoice[course.id][pid] || course.def;
 const teeObj = (course,name) => course.tees.find(t=>t.name===name) || course.tees[0];
 function courseHcp(index,course,tee){
@@ -422,31 +431,67 @@ function courseHcp(index,course,tee){
 }
 const fmt = n => { const r=Math.round(n); return r<0 ? '+'+Math.abs(r) : String(r); };
 const escapeHtml = s => String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-const half = n => (n%1===0) ? String(n) : (Math.floor(n)>0?Math.floor(n)+'½':'½');
-const playerById = id => players.find(p=>p.id===id);
-const playerName = id => { const p=playerById(id); return p ? (p.name||'unnamed') : '—'; };
+const half = n => { const v=Math.round(n*2)/2; return (v%1===0) ? String(v) : (Math.floor(v)>0?Math.floor(v)+'½':'½'); };
+const pairName = pr => pr.players.map(playerName).join(' & ');
+const pairColor = i => PAIR_COLORS[i % PAIR_COLORS.length];
 
-// ---------- Competition scoring ----------
-function matchPoints(m){ // returns {a, b} points for this match, or null if unplayed
-  if(m.result==='a') return {a:1, b:0};
-  if(m.result==='b') return {a:0, b:1};
-  if(m.result==='half') return {a:0.5, b:0.5};
-  return null;
+// ---------- Net / scoring ----------
+function roundCourseHcp(pid, course){
+  const p=playerById(pid); if(!p) return null;
+  const idx=(p.index===''||p.index==null||isNaN(p.index))?null:Number(p.index);
+  if(idx==null) return null;
+  const tee=teeObj(course, teeFor(course,pid));
+  return Math.round(courseHcp(idx, course, tee));
 }
-function teamTotals(){
-  let a=0, b=0, decided=0;
-  matches.forEach(m=>{ const p=matchPoints(m); if(p){ a+=p.a; b+=p.b; decided++; } });
-  return {a, b, decided, total:matches.length};
+function playerNet(pid, course){
+  const g = rounds[course.id].scores[pid];
+  if(g==null || g==='' || isNaN(g)) return null;
+  const ch = roundCourseHcp(pid, course);
+  if(ch==null) return {gross:Number(g), ch:null, net:null}; // gross but no HI
+  return {gross:Number(g), ch, net:Number(g)-ch};
 }
-function playerPoints(){
-  const map = {};
-  players.forEach(p=>{ map[p.id]={pts:0, played:0}; });
-  matches.forEach(m=>{
-    const p=matchPoints(m); if(!p) return;
-    (m.a||[]).forEach(pid=>{ if(map[pid]){ map[pid].pts+=p.a; map[pid].played++; } });
-    (m.b||[]).forEach(pid=>{ if(map[pid]){ map[pid].pts+=p.b; map[pid].played++; } });
+function pairScore(playerIds, course, format){
+  const nets = playerIds.map(pid=>{ const n=playerNet(pid,course); return n?n.net:null; });
+  if(nets.some(n=>n==null)) return null;
+  return format==='aggregate' ? nets.reduce((a,b)=>a+b,0) : Math.min(...nets);
+}
+const isShuffled = cid => Array.isArray(rounds[cid].pairings);
+const pairingsForRound = cid => isShuffled(cid) ? rounds[cid].pairings : pairs.map(p=>p.players);
+
+// rank pairings in a round, assign 3/2/1/0 with tie-averaging
+function roundResult(cid){
+  const c=courseById(cid); const rd=rounds[cid];
+  const entries = pairingsForRound(cid).map((pl,i)=>({players:pl, idx:i, score:pairScore(pl,c,rd.format), points:null}));
+  const scored = entries.filter(e=>e.score!=null).sort((a,b)=>a.score-b.score);
+  let i=0;
+  while(i<scored.length){
+    let j=i; while(j+1<scored.length && scored[j+1].score===scored[i].score) j++;
+    let sum=0; for(let k=i;k<=j;k++) sum += (ROUND_POINTS[k]!=null?ROUND_POINTS[k]:0);
+    const avg=sum/(j-i+1);
+    for(let k=i;k<=j;k++) scored[k].points=avg;
+    i=j+1;
+  }
+  entries.forEach(e=>{ if(e.score!=null && e.points==null) e.points=0; });
+  return entries;
+}
+function cupStandings(){
+  const totals = pairs.map((p,i)=>({pair:p, colorIdx:i, points:0, rounds:0}));
+  COURSES.forEach(c=>{
+    if(isShuffled(c.id)) return;                 // wildcard rounds sit out of the cup
+    const res = roundResult(c.id);
+    res.forEach((e,i)=>{ if(e.points!=null && totals[i]){ totals[i].points+=e.points; totals[i].rounds++; } });
   });
-  return map;
+  return totals.slice().sort((a,b)=> b.points-a.points || b.rounds-a.rounds);
+}
+function indivStandings(){
+  return players.map(p=>{
+    let net=0, gross=0, played=0, missingHI=false;
+    COURSES.forEach(c=>{
+      const n=playerNet(p.id,c);
+      if(n){ if(n.net==null){ missingHI=true; } else { net+=n.net; gross+=n.gross; played++; } }
+    });
+    return {p, net, gross, played, missingHI};
+  }).filter(x=>x.played>0 || x.missingHI).sort((a,b)=> a.net-b.net);
 }
 
 // ---------- Render: handicap calculator ----------
@@ -467,15 +512,17 @@ function renderRoster(){
     inp.addEventListener('input',e=>{
       const p=players.find(x=>x.id===e.target.dataset.id); if(!p)return;
       if(e.target.dataset.f==='name'){ p.name=e.target.value; renderComp(); }
-      else p.index = e.target.value==='' ? '' : parseFloat(e.target.value);
+      else { p.index = e.target.value==='' ? '' : parseFloat(e.target.value); renderComp(); }
       renderBoard(); save();
     });
   });
   host.querySelectorAll('[data-del]').forEach(b=>{
     b.addEventListener('click',()=>{
-      players=players.filter(x=>x.id!==b.dataset.del);
-      // drop the removed player from any match
-      matches.forEach(m=>{ m.a=(m.a||[]).filter(id=>id!==b.dataset.del); m.b=(m.b||[]).filter(id=>id!==b.dataset.del); });
+      const did=b.dataset.del;
+      players=players.filter(x=>x.id!==did);
+      pairs.forEach(pr=>{ pr.players=pr.players.map(id=>id===did?null:id); });
+      COURSES.forEach(c=>{ if(rounds[c.id].scores[did]!=null) delete rounds[c.id].scores[did];
+        if(isShuffled(c.id)) rounds[c.id].pairings=rounds[c.id].pairings.map(pl=>pl.map(id=>id===did?null:id)); });
       renderRoster(); renderBoard(); renderComp(); save();
     });
   });
@@ -550,193 +597,184 @@ function renderBoard(){
   host.innerHTML=head+body;
 
   const allSel=document.getElementById('allTees');
-  if(allSel) allSel.addEventListener('change',e=>{ if(e.target.value){ players.forEach(p=>teeChoice[c.id][p.id]=e.target.value); renderBoard(); save(); }});
+  if(allSel) allSel.addEventListener('change',e=>{ if(e.target.value){ players.forEach(p=>teeChoice[c.id][p.id]=e.target.value); renderBoard(); renderComp(); save(); }});
   const alwSel=document.getElementById('alw');
   if(alwSel) alwSel.addEventListener('change',e=>{ allowance[c.id]=parseFloat(e.target.value); renderBoard(); save(); });
   host.querySelectorAll('.tee-sel select').forEach(sel=>{
-    sel.addEventListener('change',e=>{ teeChoice[c.id][e.target.dataset.id]=e.target.value; renderBoard(); save(); });
+    sel.addEventListener('change',e=>{ teeChoice[c.id][e.target.dataset.id]=e.target.value; renderBoard(); renderComp(); save(); });
   });
 }
 
 // ---------- Render: competition ----------
 function renderComp(){
-  renderScoreboard();
-  renderTeamSetup();
-  renderSessionPicker();
-  renderMatches();
-  renderPlayerBoard();
+  renderCupBoard();
+  renderPairSetup();
+  renderRoundTabs();
+  renderRoundPanel();
+  renderIndivBoard();
 }
 
-function renderScoreboard(){
-  const host=document.getElementById('scoreboard');
-  const {a,b,decided,total}=teamTotals();
-  const toWin = total>0 ? Math.floor(total/2)+ (total%2===0 ? 0.5 : 0.5) : 0; // >half
-  const need = total>0 ? (total/2 + 0.5) : 0;
-  let status;
-  if(total===0){ status='Add matches to start scoring'; }
-  else if(a>=need){ status=`${escapeHtml(teams.a.name)} win the cup 🏆`; }
-  else if(b>=need){ status=`${escapeHtml(teams.b.name)} win the cup 🏆`; }
-  else if(decided===total && a===b){ status='Cup halved — honours even'; }
-  else { status=`${half(need)} to win · ${decided}/${total} matches decided`; }
-  const won = a>=need || b>=need;
-
-  // progress bar widths
-  const aw = total? (a/total*100):0, bw = total? (b/total*100):0, hw = total? ((total-a-b)/total*100):100;
-
-  host.innerHTML=`
-    <div class="sb-team a">
-      <div class="sb-name"><span class="dotc" style="background:var(--teamA)"></span>${escapeHtml(teams.a.name)}</div>
-      <div class="sb-score" style="color:var(--teamA)">${half(a)}</div>
-    </div>
-    <div class="sb-mid">Match play<span class="vs">vs</span>${total?half(total)+' pts':'—'}</div>
-    <div class="sb-team b">
-      <div class="sb-name"><span class="dotc" style="background:var(--teamB)"></span>${escapeHtml(teams.b.name)}</div>
-      <div class="sb-score" style="color:var(--teamB)">${half(b)}</div>
-    </div>
-    <div class="barwrap"><div class="ba" style="width:${aw}%"></div><div class="bh" style="width:${hw}%"></div><div class="bb" style="width:${bw}%"></div></div>
-    <div class="sb-status${won?' won':''}">${status}</div>`;
+function renderCupBoard(){
+  const host=document.getElementById('cupBoard');
+  const st=cupStandings();
+  const anyPoints = st.some(s=>s.rounds>0);
+  host.innerHTML=`<table class="lb"><thead><tr>
+      <th class="rk">#</th><th>Pair</th><th class="num">Rounds</th><th class="num">Points</th></tr></thead>
+    <tbody>${st.map((s,i)=>{
+      const idx=pairs.indexOf(s.pair);
+      const lead = anyPoints && i===0 && s.points>0;
+      return `<tr class="${lead?'lead':''}">
+        <td class="rk">${i+1}</td>
+        <td><span class="teamtag" style="background:${pairColor(idx)}">${escapeHtml(pairName(s.pair))}</span></td>
+        <td class="num">${s.rounds}</td>
+        <td class="num lb-pts">${half(s.points)}</td></tr>`;
+    }).join('')}</tbody></table>`;
 }
 
-function renderTeamSetup(){
-  const host=document.getElementById('teamSetup');
-  const counts={a:0,b:0,none:0};
-  players.forEach(p=>{ counts[p.team||'none']++; });
-  const col = (side)=>{
-    const color = side==='a'?'var(--teamA)':'var(--teamB)';
-    const rostered = players.filter(p=>p.team===side);
-    const rows = rostered.length
-      ? rostered.map(p=>`<div class="assign-row"><span class="an">${escapeHtml(p.name)||'unnamed'}</span>
-          <select data-team-of="${p.id}">
-            <option value="a" ${p.team==='a'?'selected':''}>${escapeHtml(teams.a.name)}</option>
-            <option value="b" ${p.team==='b'?'selected':''}>${escapeHtml(teams.b.name)}</option>
-            <option value="" ${!p.team?'selected':''}>— none —</option>
-          </select></div>`).join('')
-      : `<div class="assign-row" style="color:var(--ink-faint)">No players yet</div>`;
-    return `<div class="teamcol">
-      <h4><span class="dotc" style="width:11px;height:11px;border-radius:50%;background:${color};display:inline-block"></span>
-        <input class="nameinput" data-team-name="${side}" value="${escapeHtml(teams[side].name)}" maxlength="24">
-        <span class="cnt">${rostered.length}</span></h4>
-      ${rows}</div>`;
-  };
-  let unassigned='';
-  const none=players.filter(p=>!p.team);
-  if(none.length){
-    unassigned=`<div class="teamcol" style="grid-column:1/-1;margin-top:2px">
-      <h4><span class="pill">Unassigned</span> <span class="cnt">${none.length}</span></h4>
-      ${none.map(p=>`<div class="assign-row"><span class="an">${escapeHtml(p.name)||'unnamed'}</span>
-        <select data-team-of="${p.id}">
-          <option value="" selected>— pick —</option>
-          <option value="a">${escapeHtml(teams.a.name)}</option>
-          <option value="b">${escapeHtml(teams.b.name)}</option>
-        </select></div>`).join('')}</div>`;
-  }
-  host.innerHTML=`<div class="teamgrid">${col('a')}${col('b')}</div>${unassigned}`;
-
-  host.querySelectorAll('[data-team-name]').forEach(inp=>{
-    inp.addEventListener('input',e=>{ teams[e.target.dataset.teamName].name=e.target.value; save('comp'); renderScoreboard(); renderMatches(); renderPlayerBoard();
-      // update the other-side option labels without losing focus
-      host.querySelectorAll('select[data-team-of] option[value="a"]').forEach(o=>o.textContent=teams.a.name);
-      host.querySelectorAll('select[data-team-of] option[value="b"]').forEach(o=>o.textContent=teams.b.name);
-    });
-  });
-  host.querySelectorAll('[data-team-of]').forEach(sel=>{
+function renderPairSetup(){
+  const host=document.getElementById('pairSetup');
+  const opts = (sel)=> `<option value="">— none —</option>`+players.map(p=>`<option value="${p.id}" ${p.id===sel?'selected':''}>${escapeHtml(p.name)||'unnamed'}</option>`).join('');
+  host.innerHTML=`<div class="pairgrid">${pairs.map((pr,i)=>`
+    <div class="paircard">
+      <h4><span class="dotc" style="background:${pairColor(i)}"></span>Pair ${i+1}</h4>
+      <div class="prow"><select data-pair="${pr.id}" data-slot="0">${opts(pr.players[0])}</select></div>
+      <div class="prow"><select data-pair="${pr.id}" data-slot="1">${opts(pr.players[1])}</select></div>
+    </div>`).join('')}</div>`;
+  host.querySelectorAll('select[data-pair]').forEach(sel=>{
     sel.addEventListener('change',e=>{
-      const p=playerById(e.target.dataset.teamOf); if(!p) return;
-      p.team = e.target.value || null;
+      const pr=pairs.find(x=>x.id===e.target.dataset.pair); if(!pr) return;
+      pr.players[+e.target.dataset.slot]=e.target.value||null;
       renderComp(); save('comp');
     });
   });
 }
 
-function renderSessionPicker(){
-  const sel=document.getElementById('sessSelect');
-  sel.innerHTML=SESSIONS.map(s=>`<option value="${s.id}">${s.name} — ${s.blurb} (${s.per}v${s.per})</option>`).join('');
+function renderRoundTabs(){
+  const host=document.getElementById('roundTabs'); host.innerHTML='';
+  COURSES.forEach((c,i)=>{
+    const res=roundResult(c.id);
+    const done=res.some(e=>e.points!=null);
+    const b=document.createElement('button');
+    b.className='rtab'+(c.id===compRound?' active':'')+(done?' done':'');
+    b.innerHTML=`R${i+1} · ${c.short}<small>${isShuffled(c.id)?'shuffled':FORMATS[rounds[c.id].format]}</small>`;
+    b.addEventListener('click',()=>{ compRound=c.id; renderRoundTabs(); renderRoundPanel(); save('comp'); });
+    host.appendChild(b);
+  });
 }
 
-function renderMatches(){
-  const host=document.getElementById('matchList');
-  if(matches.length===0){ host.innerHTML=`<div class="emptyc">No matches yet. Choose a session above and add one.</div>`; return; }
-  const teamA = players.filter(p=>p.team==='a');
-  const teamB = players.filter(p=>p.team==='b');
-  const slotSelect = (side, m, slotIdx)=>{
-    const pool = side==='a'?teamA:teamB;
-    const current = (m[side]||[])[slotIdx] || '';
-    const opts = `<option value="">— pick —</option>`+pool.map(p=>`<option value="${p.id}" ${p.id===current?'selected':''}>${escapeHtml(p.name)||'unnamed'}</option>`).join('');
-    return `<select data-match="${m.id}" data-side="${side}" data-slot="${slotIdx}">${opts}</select>`;
-  };
-  host.innerHTML=matches.map((m,i)=>{
-    const s=sessionById(m.session);
-    const aSlots=Array.from({length:s.per},(_,k)=>slotSelect('a',m,k)).join('');
-    const bSlots=Array.from({length:s.per},(_,k)=>slotSelect('b',m,k)).join('');
-    return `<div class="matchcard">
-      <div class="mc-top">
-        <span class="mc-sess">Match ${i+1} · ${s.name} <span style="color:var(--ink-faint)">(${s.blurb})</span></span>
-        <button class="btn-x" data-delmatch="${m.id}" title="Remove match" style="height:28px;width:28px;padding:0">×</button>
+function renderRoundPanel(){
+  const host=document.getElementById('roundPanel');
+  const c=courseById(compRound); const rd=rounds[c.id];
+  const shuffled=isShuffled(c.id);
+  const pairings=pairingsForRound(c.id);
+
+  let top=`<div class="round-top">
+    <div>
+      <div class="round-name">${c.name}</div>
+      <div class="round-meta">Par ${c.par} · net = gross − Course HCP (from the calculator tab)</div>
+    </div>
+    <div class="fmt-toggle">
+      ${Object.keys(FORMATS).map(f=>`<button data-fmt="${f}" class="${rd.format===f?'on':''}">${FORMATS[f]}</button>`).join('')}
+    </div>
+  </div>
+  <div class="shufrow">
+    <button class="btn ghost sm" id="shuffleBtn">${shuffled?'Re-shuffle pairings':'Shuffle pairings (wildcard)'}</button>
+    ${shuffled?`<button class="btn ghost sm" id="unshuffleBtn">Restore standing pairs</button><span class="shufbadge">Wildcard round — individual only</span>`:''}
+  </div>`;
+
+  const res=roundResult(c.id);
+  const cards=pairings.map((pl,i)=>{
+    const e=res[i];
+    const color = shuffled ? '#5a6b64' : pairColor(i);
+    const nmeRows=pl.map(pid=>{
+      if(!pid) return `<div class="nm" style="color:var(--ink-faint)">— empty —</div><div></div><div class="netcell"></div>`;
+      const g = rounds[c.id].scores[pid];
+      const n = playerNet(pid,c);
+      const ch = roundCourseHcp(pid,c);
+      const netTxt = n && n.net!=null ? `<b>${n.net}</b> net` : (ch==null?'<span style="color:var(--danger)">need HI</span>':'—');
+      const chTxt = ch!=null ? `CH ${ch}` : 'CH —';
+      return `<div class="nm">${escapeHtml(playerName(pid))}</div>
+        <input class="grossin" type="number" inputmode="numeric" placeholder="gross" value="${g==null?'':g}" data-score="${pid}">
+        <div class="netcell">${chTxt} · ${netTxt}</div>`;
+    }).join('');
+    const scoreTxt = e.score!=null ? `${e.score} ${rd.format==='aggregate'?'agg':'net'}` : 'incomplete';
+    const ptsTxt = e.points!=null ? `${half(e.points)} pt${e.points===1?'':'s'}` : '—';
+    return `<div class="sgpair">
+      <div class="sgp-top">
+        <div class="sgp-name"><span class="dotc" style="background:${color}"></span>${escapeHtml(pl.map(playerName).join(' & '))}</div>
+        <div class="sgp-res">${scoreTxt}<br><b>${ptsTxt}</b></div>
       </div>
-      <div class="mc-body">
-        <div class="mc-side a">${aSlots}</div>
-        <div class="mc-result">
-          <div class="seg">
-            <button data-res="${m.id}:a" class="${m.result==='a'?'on-a':''}" title="${escapeHtml(teams.a.name)} win">${escapeHtml(shortName(teams.a.name))}</button>
-            <button data-res="${m.id}:half" class="${m.result==='half'?'on-h':''}" title="Halved">½</button>
-            <button data-res="${m.id}:b" class="${m.result==='b'?'on-b':''}" title="${escapeHtml(teams.b.name)} win">${escapeHtml(shortName(teams.b.name))}</button>
-          </div>
-          <div class="pts">${resultLabel(m)}</div>
-        </div>
-        <div class="mc-side b">${bSlots}</div>
-      </div>
+      <div class="sgp-players">${nmeRows}</div>
     </div>`;
   }).join('');
 
-  host.querySelectorAll('select[data-match]').forEach(sel=>{
-    sel.addEventListener('change',e=>{
-      const {match,side,slot}=e.target.dataset;
-      const m=matches.find(x=>x.id===match); if(!m) return;
-      if(!Array.isArray(m[side])) m[side]=[];
-      m[side][+slot]=e.target.value||undefined;
-      m[side]=m[side].filter(v=>v!==undefined && v!=='');
-      save('comp'); renderPlayerBoard();
+  host.innerHTML=top+`<div class="scoregrid">${cards}</div>`;
+
+  host.querySelectorAll('[data-fmt]').forEach(b=>b.addEventListener('click',()=>{
+    rd.format=b.dataset.fmt; renderRoundTabs(); renderRoundPanel(); renderCupBoard(); save('comp');
+  }));
+  const sh=document.getElementById('shuffleBtn');
+  if(sh) sh.addEventListener('click',()=>{ rounds[c.id].pairings=shufflePairs(); renderComp(); save('comp'); });
+  const un=document.getElementById('unshuffleBtn');
+  if(un) un.addEventListener('click',()=>{ rounds[c.id].pairings=null; renderComp(); save('comp'); });
+  host.querySelectorAll('[data-score]').forEach(inp=>{
+    inp.addEventListener('input',e=>{
+      const pid=e.target.dataset.score;
+      const v=e.target.value;
+      if(v===''||v==null) delete rounds[c.id].scores[pid];
+      else rounds[c.id].scores[pid]=parseInt(v,10);
+      // live-update result line + boards without dropping focus
+      renderCupBoard(); renderIndivBoard(); renderRoundTabs();
+      updateRoundResultLines(c.id);
+      save('comp');
     });
   });
-  host.querySelectorAll('[data-res]').forEach(b=>{
-    b.addEventListener('click',()=>{
-      const [id,res]=b.dataset.res.split(':');
-      const m=matches.find(x=>x.id===id); if(!m) return;
-      m.result = (m.result===res)?null:res; // tap again to clear
-      renderScoreboard(); renderMatches(); renderPlayerBoard(); save('comp');
-    });
-  });
-  host.querySelectorAll('[data-delmatch]').forEach(b=>{
-    b.addEventListener('click',()=>{
-      matches=matches.filter(x=>x.id!==b.dataset.delmatch);
-      renderScoreboard(); renderMatches(); renderPlayerBoard(); save('comp');
-    });
-  });
-}
-function shortName(n){ return n.length>7 ? n.slice(0,7) : n; }
-function resultLabel(m){
-  if(m.result==='a') return teams.a.name+' +1';
-  if(m.result==='b') return teams.b.name+' +1';
-  if(m.result==='half') return 'halved · ½ each';
-  return 'not played';
 }
 
-function renderPlayerBoard(){
-  const host=document.getElementById('playerBoard');
-  const pp=playerPoints();
-  const rostered=players.filter(p=>p.team==='a'||p.team==='b');
-  if(rostered.length===0){ host.innerHTML=`<div class="emptyc">Assign players to teams to see the leaderboard.</div>`; return; }
-  const rows=rostered.map(p=>({p, ...pp[p.id]}))
-    .sort((x,y)=> y.pts-x.pts || y.played-x.played || x.p.name.localeCompare(y.p.name));
+// update just the per-pair score/points lines so typing doesn't lose focus
+function updateRoundResultLines(cid){
+  const c=courseById(cid); const rd=rounds[cid];
+  const res=roundResult(cid);
+  const host=document.getElementById('roundPanel');
+  host.querySelectorAll('.sgpair').forEach((card,i)=>{
+    const e=res[i]; if(!e) return;
+    const scoreTxt = e.score!=null ? `${e.score} ${rd.format==='aggregate'?'agg':'net'}` : 'incomplete';
+    const ptsTxt = e.points!=null ? `${half(e.points)} pt${e.points===1?'':'s'}` : '—';
+    const resEl=card.querySelector('.sgp-res');
+    if(resEl) resEl.innerHTML=`${scoreTxt}<br><b>${ptsTxt}</b>`;
+    // refresh net cells
+    const pids=pairingsForRound(cid)[i];
+    const netCells=card.querySelectorAll('.netcell');
+    pids.forEach((pid,k)=>{
+      if(!pid||!netCells[k]) return;
+      const n=playerNet(pid,c); const ch=roundCourseHcp(pid,c);
+      const netTxt = n && n.net!=null ? `<b>${n.net}</b> net` : (ch==null?'<span style="color:var(--danger)">need HI</span>':'—');
+      netCells[k].innerHTML=`${ch!=null?'CH '+ch:'CH —'} · ${netTxt}`;
+    });
+  });
+}
+
+function shufflePairs(){
+  const ids=pairs.flatMap(p=>p.players).filter(Boolean);
+  for(let i=ids.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [ids[i],ids[j]]=[ids[j],ids[i]]; }
+  const out=[]; for(let i=0;i<ids.length;i+=2) out.push([ids[i], ids[i+1]||null]);
+  return out;
+}
+
+function renderIndivBoard(){
+  const host=document.getElementById('indivBoard');
+  const st=indivStandings();
+  if(st.length===0){ host.innerHTML=`<div class="emptyc">Enter round scores to build the leaderboard.</div>`; return; }
   host.innerHTML=`<table class="lb"><thead><tr>
-      <th>Player</th><th>Team</th><th class="num">Played</th><th class="num">Points</th></tr></thead>
-    <tbody>${rows.map(r=>{
-      const color=r.p.team==='a'?'var(--teamA)':'var(--teamB)';
-      return `<tr>
-        <td>${escapeHtml(r.p.name)||'unnamed'}</td>
-        <td><span class="teamtag" style="background:${color}">${escapeHtml(teams[r.p.team].name)}</span></td>
+      <th class="rk">#</th><th>Player</th><th class="num">Rounds</th><th class="num">Gross</th><th class="num">Net</th></tr></thead>
+    <tbody>${st.map((r,i)=>{
+      const lead=i===0 && r.played>0;
+      return `<tr class="${lead?'lead':''}">
+        <td class="rk">${r.played>0?i+1:'–'}</td>
+        <td>${escapeHtml(r.p.name)||'unnamed'}${r.missingHI?' <span style="color:var(--danger);font-size:11px">·needs HI</span>':''}</td>
         <td class="num">${r.played}</td>
-        <td class="num lb-pts">${half(r.pts)}</td></tr>`;
+        <td class="num">${r.played>0?r.gross:'—'}</td>
+        <td class="num netbig">${r.played>0?r.net:'—'}</td></tr>`;
     }).join('')}</tbody></table>`;
 }
 
@@ -750,14 +788,9 @@ function setAppTab(t){
 }
 
 // ---------- Actions ----------
-document.getElementById('addBtn').addEventListener('click',()=>{ const id=newId(); players.push({id,name:'',index:'',team:null}); renderRoster(); renderBoard(); renderComp(); save(); });
+document.getElementById('addBtn').addEventListener('click',()=>{ const id=newId(); players.push({id,name:'',index:''}); renderRoster(); renderBoard(); renderComp(); save(); });
 document.getElementById('resetBtn').addEventListener('click',()=>{ if(confirm('Reset roster and tee choices to the original eight?')){ freshDefaults(); renderRoster(); renderTabs(); renderBoard(); renderComp(); save(); }});
-document.getElementById('resetCompBtn').addEventListener('click',()=>{ if(confirm('Reset teams and clear all matches?')){ freshComp(); renderComp(); save('comp'); }});
-document.getElementById('addMatchBtn').addEventListener('click',()=>{
-  const sess=document.getElementById('sessSelect').value || 'foursomes';
-  matches.push({id:newMid(), session:sess, a:[], b:[], result:null});
-  renderMatches(); renderScoreboard(); save('comp');
-});
+document.getElementById('resetCompBtn').addEventListener('click',()=>{ if(confirm('Reset pairs, formats and all scores?')){ freshComp(); renderComp(); save('comp'); }});
 document.querySelectorAll('.apptab').forEach(b=>b.addEventListener('click',()=>setAppTab(b.dataset.app)));
 
 // ---------- Init ----------
