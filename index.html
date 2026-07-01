@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fife &amp; Angus — Scotland Golf Tour 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#e7eee7; --card:#f5f8f3; --ink:#182823; --ink-soft:#4d5c56;
+    --ink-faint:#8a968f; --rule:#ccd6cd; --rule-soft:#dde4dc;
+    --gorse:#e3a81f; --gorse-deep:#a9790c; --sea:#2f6b63; --danger:#b4472e;
+    --teamA:#2f6b63; --teamB:#b4472e;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    font-family:'Inter',system-ui,sans-serif;background:var(--paper);color:var(--ink);
+    line-height:1.5;padding:28px 18px 60px;
+    background-image:linear-gradient(var(--rule-soft) 1px,transparent 1px);
+    background-size:100% 34px;background-position:0 -1px;
+  }
+  .wrap{max-width:980px;margin:0 auto}
+  .mast{border:2px solid var(--ink);background:var(--card);padding:22px 24px 20px;position:relative}
+  .mast::before{content:"";position:absolute;left:0;right:0;top:0;height:6px;
+    background:repeating-linear-gradient(90deg,var(--gorse) 0 18px,var(--ink) 18px 20px)}
+  .eyebrow{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.28em;
+    text-transform:uppercase;color:var(--sea);margin-top:6px}
+  h1{font-family:'Space Grotesk',sans-serif;font-weight:700;
+    font-size:clamp(28px,5.4vw,44px);line-height:1.02;letter-spacing:-.01em;margin:6px 0 4px}
+  .sub{font-size:14px;color:var(--ink-soft);max-width:64ch}
+  .sub b{color:var(--ink);font-weight:600}
+
+  /* top-level app tabs */
+  .apptabs{display:flex;gap:0;border:2px solid var(--ink);border-top:none;background:var(--ink)}
+  .apptab{flex:1 1 0;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;
+    color:#b9c6bf;background:var(--ink);border:none;cursor:pointer;padding:14px 10px 13px;
+    border-right:1px solid #2b423b;text-align:center;line-height:1.15;transition:color .12s,background .12s}
+  .apptab:last-child{border-right:none}
+  .apptab small{display:block;font-family:'Space Mono',monospace;font-weight:400;font-size:9.5px;opacity:.7;margin-top:3px}
+  .apptab:hover{color:#fff}
+  .apptab.active{background:var(--gorse);color:var(--ink)}
+  .apptab.active small{opacity:.85}
+  .view{display:none}
+  .view.active{display:block}
+
+  .panel{border:2px solid var(--ink);border-top:none;background:var(--card)}
+  .panel-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;
+    padding:14px 24px;border-bottom:1px solid var(--rule);background:var(--card)}
+  .panel-head h2{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600}
+  .panel-head .hint{font-size:12.5px;color:var(--ink-faint)}
+  .roster{padding:16px 24px 20px}
+  .roster-row{display:grid;grid-template-columns:1fr 96px 34px;gap:10px;align-items:center;margin-bottom:9px}
+  input[type=text],input[type=number],select{font-family:'Inter',sans-serif;font-size:14px;color:var(--ink);
+    background:var(--paper);border:1px solid var(--rule);border-radius:4px;padding:8px 10px;width:100%;
+    transition:border-color .12s,box-shadow .12s}
+  input[type=number]{font-family:'Space Mono',monospace;text-align:center}
+  input:focus,select:focus{outline:none;border-color:var(--sea);box-shadow:0 0 0 3px rgba(47,107,99,.16)}
+  .idx-wrap{position:relative}
+  .idx-wrap::after{content:"HI";position:absolute;right:8px;top:50%;transform:translateY(-50%);
+    font-family:'Space Mono',monospace;font-size:9px;color:var(--ink-faint);pointer-events:none}
+  .btn-x{border:1px solid var(--rule);background:var(--paper);border-radius:4px;height:36px;cursor:pointer;
+    color:var(--ink-faint);font-size:16px;line-height:1;transition:color .12s,border-color .12s}
+  .btn-x:hover{color:var(--danger);border-color:var(--danger)}
+  .btn{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:13.5px;
+    border:1.5px solid var(--ink);background:var(--ink);color:var(--card);padding:9px 16px;border-radius:5px;
+    cursor:pointer;transition:transform .08s,background .12s}
+  .btn:hover{background:#233a33}
+  .btn:active{transform:translateY(1px)}
+  .btn.ghost{background:transparent;color:var(--ink)}
+  .btn.ghost:hover{background:var(--paper)}
+  .btn.sm{font-size:12px;padding:6px 11px}
+  .roster-actions{margin-top:6px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .saved{font-family:'Space Mono',monospace;font-size:11px;color:var(--sea);opacity:0;transition:opacity .2s}
+  .saved.show{opacity:1}
+  .tabs{display:flex;border:2px solid var(--ink);border-top:none;background:var(--ink);overflow-x:auto}
+  .tab{flex:1 0 auto;min-width:118px;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:13px;
+    color:#b9c6bf;background:var(--ink);border:none;cursor:pointer;padding:12px 10px 11px;
+    border-right:1px solid #2b423b;text-align:left;line-height:1.15;transition:color .12s,background .12s}
+  .tab:last-child{border-right:none}
+  .tab small{display:block;font-family:'Space Mono',monospace;font-weight:400;font-size:10px;opacity:.7;margin-top:3px}
+  .tab:hover{color:#fff}
+  .tab.active{background:var(--gorse);color:var(--ink)}
+  .tab.active small{opacity:.85}
+  .board{border:2px solid var(--ink);border-top:none;background:var(--card);padding:20px 24px 24px}
+  .formula{margin:0;border:2px solid var(--ink);border-top:none;background:var(--paper);
+    font-family:'Space Mono',monospace;font-size:12.5px;color:var(--ink-soft);padding:9px 24px}
+  .formula b{color:var(--gorse-deep)}
+  .board-top{display:flex;flex-wrap:wrap;gap:14px 24px;align-items:flex-end;justify-content:space-between;
+    padding-bottom:16px;border-bottom:1px solid var(--rule);margin-bottom:4px}
+  .course-name{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;letter-spacing:-.01em}
+  .course-meta{font-family:'Space Mono',monospace;font-size:12px;color:var(--ink-soft);margin-top:3px}
+  .controls{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end}
+  .ctl label{display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);
+    margin-bottom:4px;font-weight:600}
+  .ctl select{min-width:130px}
+  .flag{margin:14px 0 2px;padding:9px 13px;border-left:3px solid var(--gorse);background:var(--paper);
+    font-size:12.5px;color:var(--ink-soft)}
+  .flag b{color:var(--ink)}
+  .rt{width:100%;border-collapse:collapse;margin-top:16px}
+  .rt thead th{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--ink-faint);text-align:left;padding:0 10px 8px;border-bottom:1.5px solid var(--ink);font-weight:700}
+  .rt thead th.num{text-align:center}
+  .rt tbody td{padding:10px;border-bottom:1px solid var(--rule-soft);vertical-align:middle}
+  .rt tbody tr:last-child td{border-bottom:none}
+  .p-name{font-weight:600;font-size:14.5px}
+  .p-idx{font-family:'Space Mono',monospace;font-size:12px;color:var(--ink-faint);margin-top:1px}
+  .tee-sel select{min-width:150px}
+  .rs{font-family:'Space Mono',monospace;font-size:12px;color:var(--ink-soft);text-align:center;white-space:nowrap}
+  .chcp{text-align:center}
+  .chcp .big{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:22px;line-height:1}
+  .chcp .raw{font-family:'Space Mono',monospace;font-size:10px;color:var(--ink-faint);margin-top:2px}
+  .phcp{text-align:center}
+  .phcp .big{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:22px;line-height:1;color:var(--gorse-deep)}
+  .plus{color:var(--sea)}
+  .tbd{color:var(--ink-faint);font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:16px}
+  .foot{margin-top:18px;font-size:12px;color:var(--ink-faint);line-height:1.55;display:flex;gap:8px;align-items:flex-start}
+  .foot .dot{color:var(--gorse-deep);font-weight:700}
+
+  /* ---- schedule ---- */
+  .sched{border:2px solid var(--ink);border-top:none;background:var(--card)}
+  .sday{display:grid;grid-template-columns:132px 1fr;border-bottom:1px solid var(--rule)}
+  .sday:last-child{border-bottom:none}
+  .sday.golf{border-left:4px solid var(--gorse)}
+  .sday-date{padding:16px 16px;background:var(--paper);border-right:1px solid var(--rule)}
+  .sday-date .dnum{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px}
+  .sday-date .ddate{font-family:'Space Mono',monospace;font-size:11px;color:var(--ink-faint);margin-top:2px}
+  .sday-body{padding:15px 18px}
+  .sday-theme{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16.5px}
+  .sday-line{margin-top:7px;font-size:13px;color:var(--ink-soft);display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+  .sday-line .lbl{font-family:'Space Mono',monospace;font-size:9.5px;text-transform:uppercase;letter-spacing:.08em;
+    color:var(--sea);font-weight:700;min-width:52px}
+  .tee{font-family:'Space Mono',monospace;font-size:12px;background:var(--gorse);color:var(--ink);padding:2px 9px;
+    border-radius:20px;font-weight:700}
+  .travel{font-family:'Space Mono',monospace;font-size:11px;color:var(--ink-faint)}
+  .rbadge{font-family:'Space Mono',monospace;font-size:10px;padding:2px 8px;border-radius:20px;font-weight:700;
+    border:1px solid var(--rule);color:var(--ink-soft)}
+  .rbadge.fin{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .rbadge.swap{background:var(--sea);color:#fff;border-color:var(--sea)}
+  .sref{padding:16px 18px 20px}
+  .sref h4{font-family:'Space Grotesk',sans-serif;font-size:13px;margin:10px 0 6px}
+  .sref .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{font-size:12px;background:var(--paper);border:1px solid var(--rule);border-radius:20px;padding:4px 10px;color:var(--ink-soft)}
+  .chip b{color:var(--ink);font-weight:600}
+
+  /* ---- competition ---- */
+  .comp{border:2px solid var(--ink);border-top:none;background:var(--card);padding:0}
+  .scoreboard{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;
+    padding:22px 24px;border-bottom:1px solid var(--rule);background:var(--paper)}
+  .sb-team{display:flex;flex-direction:column;gap:4px}
+  .sb-team.b{align-items:flex-end;text-align:right}
+  .sb-name{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;display:flex;align-items:center;gap:8px}
+  .sb-name .dotc{width:11px;height:11px;border-radius:50%;flex:none}
+  .sb-team.b .sb-name{flex-direction:row-reverse}
+  .sb-score{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:44px;line-height:1}
+  .sb-mid{font-family:'Space Mono',monospace;font-size:11px;color:var(--ink-faint);text-align:center;
+    letter-spacing:.06em;text-transform:uppercase}
+  .sb-mid .vs{font-size:14px;color:var(--ink-soft);display:block;margin:2px 0}
+  .sb-status{grid-column:1/-1;text-align:center;font-family:'Space Mono',monospace;font-size:12px;
+    color:var(--sea);margin-top:8px;font-weight:700}
+  .sb-status.won{color:var(--gorse-deep)}
+  .barwrap{grid-column:1/-1;height:8px;border-radius:4px;background:var(--rule);overflow:hidden;margin-top:12px;display:flex}
+  .barwrap .ba{background:var(--teamA)}
+  .barwrap .bb{background:var(--teamB)}
+  .barwrap .bh{background:var(--ink-faint)}
+
+  .csection{padding:18px 24px 4px}
+  .csection h3{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;margin-bottom:2px}
+  .csection .csub{font-size:12.5px;color:var(--ink-faint);margin-bottom:14px}
+  .divide{border-top:1px solid var(--rule);margin:10px 0 0}
+
+  .teamgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .teamcol{border:1px solid var(--rule);border-radius:7px;background:var(--paper);padding:12px}
+  .teamcol h4{font-family:'Space Grotesk',sans-serif;font-size:13px;display:flex;align-items:center;gap:7px;margin-bottom:10px}
+  .teamcol .dotc{width:11px;height:11px;border-radius:50%}
+  .teamcol .nameinput{border:none;border-bottom:1px dashed var(--rule);background:transparent;border-radius:0;
+    font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;padding:2px 0;flex:1}
+  .teamcol .nameinput:focus{box-shadow:none;border-bottom-color:var(--sea)}
+  .duo{display:grid;grid-template-columns:46px 1fr 1fr;gap:6px;align-items:center;margin-bottom:7px}
+  .duo:last-child{margin-bottom:0}
+  .duolbl{font-family:'Space Mono',monospace;font-size:10px;color:var(--ink-faint)}
+  .duo select{font-size:12.5px;padding:6px 7px}
+
+  .rtabs{display:flex;border:1px solid var(--rule);border-radius:7px;overflow:hidden;margin-bottom:14px;background:var(--paper)}
+  .rtab{flex:1 1 0;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:12px;color:var(--ink-soft);
+    background:var(--paper);border:none;border-right:1px solid var(--rule);cursor:pointer;padding:9px 6px;line-height:1.2;
+    text-align:center;transition:background .12s,color .12s}
+  .rtab:last-child{border-right:none}
+  .rtab small{display:block;font-family:'Space Mono',monospace;font-weight:400;font-size:9px;opacity:.75;margin-top:2px}
+  .rtab.active{background:var(--sea);color:#fff}
+  .rtab.done{color:var(--gorse-deep)}
+  .rtab.active.done{color:#fff}
+
+  .round-top{display:flex;flex-wrap:wrap;gap:12px 14px;align-items:flex-end;justify-content:space-between;margin-bottom:12px}
+  .round-name{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700}
+  .round-meta{font-family:'Space Mono',monospace;font-size:11.5px;color:var(--ink-soft);margin-top:3px;max-width:52ch}
+  .fmt-toggle{display:flex;border:1px solid var(--rule);border-radius:6px;overflow:hidden}
+  .fmt-toggle button{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:12px;border:none;
+    background:var(--paper);color:var(--ink-soft);padding:8px 11px;cursor:pointer;border-right:1px solid var(--rule);white-space:nowrap}
+  .fmt-toggle button:last-child{border-right:none}
+  .fmt-toggle button.on{background:var(--gorse);color:var(--ink)}
+
+  .matchcard{border:1px solid var(--rule);border-radius:8px;background:var(--paper);padding:12px 14px;margin-bottom:10px}
+  .mc-grid{display:grid;grid-template-columns:1fr 118px 1fr;gap:12px;align-items:start}
+  .mc-side .mc-team{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:12px;margin-bottom:7px}
+  .mc-side.b{text-align:right}
+  .mp{display:grid;grid-template-columns:1fr 62px;gap:7px;align-items:center;margin-bottom:5px}
+  .mc-side.b .mp{grid-template-columns:62px 1fr;direction:rtl}
+  .mc-side.b .mp>*{direction:ltr}
+  .mpn{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .grossin{width:62px;text-align:center;padding:6px 4px}
+  .mpnet{grid-column:1/-1;font-family:'Space Mono',monospace;font-size:10.5px;color:var(--ink-faint);margin:-2px 0 3px}
+  .mc-side.b .mpnet{text-align:right}
+  .mpnet b{color:var(--sea);font-family:'Space Grotesk',sans-serif;font-size:12px}
+  .mpnet .u{opacity:.6}
+  .warn{color:var(--danger)}
+  .mc-sub{font-family:'Space Mono',monospace;font-size:10.5px;color:var(--ink-faint);margin-top:4px}
+  .mc-sub b{color:var(--ink);font-family:'Space Grotesk',sans-serif;font-size:12px}
+  .mc-res{text-align:center;padding-top:16px}
+  .mbadge{display:inline-block;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:11.5px;
+    padding:4px 8px;border-radius:5px;line-height:1.15}
+  .mbadge.none{background:var(--card);color:var(--ink-faint);border:1px solid var(--rule)}
+  .mbadge.half{background:var(--ink-faint);color:#fff}
+  .mbadge.wa{background:var(--teamA);color:#fff}
+  .mbadge.wb{background:var(--teamB);color:#fff}
+  .mc-nets{font-family:'Space Mono',monospace;font-size:11px;color:var(--ink-soft);margin-top:6px}
+
+  .lb{width:100%;border-collapse:collapse;margin-top:4px}
+  .lb th{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--ink-faint);text-align:left;padding:0 10px 8px;border-bottom:1.5px solid var(--ink);font-weight:700}
+  .lb th.num,.lb td.num{text-align:center}
+  .lb td{padding:9px 10px;border-bottom:1px solid var(--rule-soft);font-size:13.5px}
+  .lb tbody tr:last-child td{border-bottom:none}
+  .lb .rk{font-family:'Space Mono',monospace;color:var(--ink-faint);width:26px}
+  .lb .lead{background:rgba(227,168,31,.13)}
+  .lb .teamtag{font-family:'Space Mono',monospace;font-size:10px;padding:2px 7px;border-radius:20px;color:#fff}
+  .lb .netbig{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:15px}
+  .emptyc{padding:18px 0;text-align:center;color:var(--ink-faint);font-size:13px}
+
+  @media (max-width:640px){
+    body{padding:18px 10px 50px;background-size:100% 30px}
+    .mast,.panel-head,.roster,.board,.csection,.formula,.scoreboard,.sref{padding-left:16px;padding-right:16px}
+    .roster-row{grid-template-columns:1fr 82px 34px}
+    .rt thead{display:none}
+    .rt tbody td{display:block;border:none;padding:3px 0}
+    .rt tbody tr{display:block;padding:14px 0;border-bottom:1px solid var(--rule)}
+    .rt tbody tr:last-child{border-bottom:none}
+    .card-line{display:flex;justify-content:space-between;align-items:center;gap:12px}
+    .card-line .k{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint)}
+    .teamgrid{grid-template-columns:1fr}
+    .rtab small{display:none}
+    .sb-score{font-size:36px}
+    .sday{grid-template-columns:98px 1fr}
+    .sday-date{padding:14px 12px}
+    .mc-grid{grid-template-columns:1fr;gap:8px}
+    .mc-side.b{text-align:left}
+    .mc-side.b .mp{grid-template-columns:1fr 62px;direction:ltr}
+    .mc-side.b .mpnet{text-align:left}
+    .mc-res{padding-top:4px;padding-bottom:4px;border-top:1px dashed var(--rule);border-bottom:1px dashed var(--rule);margin:2px 0}
+    .apptab small{display:none}
+    /* inputs at 16px stop iOS from zooming in when a field is focused */
+    input[type=text],input[type=number],select{font-size:16px}
+    .grossin{width:58px;padding:7px 4px}
+    /* keep wide leaderboard tables tidy, and let them scroll if a phone is very narrow */
+    #indivBoard,#roundPanel{overflow-x:auto;-webkit-overflow-scrolling:touch}
+    .lb th,.lb td{padding:8px 6px;font-size:13px}
+    .lb th{font-size:9.5px}
+    .lb .teamtag{font-size:9px;padding:2px 6px}
+    .round-top{gap:10px}
+    .fmt-toggle button{padding:8px 10px}
+    .csub{font-size:12px}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="mast">
+    <div class="eyebrow">Scotland Golf Tour · Jul 8–14 2026</div>
+    <h1>Fife &amp; Angus Golf Tour</h1>
+    <p class="sub">The trip HQ. <b>Schedule</b> is the day-by-day; <b>Handicaps</b> works out course &amp; playing handicaps; <b>Competition</b> runs the two-team cup — a mix of match-play and individual rounds, everyone always playing their own ball — with a live scoreboard and a personal net leaderboard. Everything saves to this device.</p>
+  </header>
+
+  <nav class="apptabs">
+    <button class="apptab active" data-app="sched">Schedule<small>day by day</small></button>
+    <button class="apptab" data-app="hcp">Handicaps<small>course &amp; playing HCP</small></button>
+    <button class="apptab" data-app="comp">Competition<small>Ryder Cup + leaderboard</small></button>
+  </nav>
+
+  <!-- ============ SCHEDULE VIEW ============ -->
+  <div class="view active" id="view-sched">
+    <section class="sched" id="schedList"></section>
+    <section class="sched" style="border-top:1px solid var(--rule);margin-top:-2px">
+      <div class="sref">
+        <h4>Dinners &amp; bars worth knowing</h4>
+        <div class="chips">
+          <span class="chip"><b>18 St Andrews</b> · rooftop, Old Course views</span>
+          <span class="chip"><b>The Jigger Inn</b> · Old Course hotel pub</span>
+          <span class="chip"><b>Dunvegan</b> · famous caddy bar</span>
+          <span class="chip"><b>The Keys</b> · classic St Andrews bar</span>
+          <span class="chip"><b>Swilcan Loft</b> · views over the Old Course</span>
+          <span class="chip"><b>Rogue</b> · steak</span>
+          <span class="chip"><b>Little Italy</b> · popular Italian</span>
+          <span class="chip"><b>The Criterion</b> · famous chicken pot pies</span>
+          <span class="chip"><b>The Seafood Restaurant</b> · on the water</span>
+        </div>
+      </div>
+    </section>
+    <div class="foot">
+      <span class="dot">▪</span>
+      <span>Tee times and travel from the trip sheet — confirm each morning. Golf days are marked and map straight to the five competition rounds: New Course is the <b>swap</b> round, the Old Course is the <b>singles finale</b>.</span>
+    </div>
+  </div>
+
+  <!-- ============ HANDICAP CALCULATOR VIEW ============ -->
+  <div class="view" id="view-hcp">
+    <section class="panel">
+      <div class="panel-head">
+        <h2>The Roster</h2>
+        <span class="hint">edits save automatically</span>
+      </div>
+      <div class="roster">
+        <div id="rosterList"></div>
+        <div class="roster-actions">
+          <button class="btn" id="addBtn">+ Add player</button>
+          <button class="btn ghost" id="resetBtn">Reset to original roster</button>
+          <span class="saved" id="savedTag">saved ✓</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="formula">Course HCP = Index × (Slope ÷ 113) + (Course Rating − Par) → rounded. <b>Playing HCP</b> applies your comp allowance.</div>
+
+    <nav class="tabs" id="tabs"></nav>
+    <section class="board" id="board"></section>
+
+    <div class="foot">
+      <span class="dot">▪</span>
+      <span>Realistic tees only (blacks/golds/tips removed). Ratings from published scorecards — cross-check the physical card on the day. Carnoustie plays par 70 off the Yellows, which the sheet accounts for. Old Course "Blue" is the medal tee most visitors get.</span>
+    </div>
+  </div>
+
+  <!-- ============ COMPETITION VIEW ============ -->
+  <div class="view" id="view-comp">
+    <section class="comp">
+      <div class="scoreboard" id="scoreboard"></div>
+
+      <div class="csection">
+        <h3>Teams</h3>
+        <div class="csub">Two sides, two father-son duos each. Tap a team name to rename; swap a player if the roster changes.</div>
+        <div id="teamSetup"></div>
+        <div class="divide"></div>
+      </div>
+
+      <div class="csection">
+        <h3>Rounds &amp; matches</h3>
+        <div class="csub">Each round is <b>Individual</b> (own ball, group with anyone — personal board only), <b>Pairs</b> match play (Better Ball / Aggregate, standing or swapped), or <b>Singles</b>. Enter each player's gross; low net wins match-play — 1 point, ½ if tied.</div>
+        <div class="rtabs" id="roundTabs"></div>
+        <div id="roundPanel"></div>
+        <div class="divide"></div>
+      </div>
+
+      <div class="csection">
+        <h3>Individual net leaderboard</h3>
+        <div class="csub">Every player ranked by cumulative net across all rounds played.</div>
+        <div id="indivBoard"></div>
+        <div class="divide"></div>
+      </div>
+
+      <div class="csection" style="padding-bottom:20px">
+        <div class="roster-actions">
+          <button class="btn ghost sm" id="resetCompBtn">Reset competition</button>
+          <span class="saved" id="savedTagC">saved ✓</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="foot">
+      <span class="dot">▪</span>
+      <span>The team cup is decided by the <b>match-play</b> rounds — pairs = two duo matches, singles = four 1‑v‑1s, each match a point; most points wins, an even split retains. <b>Individual</b> rounds let everyone play their own ball in any group and count only toward the personal net leaderboard. Better Ball takes a duo's lower net; Aggregate adds both. Every format here is own-ball — no alternate shot.</span>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ---------- Course data (realistic tees only) ----------
+const COURSES = [
+  { id:'kings', name:'Kingsbarns', short:'Kingsbarns', par:72,
+    tees:[
+      {name:'White', yds:6853, cr:73.6, sl:138},
+      {name:'Green', yds:6408, cr:71.3, sl:133},
+      {name:'Blue',  yds:null, cr:70.0, sl:128},
+      {name:'Red (fwd)', yds:null, cr:66.1, sl:119},
+    ], def:'Green' },
+  { id:'dumb', name:'Dumbarnie Links', short:'Dumbarnie', par:72,
+    tees:[
+      {name:'Blue',  yds:6421, cr:71.0, sl:128},
+      {name:'White', yds:5901, cr:68.0, sl:125},
+    ], def:'Blue' },
+  { id:'carn', name:'Carnoustie — Championship', short:'Carnoustie', par:72,
+    note:'Off the Yellows/Greens the men\'s par is 70, not 72 — that\'s why the numbers run higher here.',
+    tees:[
+      {name:'Yellow', yds:6589, cr:73.6, sl:135, par:70},
+      {name:'Green',  yds:6139, cr:71.5, sl:130, par:70},
+    ], def:'Yellow' },
+  { id:'new', name:'St Andrews — New Course', short:'St A. New', par:71,
+    tees:[
+      {name:'Blue',  yds:6362, cr:71.6, sl:125},
+      {name:'Green', yds:5992, cr:69.9, sl:121},
+    ], def:'Blue' },
+  { id:'old', name:'St Andrews — Old Course', short:'St A. Old', par:72,
+    tees:[
+      {name:'Blue (Medal)', yds:null, cr:71.8, sl:133},
+      {name:'Green',        yds:null, cr:70.2, sl:127},
+    ], def:'Blue (Medal)' },
+];
+
+const ALLOWANCES = [
+  {label:'Full (100%)', v:1.00},
+  {label:'Singles stroke play (95%)', v:0.95},
+  {label:'4BBB / better ball (90%)', v:0.90},
+  {label:'Foursomes combined (85%)', v:0.85},
+];
+
+const SEED_PLAYERS = [
+  {id:'p1', name:'Brett',  index:0},
+  {id:'p2', name:'Bruce',  index:11.7},
+  {id:'p3', name:'Kyle',   index:16},
+  {id:'p4', name:'Ron',    index:18},
+  {id:'p5', name:'Andrew', index:15.7},
+  {id:'p6', name:'Mike',   index:5},
+  {id:'p7', name:'Justin', index:9.7},
+  {id:'p8', name:'Robert', index:16},
+];
+// two teams, two father-son duos each
+const SEED_TEAMS = {A:{name:'Fife'}, B:{name:'Angus'}};
+const SEED_DUOS = [
+  {id:'d1', team:'A', players:['p1','p2']}, // Brett & Bruce   (Fife)
+  {id:'d2', team:'A', players:['p3','p4']}, // Kyle & Ron      (Fife)
+  {id:'d3', team:'B', players:['p7','p8']}, // Justin & Robert (Angus)
+  {id:'d4', team:'B', players:['p5','p6']}, // Andrew & Mike   (Angus)
+];
+const TEAM_COLORS = {A:'#2f6b63', B:'#b4472e'};
+const FORMATS = {betterball:'Better Ball', aggregate:'Aggregate'};
+// default 5-round mix — all own-ball formats, blending match play and individual rounds
+const ROUND_DEFAULTS = {
+  kings:{type:'pairs',      format:'betterball', pairMode:'standing'}, // partner opener
+  dumb: {type:'individual', format:'betterball', pairMode:'standing'}, // mix the groups
+  carn: {type:'pairs',      format:'betterball', pairMode:'swap'},     // swap partners in team
+  new:  {type:'individual', format:'betterball', pairMode:'standing'}, // mix the groups
+  old:  {type:'singles',    format:'betterball', pairMode:'standing'}, // singles finale
+};
+const roundDefault = id => ROUND_DEFAULTS[id] || {type:'pairs', format:'betterball', pairMode:'standing'};
+
+// day-by-day schedule (Jul 8–14 2026)
+const SCHEDULE = [
+  {n:'Day 1', d:'Wed · Jul 8',  theme:'Arrive Scotland', dinner:'18 St Andrews', time:'7:00pm'},
+  {n:'Day 2', d:'Thu · Jul 9',  theme:'Kingsbarns',            golf:{id:'kings', tee:'1:20pm',  travel:'~20 min from hotel'}, dinner:'Dunvegan / The Criterion'},
+  {n:'Day 3', d:'Fri · Jul 10', theme:'Dumbarnie Links',       golf:{id:'dumb',  tee:'11:10am', travel:'~30 min from hotel'}, dinner:'Little Italy', time:'9:00pm'},
+  {n:'Day 4', d:'Sat · Jul 11', theme:'Carnoustie',            golf:{id:'carn',  tee:'2:40pm',  travel:'~1 hr from hotel'},   dinner:'Carnoustie clubhouse bar'},
+  {n:'Day 5', d:'Sun · Jul 12', theme:'St Andrews — New Course', golf:{id:'new', tee:'10:32am', travel:'On site'},            dinner:'The Steak Barn'},
+  {n:'Day 6', d:'Mon · Jul 13', theme:'St Andrews — Old Course', golf:{id:'old', tee:'2:10pm',  travel:'On site'},            dinner:'The Jigger Inn', time:'8:30pm'},
+  {n:'Day 7', d:'Tue · Jul 14', theme:'Departure', note:'Optional early Kingsbarns 6:50am before flights'},
+];
+
+const LS_KEY = 'fife-hcp-v8';
+
+// ---------- State ----------
+let players = [];
+let active = 'kings';         // handicap-tab active course
+let teeChoice = {};
+let allowance = {};
+let teams = {};
+let duos = [];
+let rounds = {};              // rounds[cid] = {type, format, pairMode, scores:{pid:gross}}
+let compRound = 'kings';      // competition-tab active round
+let appTab = 'sched';
+let uid = 0;
+const newId = () => 'p' + (++uid);
+
+function freshRounds(){
+  rounds = {};
+  COURSES.forEach(c => { const d=roundDefault(c.id); rounds[c.id] = {type:d.type, format:d.format, pairMode:d.pairMode, scores:{}}; });
+}
+function freshDefaults(){
+  players = SEED_PLAYERS.map(p => ({...p}));
+  active = 'kings'; compRound = 'kings';
+  teeChoice = {}; allowance = {};
+  COURSES.forEach(c => { teeChoice[c.id] = {}; allowance[c.id] = 1.00; });
+  freshComp();
+  uid = players.length;
+}
+function freshComp(){
+  teams = {A:{name:SEED_TEAMS.A.name}, B:{name:SEED_TEAMS.B.name}};
+  duos = SEED_DUOS.map(d => ({id:d.id, team:d.team, players:[...d.players]}));
+  freshRounds();
+  compRound = 'kings';
+}
+function ensureShape(){
+  COURSES.forEach(c => {
+    if(!teeChoice[c.id]) teeChoice[c.id] = {};
+    if(allowance[c.id] == null) allowance[c.id] = 1.00;
+    if(!rounds[c.id]) rounds[c.id] = {type:'pairs', format:'betterball', pairMode:'standing', scores:{}};
+    const rd = rounds[c.id];
+    if(!rd.scores) rd.scores = {};
+    const dd=roundDefault(c.id);
+    if(rd.type==null) rd.type = dd.type;
+    if(rd.format==null) rd.format = dd.format;
+    if(rd.pairMode==null) rd.pairMode = dd.pairMode;
+  });
+  if(!teams || !teams.A || !teams.B) teams = {A:{name:'Fife'}, B:{name:'Angus'}};
+  if(!Array.isArray(duos) || duos.length===0) duos = SEED_DUOS.map(d => ({id:d.id, team:d.team, players:[...d.players]}));
+  uid = players.reduce((m,p)=>{ const n=parseInt(String(p.id).slice(1)); return isNaN(n)?m:Math.max(m,n); }, players.length);
+}
+function save(which){
+  try{
+    localStorage.setItem(LS_KEY, JSON.stringify({players, teeChoice, allowance, active, teams, duos, rounds, compRound, appTab}));
+    const t = document.getElementById(which==='comp'?'savedTagC':'savedTag');
+    if(t){ t.classList.add('show'); clearTimeout(window.__st); window.__st = setTimeout(()=>t.classList.remove('show'),1100); }
+  }catch(e){/* preview sandbox — persistence resumes once hosted */}
+}
+function load(){
+  try{
+    const s = localStorage.getItem(LS_KEY);
+    if(!s) return false;
+    const d = JSON.parse(s);
+    if(!d || !Array.isArray(d.players)) return false;
+    players = d.players; teeChoice = d.teeChoice||{}; allowance = d.allowance||{}; active = d.active||'kings';
+    teams = d.teams || {A:{name:'Fife'}, B:{name:'Angus'}};
+    duos = d.duos || SEED_DUOS.map(x => ({id:x.id, team:x.team, players:[...x.players]}));
+    rounds = d.rounds || {};
+    compRound = d.compRound || 'kings';
+    appTab = d.appTab || 'sched';
+    ensureShape();
+    return true;
+  }catch(e){ return false; }
+}
+
+// ---------- Helpers ----------
+const courseById = id => COURSES.find(c=>c.id===id) || COURSES[0];
+const playerById = id => players.find(p=>p.id===id);
+const playerName = id => { const p=playerById(id); return p ? (p.name||'unnamed') : '—'; };
+const teeFor = (course,pid) => teeChoice[course.id][pid] || course.def;
+const teeObj = (course,name) => course.tees.find(t=>t.name===name) || course.tees[0];
+function courseHcp(index,course,tee){
+  const par = (tee.par!=null)?tee.par:course.par;
+  return index*(tee.sl/113) + (tee.cr-par);
+}
+const fmt = n => { const r=Math.round(n); return r<0 ? '+'+Math.abs(r) : String(r); };
+const escapeHtml = s => String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const half = n => { const v=Math.round(n*2)/2; return (v%1===0) ? String(v) : (Math.floor(v)>0?Math.floor(v)+'½':'½'); };
+
+// ---------- Teams / matches ----------
+const teamDuos = t => duos.filter(d=>d.team===t);
+const teamPlayers = t => teamDuos(t).flatMap(d=>d.players.filter(Boolean));
+function teamOfPlayer(pid){ const d=duos.find(x=>x.players.includes(pid)); return d?d.team:null; }
+const teamName = t => (teams[t] && teams[t].name) || t;
+
+function partnerships(cid, t){
+  const ds = teamDuos(t).map(d=>d.players.filter(Boolean));
+  if(rounds[cid].pairMode==='swap' && ds.length===2 && ds[0].length===2 && ds[1].length===2){
+    return [[ds[0][0], ds[1][0]], [ds[0][1], ds[1][1]]];   // cross partners within the side
+  }
+  return ds;
+}
+function matchesForRound(cid){
+  const rd = rounds[cid];
+  if(rd.type==='individual') return [];   // no matches — scores the personal board only
+  if(rd.type==='singles'){
+    const a=teamPlayers('A'), b=teamPlayers('B'), n=Math.min(a.length,b.length);
+    return Array.from({length:n},(_,i)=>({a:[a[i]], b:[b[i]]}));
+  }
+  const pa=partnerships(cid,'A'), pb=partnerships(cid,'B'), n=Math.min(pa.length,pb.length);
+  return Array.from({length:n},(_,i)=>({a:pa[i], b:pb[i]}));
+}
+
+// ---------- Net / scoring ----------
+function roundCourseHcp(pid, course){
+  const p=playerById(pid); if(!p) return null;
+  const idx=(p.index===''||p.index==null||isNaN(p.index))?null:Number(p.index);
+  if(idx==null) return null;
+  const tee=teeObj(course, teeFor(course,pid));
+  return Math.round(courseHcp(idx, course, tee));
+}
+function playerNet(pid, course){
+  const g = rounds[course.id].scores[pid];
+  if(g==null || g==='' || isNaN(g)) return null;
+  const ch = roundCourseHcp(pid, course);
+  if(ch==null) return {gross:Number(g), ch:null, net:null};
+  return {gross:Number(g), ch, net:Number(g)-ch};
+}
+function sideNet(ids, course, format){
+  const nets = ids.map(pid=>{ const n=playerNet(pid,course); return n?n.net:null; });
+  if(nets.length===0 || nets.some(x=>x==null)) return null;
+  if(nets.length===1) return nets[0];
+  return format==='aggregate' ? nets.reduce((a,b)=>a+b,0) : Math.min(...nets);
+}
+function matchResult(m, course, format){
+  const na=sideNet(m.a,course,format), nb=sideNet(m.b,course,format);
+  if(na==null || nb==null) return {na, nb, winner:null};
+  if(na<nb) return {na, nb, winner:'A'};
+  if(nb<na) return {na, nb, winner:'B'};
+  return {na, nb, winner:'half'};
+}
+function cupTotals(){
+  let A=0, B=0, total=0, decided=0;
+  COURSES.forEach(c=>{
+    const f=rounds[c.id].format;
+    matchesForRound(c.id).forEach(m=>{
+      total++;
+      const r=matchResult(m,c,f);
+      if(r.winner==='A'){ A+=1; decided++; }
+      else if(r.winner==='B'){ B+=1; decided++; }
+      else if(r.winner==='half'){ A+=0.5; B+=0.5; decided++; }
+    });
+  });
+  const need = total ? (total%2===0 ? total/2 + 0.5 : (total+1)/2) : 0;
+  return {A, B, total, decided, need};
+}
+function roundDone(cid){
+  const c=courseById(cid), rd=rounds[cid];
+  if(rd.type==='individual') return players.some(p=>{ const n=playerNet(p.id,c); return n && n.net!=null; });
+  return matchesForRound(cid).some(m=>matchResult(m,c,rd.format).winner!=null);
+}
+function indivStandings(){
+  return players.map(p=>{
+    let net=0, gross=0, played=0, missingHI=false;
+    COURSES.forEach(c=>{
+      const n=playerNet(p.id,c);
+      if(n){ if(n.net==null){ missingHI=true; } else { net+=n.net; gross+=n.gross; played++; } }
+    });
+    return {p, net, gross, played, missingHI};
+  }).filter(x=>x.played>0 || x.missingHI).sort((a,b)=> a.net-b.net);
+}
+
+// ---------- Render: schedule ----------
+function renderSchedule(){
+  const host=document.getElementById('schedList');
+  host.innerHTML = SCHEDULE.map(day=>{
+    const isGolf = !!day.golf;
+    let lines='';
+    if(isGolf){
+      const c=courseById(day.golf.id);
+      const rd=rounds[c.id];
+      const rNo=COURSES.findIndex(x=>x.id===c.id)+1;
+      let badge;
+      if(rd.type==='singles') badge=`<span class="rbadge fin">R${rNo} · Singles finale</span>`;
+      else if(rd.type==='individual') badge=`<span class="rbadge">R${rNo} · Individual</span>`;
+      else if(rd.pairMode==='swap') badge=`<span class="rbadge swap">R${rNo} · Swap round</span>`;
+      else badge=`<span class="rbadge">R${rNo} · ${FORMATS[rd.format]}</span>`;
+      lines += `<div class="sday-line"><span class="lbl">Golf</span><span class="tee">${day.golf.tee}</span>
+        <span class="travel">${day.golf.travel}</span>${badge}</div>`;
+    }
+    if(day.dinner){
+      lines += `<div class="sday-line"><span class="lbl">Dinner</span><span>${escapeHtml(day.dinner)}${day.time?` <b style="color:var(--ink)">· ${day.time}</b>`:''}</span></div>`;
+    }
+    if(day.note){
+      lines += `<div class="sday-line"><span class="lbl">Note</span><span style="color:var(--ink-faint)">${escapeHtml(day.note)}</span></div>`;
+    }
+    return `<div class="sday${isGolf?' golf':''}">
+      <div class="sday-date"><div class="dnum">${day.n}</div><div class="ddate">${day.d}</div></div>
+      <div class="sday-body"><div class="sday-theme">${escapeHtml(day.theme)}</div>${lines}</div>
+    </div>`;
+  }).join('');
+}
+
+// ---------- Render: handicap calculator ----------
+function renderRoster(){
+  const host = document.getElementById('rosterList');
+  host.innerHTML='';
+  players.forEach(p=>{
+    const row=document.createElement('div');
+    row.className='roster-row';
+    const idxVal = (p.index===''||p.index==null) ? '' : p.index;
+    row.innerHTML=`
+      <input type="text" placeholder="Player name" value="${escapeHtml(p.name)}" data-id="${p.id}" data-f="name">
+      <div class="idx-wrap"><input type="number" step="0.1" placeholder="TBD" value="${idxVal}" data-id="${p.id}" data-f="index"></div>
+      <button class="btn-x" title="Remove" data-del="${p.id}">×</button>`;
+    host.appendChild(row);
+  });
+  host.querySelectorAll('input').forEach(inp=>{
+    inp.addEventListener('input',e=>{
+      const p=players.find(x=>x.id===e.target.dataset.id); if(!p)return;
+      if(e.target.dataset.f==='name'){ p.name=e.target.value; renderComp(); }
+      else { p.index = e.target.value==='' ? '' : parseFloat(e.target.value); renderComp(); }
+      renderBoard(); save();
+    });
+  });
+  host.querySelectorAll('[data-del]').forEach(b=>{
+    b.addEventListener('click',()=>{
+      const did=b.dataset.del;
+      players=players.filter(x=>x.id!==did);
+      duos.forEach(d=>{ d.players=d.players.map(id=>id===did?null:id); });
+      COURSES.forEach(c=>{ if(rounds[c.id].scores[did]!=null) delete rounds[c.id].scores[did]; });
+      renderRoster(); renderBoard(); renderComp(); save();
+    });
+  });
+}
+function renderTabs(){
+  const host=document.getElementById('tabs'); host.innerHTML='';
+  COURSES.forEach(c=>{
+    const b=document.createElement('button');
+    b.className='tab'+(c.id===active?' active':'');
+    b.innerHTML=`${c.short}<small>par ${c.par}${c.id==='carn'?' *':''}</small>`;
+    b.addEventListener('click',()=>{ active=c.id; renderTabs(); renderBoard(); save(); });
+    host.appendChild(b);
+  });
+}
+function renderBoard(){
+  const c=COURSES.find(x=>x.id===active);
+  const host=document.getElementById('board');
+  const alw=allowance[c.id];
+  const teeOpts = teeName => c.tees.map(t=>
+    `<option value="${t.name}" ${t.name===teeName?'selected':''}>${t.name} — ${t.cr}/${t.sl}${t.par!=null&&t.par!==c.par?' · par '+t.par:''}</option>`).join('');
+
+  let head=`
+    <div class="board-top">
+      <div>
+        <div class="course-name">${c.name}</div>
+        <div class="course-meta">Par ${c.par} · ${c.tees.length} tees · CR/Slope shown per tee</div>
+      </div>
+      <div class="controls">
+        <div class="ctl"><label>Set all tees</label>
+          <select id="allTees"><option value="">— choose —</option>
+            ${c.tees.map(t=>`<option value="${t.name}">${t.name}</option>`).join('')}
+          </select></div>
+        <div class="ctl"><label>Comp allowance</label>
+          <select id="alw">${ALLOWANCES.map(a=>`<option value="${a.v}" ${a.v===alw?'selected':''}>${a.label}</option>`).join('')}</select></div>
+      </div>
+    </div>`;
+  if(c.note) head+=`<div class="flag"><b>Heads up:</b> ${c.note}</div>`;
+
+  let body;
+  if(players.length===0){
+    body=`<div class="foot" style="padding:34px 0;justify-content:center">No players. Add some above.</div>`;
+  } else {
+    const rows=players.map(p=>{
+      const teeName=teeFor(c,p.id); const t=teeObj(c,teeName);
+      const parUsed=(t.par!=null)?t.par:c.par;
+      const idxNum=(p.index===''||p.index==null||isNaN(p.index))?null:Number(p.index);
+      let chCell, phCell;
+      if(idxNum===null){
+        chCell=`<span class="tbd">TBD</span>`; phCell=`<span class="tbd">TBD</span>`;
+      }else{
+        const ch=courseHcp(idxNum,c,t);
+        const chB=fmt(ch), phB=fmt(Math.round(ch)*alw);
+        chCell=`<div class="big${chB.startsWith('+')?' plus':''}">${chB}</div><div class="raw">${ch.toFixed(1)}</div>`;
+        phCell=`<div class="big${phB.startsWith('+')?' plus':''}">${phB}</div>`;
+      }
+      return `<tr>
+        <td><div class="card-line"><span class="k">Player</span>
+          <div><div class="p-name">${escapeHtml(p.name)||'unnamed'}</div>
+          <div class="p-idx">HI ${idxNum!==null?idxNum.toFixed(1):'—'}</div></div></div></td>
+        <td class="tee-sel"><div class="card-line"><span class="k">Tee</span>
+          <select data-id="${p.id}">${teeOpts(teeName)}</select></div></td>
+        <td class="rs"><div class="card-line"><span class="k">CR / Slope / Par</span><span>${t.cr} / ${t.sl} / ${parUsed}</span></div></td>
+        <td class="chcp"><div class="card-line"><span class="k">Course HCP</span><div>${chCell}</div></div></td>
+        <td class="phcp"><div class="card-line"><span class="k">Playing HCP</span><div>${phCell}</div></div></td>
+      </tr>`;
+    }).join('');
+    body=`<table class="rt"><thead><tr>
+        <th>Player</th><th>Tee</th><th class="num">CR / Slope / Par</th>
+        <th class="num">Course HCP</th><th class="num">Playing HCP</th></tr></thead>
+      <tbody>${rows}</tbody></table>`;
+  }
+  host.innerHTML=head+body;
+
+  const allSel=document.getElementById('allTees');
+  if(allSel) allSel.addEventListener('change',e=>{ if(e.target.value){ players.forEach(p=>teeChoice[c.id][p.id]=e.target.value); renderBoard(); renderComp(); save(); }});
+  const alwSel=document.getElementById('alw');
+  if(alwSel) alwSel.addEventListener('change',e=>{ allowance[c.id]=parseFloat(e.target.value); renderBoard(); save(); });
+  host.querySelectorAll('.tee-sel select').forEach(sel=>{
+    sel.addEventListener('change',e=>{ teeChoice[c.id][e.target.dataset.id]=e.target.value; renderBoard(); renderComp(); save(); });
+  });
+}
+
+// ---------- Render: competition ----------
+function renderComp(){
+  renderScoreboard();
+  renderTeamSetup();
+  renderRoundTabs();
+  renderRoundPanel();
+  renderIndivBoard();
+}
+
+function renderScoreboard(){
+  const host=document.getElementById('scoreboard');
+  const {A,B,total,decided,need}=cupTotals();
+  let status, won=false;
+  if(total===0){ status='Set up teams to start the cup'; }
+  else if(A>=need){ status=`${escapeHtml(teamName('A'))} win the cup 🏆`; won=true; }
+  else if(B>=need){ status=`${escapeHtml(teamName('B'))} win the cup 🏆`; won=true; }
+  else if(decided===total && A===B){ status='Cup halved — honours even'; }
+  else { status=`${half(need)} to win · ${decided}/${total} matches decided`; }
+  const aw=total?A/total*100:0, bw=total?B/total*100:0, hw=total?(total-A-B)/total*100:100;
+  host.innerHTML=`
+    <div class="sb-team a">
+      <div class="sb-name"><span class="dotc" style="background:${TEAM_COLORS.A}"></span>${escapeHtml(teamName('A'))}</div>
+      <div class="sb-score" style="color:${TEAM_COLORS.A}">${half(A)}</div>
+    </div>
+    <div class="sb-mid">Match play<span class="vs">vs</span>${total?half(total)+' pts':'—'}</div>
+    <div class="sb-team b">
+      <div class="sb-name"><span class="dotc" style="background:${TEAM_COLORS.B}"></span>${escapeHtml(teamName('B'))}</div>
+      <div class="sb-score" style="color:${TEAM_COLORS.B}">${half(B)}</div>
+    </div>
+    <div class="barwrap"><div class="ba" style="width:${aw}%"></div><div class="bh" style="width:${hw}%"></div><div class="bb" style="width:${bw}%"></div></div>
+    <div class="sb-status${won?' won':''}">${status}</div>`;
+}
+
+function renderTeamSetup(){
+  const host=document.getElementById('teamSetup');
+  const opts=(sel)=>`<option value="">—</option>`+players.map(p=>`<option value="${p.id}" ${p.id===sel?'selected':''}>${escapeHtml(p.name)||'unnamed'}</option>`).join('');
+  const col=t=>{
+    const ds=teamDuos(t);
+    return `<div class="teamcol">
+      <h4><span class="dotc" style="background:${TEAM_COLORS[t]}"></span>
+        <input class="nameinput" data-tname="${t}" value="${escapeHtml(teamName(t))}" maxlength="20"></h4>
+      ${ds.map((d,i)=>`<div class="duo"><span class="duolbl">Duo ${i+1}</span>
+        <select data-duo="${d.id}" data-slot="0">${opts(d.players[0])}</select>
+        <select data-duo="${d.id}" data-slot="1">${opts(d.players[1])}</select></div>`).join('')}
+    </div>`;
+  };
+  host.innerHTML=`<div class="teamgrid">${col('A')}${col('B')}</div>`;
+  host.querySelectorAll('[data-tname]').forEach(inp=>inp.addEventListener('input',e=>{
+    teams[e.target.dataset.tname].name=e.target.value;
+    renderScoreboard(); renderRoundPanel(); renderIndivBoard(); renderSchedule(); save('comp');
+  }));
+  host.querySelectorAll('[data-duo]').forEach(sel=>sel.addEventListener('change',e=>{
+    const d=duos.find(x=>x.id===e.target.dataset.duo); if(!d) return;
+    d.players[+e.target.dataset.slot]=e.target.value||null;
+    renderComp(); save('comp');
+  }));
+}
+
+function renderRoundTabs(){
+  const host=document.getElementById('roundTabs'); host.innerHTML='';
+  COURSES.forEach((c,i)=>{
+    const rd=rounds[c.id];
+    const sub = rd.type==='individual' ? 'Individual' : rd.type==='singles' ? 'Singles' : (rd.pairMode==='swap'?'Swap':FORMATS[rd.format]);
+    const b=document.createElement('button');
+    b.className='rtab'+(c.id===compRound?' active':'')+(roundDone(c.id)?' done':'');
+    b.innerHTML=`R${i+1} · ${c.short}<small>${sub}</small>`;
+    b.addEventListener('click',()=>{ compRound=c.id; renderRoundTabs(); renderRoundPanel(); save('comp'); });
+    host.appendChild(b);
+  });
+}
+
+function playerScoreRow(pid, course){
+  if(!pid) return `<div class="mp"><span class="mpn" style="color:var(--ink-faint)">— empty —</span><span></span></div>`;
+  const g=rounds[course.id].scores[pid];
+  const n=playerNet(pid,course); const ch=roundCourseHcp(pid,course);
+  const netTxt = n && n.net!=null ? `<b>${n.net}</b>` : (ch==null?'<span class="warn">need HI</span>':'—');
+  return `<div class="mp"><span class="mpn">${escapeHtml(playerName(pid))}</span>
+      <input class="grossin" type="number" inputmode="numeric" placeholder="—" value="${g==null?'':g}" data-score="${pid}">
+    </div><div class="mpnet" data-netfor="${pid}">${ch!=null?'CH '+ch:'CH —'} · ${netTxt} <span class="u">net</span></div>`;
+}
+function matchCard(m, idx, course, format){
+  const r=matchResult(m,course,format);
+  const badge = r.winner==null ? '<span class="mbadge none">to play</span>'
+    : r.winner==='half' ? '<span class="mbadge half">Halved · ½ each</span>'
+    : `<span class="mbadge ${r.winner==='A'?'wa':'wb'}">${escapeHtml(teamName(r.winner))} win</span>`;
+  const sub = m.a.length>1 ? (format==='aggregate'?'aggregate':'better ball') : 'net';
+  const na = r.na!=null?r.na:'–', nb = r.nb!=null?r.nb:'–';
+  return `<div class="matchcard"><div class="mc-grid">
+    <div class="mc-side a">
+      <div class="mc-team" style="color:${TEAM_COLORS.A}">${escapeHtml(teamName('A'))}</div>
+      ${m.a.map(pid=>playerScoreRow(pid,course)).join('')}
+      <div class="mc-sub">${sub}: <b data-sidenet="${idx}:A">${na}</b></div>
+    </div>
+    <div class="mc-res">
+      <div data-resfor="${idx}">${badge}</div>
+      <div class="mc-nets"><span data-net2="${idx}:A">${na}</span> v <span data-net2="${idx}:B">${nb}</span></div>
+    </div>
+    <div class="mc-side b">
+      <div class="mc-team" style="color:${TEAM_COLORS.B}">${escapeHtml(teamName('B'))}</div>
+      ${m.b.map(pid=>playerScoreRow(pid,course)).join('')}
+      <div class="mc-sub">${sub}: <b data-sidenet="${idx}:B">${nb}</b></div>
+    </div>
+  </div></div>`;
+}
+
+function renderRoundPanel(){
+  const host=document.getElementById('roundPanel');
+  const c=courseById(compRound); const rd=rounds[c.id];
+  const isInd=rd.type==='individual', isPairs=rd.type==='pairs', isSingles=rd.type==='singles';
+
+  const MODES=[['individual','Individual'],['pairs','Pairs'],['singles','Singles']];
+  const sess=`<div class="fmt-toggle">${MODES.map(([v,l])=>`<button data-sess="${v}" class="${rd.type===v?'on':''}">${l}</button>`).join('')}</div>`;
+  const fmtT = isPairs ? `<div class="fmt-toggle">${Object.keys(FORMATS).map(f=>`<button data-fmt="${f}" class="${rd.format===f?'on':''}">${FORMATS[f]}</button>`).join('')}</div>` : '';
+  const pairT = isPairs ? `<div class="fmt-toggle"><button data-pm="standing" class="${rd.pairMode!=='swap'?'on':''}">Standing</button><button data-pm="swap" class="${rd.pairMode==='swap'?'on':''}">Swap in team</button></div>` : '';
+  const desc = isInd
+    ? 'Individual — everyone plays their own ball, group with anyone. Counts toward the personal leaderboard only, not the team cup.'
+    : isSingles
+      ? 'Singles — every player vs the other side, low net wins the match (1 pt, ½ if tied)'
+      : `${FORMATS[rd.format]} — ${rd.pairMode==='swap'?'partners swapped within each side':'standing father-son duos'}; low net wins the match`;
+
+  let top=`<div class="round-top">
+    <div><div class="round-name">${c.name}</div><div class="round-meta">Par ${c.par} · ${desc}</div></div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px">${sess}${fmtT}${pairT}</div>
+  </div>`;
+
+  let body;
+  if(isInd){
+    body = individualCardHtml(c);
+  } else {
+    const ms=matchesForRound(c.id);
+    body = `<div class="matchlist">${ms.length ? ms.map((m,i)=>matchCard(m,i,c,rd.format)).join('')
+      : '<div class="emptyc">Assign players to both sides to create matches.</div>'}</div>`;
+  }
+  host.innerHTML=top+body;
+
+  host.querySelectorAll('[data-sess]').forEach(b=>b.addEventListener('click',()=>{ rd.type=b.dataset.sess; renderComp(); renderSchedule(); save('comp'); }));
+  host.querySelectorAll('[data-fmt]').forEach(b=>b.addEventListener('click',()=>{ rd.format=b.dataset.fmt; renderComp(); renderSchedule(); save('comp'); }));
+  host.querySelectorAll('[data-pm]').forEach(b=>b.addEventListener('click',()=>{ rd.pairMode=b.dataset.pm; renderComp(); renderSchedule(); save('comp'); }));
+  host.querySelectorAll('[data-score]').forEach(inp=>inp.addEventListener('input',e=>{
+    const pid=e.target.dataset.score, v=e.target.value;
+    if(v===''||v==null) delete rounds[c.id].scores[pid];
+    else rounds[c.id].scores[pid]=parseInt(v,10);
+    renderScoreboard(); renderIndivBoard(); renderRoundTabs();
+    if(rounds[c.id].type==='individual') updateIndividualLive(c.id); else updateMatchLive(c.id);
+    save('comp');
+  }));
+}
+
+function individualRanks(c){
+  const ranked=players.map(p=>({pid:p.id, net:(playerNet(p.id,c)||{}).net})).filter(x=>x.net!=null).sort((a,b)=>a.net-b.net);
+  const rank={}; let i=0;
+  while(i<ranked.length){ let j=i; while(j+1<ranked.length && ranked[j+1].net===ranked[i].net) j++; for(let k=i;k<=j;k++) rank[ranked[k].pid]=i+1; i=j+1; }
+  return rank;
+}
+function individualCardHtml(c){
+  const rank=individualRanks(c);
+  const rows=players.map(p=>{
+    const g=rounds[c.id].scores[p.id];
+    const n=playerNet(p.id,c), ch=roundCourseHcp(p.id,c);
+    const t=teamOfPlayer(p.id);
+    const tag=t?`<span class="teamtag" style="background:${TEAM_COLORS[t]}">${escapeHtml(teamName(t))}</span>`:'';
+    const netTxt=n&&n.net!=null?`<b>${n.net}</b>`:(ch==null?'<span class="warn">need HI</span>':'—');
+    return `<tr>
+      <td>${escapeHtml(p.name)||'unnamed'}</td>
+      <td>${tag}</td>
+      <td class="num"><input class="grossin" type="number" inputmode="numeric" placeholder="—" value="${g==null?'':g}" data-score="${p.id}"></td>
+      <td class="num" data-inet="${p.id}">${ch!=null?'CH '+ch+' · ':''}${netTxt}</td>
+      <td class="num" data-irank="${p.id}">${rank[p.id]||'—'}</td>
+    </tr>`;
+  }).join('');
+  return `<table class="lb"><thead><tr><th>Player</th><th>Team</th><th class="num">Gross</th><th class="num">Net</th><th class="num">Rd rank</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+function updateIndividualLive(cid){
+  const c=courseById(cid); const host=document.getElementById('roundPanel'); const rank=individualRanks(c);
+  players.forEach(p=>{
+    const n=playerNet(p.id,c), ch=roundCourseHcp(p.id,c);
+    const netTxt=n&&n.net!=null?`<b>${n.net}</b>`:(ch==null?'<span class="warn">need HI</span>':'—');
+    const ne=host.querySelector(`[data-inet="${p.id}"]`); if(ne) ne.innerHTML=`${ch!=null?'CH '+ch+' · ':''}${netTxt}`;
+    const re=host.querySelector(`[data-irank="${p.id}"]`); if(re) re.textContent=rank[p.id]||'—';
+  });
+}
+
+// in-place refresh so typing a score doesn't drop input focus
+function updateMatchLive(cid){
+  const c=courseById(cid), f=rounds[cid].format;
+  const host=document.getElementById('roundPanel');
+  host.querySelectorAll('[data-netfor]').forEach(el=>{
+    const pid=el.dataset.netfor; const n=playerNet(pid,c); const ch=roundCourseHcp(pid,c);
+    const netTxt = n && n.net!=null ? `<b>${n.net}</b>` : (ch==null?'<span class="warn">need HI</span>':'—');
+    el.innerHTML=`${ch!=null?'CH '+ch:'CH —'} · ${netTxt} <span class="u">net</span>`;
+  });
+  matchesForRound(cid).forEach((m,idx)=>{
+    const r=matchResult(m,c,f);
+    const rf=host.querySelector(`[data-resfor="${idx}"]`);
+    if(rf) rf.innerHTML = r.winner==null ? '<span class="mbadge none">to play</span>'
+      : r.winner==='half' ? '<span class="mbadge half">Halved · ½ each</span>'
+      : `<span class="mbadge ${r.winner==='A'?'wa':'wb'}">${escapeHtml(teamName(r.winner))} win</span>`;
+    const na=r.na!=null?r.na:'–', nb=r.nb!=null?r.nb:'–';
+    host.querySelectorAll(`[data-sidenet="${idx}:A"]`).forEach(e=>e.textContent=na);
+    host.querySelectorAll(`[data-sidenet="${idx}:B"]`).forEach(e=>e.textContent=nb);
+    const a2=host.querySelector(`[data-net2="${idx}:A"]`); if(a2)a2.textContent=na;
+    const b2=host.querySelector(`[data-net2="${idx}:B"]`); if(b2)b2.textContent=nb;
+  });
+}
+
+function renderIndivBoard(){
+  const host=document.getElementById('indivBoard');
+  const st=indivStandings();
+  if(st.length===0){ host.innerHTML=`<div class="emptyc">Enter round scores to build the leaderboard.</div>`; return; }
+  host.innerHTML=`<table class="lb"><thead><tr>
+      <th class="rk">#</th><th>Player</th><th>Team</th><th class="num">Rounds</th><th class="num">Gross</th><th class="num">Net</th></tr></thead>
+    <tbody>${st.map((r,i)=>{
+      const lead=i===0 && r.played>0;
+      const t=teamOfPlayer(r.p.id);
+      const tag = t ? `<span class="teamtag" style="background:${TEAM_COLORS[t]}">${escapeHtml(teamName(t))}</span>` : '';
+      return `<tr class="${lead?'lead':''}">
+        <td class="rk">${r.played>0?i+1:'–'}</td>
+        <td>${escapeHtml(r.p.name)||'unnamed'}${r.missingHI?' <span style="color:var(--danger);font-size:11px">·needs HI</span>':''}</td>
+        <td>${tag}</td>
+        <td class="num">${r.played}</td>
+        <td class="num">${r.played>0?r.gross:'—'}</td>
+        <td class="num netbig">${r.played>0?r.net:'—'}</td></tr>`;
+    }).join('')}</tbody></table>`;
+}
+
+// ---------- App tab switching ----------
+function setAppTab(t){
+  appTab=t;
+  document.querySelectorAll('.apptab').forEach(b=>b.classList.toggle('active', b.dataset.app===t));
+  document.getElementById('view-sched').classList.toggle('active', t==='sched');
+  document.getElementById('view-hcp').classList.toggle('active', t==='hcp');
+  document.getElementById('view-comp').classList.toggle('active', t==='comp');
+  save();
+}
+
+// ---------- Actions ----------
+document.getElementById('addBtn').addEventListener('click',()=>{ const id=newId(); players.push({id,name:'',index:''}); renderRoster(); renderBoard(); renderComp(); save(); });
+document.getElementById('resetBtn').addEventListener('click',()=>{ if(confirm('Reset roster and tee choices to the original eight?')){ freshDefaults(); renderRoster(); renderTabs(); renderBoard(); renderComp(); renderSchedule(); save(); }});
+document.getElementById('resetCompBtn').addEventListener('click',()=>{ if(confirm('Reset teams, formats and all scores?')){ freshComp(); renderComp(); renderSchedule(); save('comp'); }});
+document.querySelectorAll('.apptab').forEach(b=>b.addEventListener('click',()=>setAppTab(b.dataset.app)));
+
+// ---------- Init ----------
+freshDefaults();
+load();               // overrides defaults if saved state exists on this device
+renderSchedule(); renderRoster(); renderTabs(); renderBoard(); renderComp();
+setAppTab(appTab);
+</script>
+</body>
+</html>
