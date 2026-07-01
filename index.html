@@ -260,6 +260,17 @@
     .mc-side.b .mpnet{text-align:left}
     .mc-res{padding-top:4px;padding-bottom:4px;border-top:1px dashed var(--rule);border-bottom:1px dashed var(--rule);margin:2px 0}
     .apptab small{display:none}
+    /* inputs at 16px stop iOS from zooming in when a field is focused */
+    input[type=text],input[type=number],select{font-size:16px}
+    .grossin{width:58px;padding:7px 4px}
+    /* keep wide leaderboard tables tidy, and let them scroll if a phone is very narrow */
+    #indivBoard,#roundPanel{overflow-x:auto;-webkit-overflow-scrolling:touch}
+    .lb th,.lb td{padding:8px 6px;font-size:13px}
+    .lb th{font-size:9.5px}
+    .lb .teamtag{font-size:9px;padding:2px 6px}
+    .round-top{gap:10px}
+    .fmt-toggle button{padding:8px 10px}
+    .csub{font-size:12px}
   }
   @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -420,7 +431,7 @@ const SEED_PLAYERS = [
   {id:'p2', name:'Bruce',  index:11.7},
   {id:'p3', name:'Kyle',   index:16},
   {id:'p4', name:'Ron',    index:18},
-  {id:'p5', name:'Andrew', index:''},
+  {id:'p5', name:'Andrew', index:15.7},
   {id:'p6', name:'Mike',   index:5},
   {id:'p7', name:'Justin', index:9.7},
   {id:'p8', name:'Robert', index:16},
@@ -456,7 +467,7 @@ const SCHEDULE = [
   {n:'Day 7', d:'Tue · Jul 14', theme:'Departure', note:'Optional early Kingsbarns 6:50am before flights'},
 ];
 
-const LS_KEY = 'fife-hcp-v7';
+const LS_KEY = 'fife-hcp-v8';
 
 // ---------- State ----------
 let players = [];
