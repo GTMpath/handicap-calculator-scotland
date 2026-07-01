@@ -648,7 +648,7 @@ const FORMATS = {betterball:'Better Ball', aggregate:'Combined'};
 const ROUND_CFG = {
   kings:{team:'pairs',    ball:'betterball', play:'match',  label:'Pairs · Better Ball'},
   dumb: {team:'pairs',    ball:'aggregate',  play:'match',  label:'Pairs · Combined'},
-  carn: {team:'foursome', bestN:2,           play:'stroke', label:'Team foursome · Best 2'},
+  carn: {team:'pairs',    ball:'aggregate',  play:'match',  label:'Pairs · Combined'},  // format TBD by Justin
   new:  {team:'singles',                     play:'match',  label:'Singles · mix it up'},
   old:  {team:'foursome', bestN:4,           play:'stroke', label:'Team foursome · Best 4'},
 };
@@ -658,11 +658,11 @@ const cfg = id => ROUND_CFG[id] || ROUND_CFG.kings;
 // (the weakest): mixed singles, nobody with their partner. Seed ids: p1 Brett, p2 Bruce,
 // p3 Kyle, p4 Ron (Fife); p5 Andrew, p6 Mike, p7 Justin, p8 Robert (Angus).
 const ROUND_GROUPS = {
-  kings:[['p1','p2','p7','p8'],['p3','p4','p5','p6']],   // pairings: Brett+Bruce v Justin+Robert
-  dumb: [['p3','p4','p7','p8'],['p1','p2','p5','p6']],   // pairings: rotated opponents + tee order
-  carn: [['p1','p2','p3','p4'],['p5','p6','p7','p8']],   // team foursome: Fife together, Angus together
-  new:  [['p1','p7','p3','p6'],['p2','p8','p4','p5']],   // singles, mixed: Brett-Justin & Kyle-Mike | Bruce-Robert & Ron-Andrew
-  old:  [['p1','p2','p3','p4'],['p5','p6','p7','p8']],   // team foursome: full teams
+  kings:[['p1','p2','p5','p6'],['p3','p4','p7','p8']],   // Brett+Bruce v Andrew+Mike | Kyle+Ron v Justin+Robert
+  dumb: [['p1','p2','p7','p8'],['p3','p4','p5','p6']],   // Brett+Bruce v Justin+Robert | Kyle+Ron v Andrew+Mike
+  carn: [['p1','p2','p5','p6'],['p3','p4','p7','p8']],   // same groups as Kingsbarns (the unavoidable repeat)
+  new:  [['p1','p3','p5','p7'],['p2','p4','p6','p8']],   // singles mixed: Brett-Andrew, Kyle-Justin | Bruce-Mike, Ron-Robert
+  old:  [['p1','p2','p3','p4'],['p5','p6','p7','p8']],   // team foursome: Fife | Angus (the one team game)
 };
 
 // day-by-day schedule (Jul 8–14 2026)
