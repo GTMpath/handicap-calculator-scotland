@@ -545,8 +545,8 @@
       </div>
 
       <div class="csection">
-        <h3>Groupings &amp; who plays with who</h3>
-        <div class="csub">The playing groups each round on the current format, plus a count of how often each pair shares a group. Use it to spot who never crosses paths before you finalise the days.</div>
+        <h3>Groupings</h3>
+        <div class="csub">The playing groups for each round.</div>
         <div id="groupings"></div>
         <div class="divide"></div>
       </div>
@@ -1267,20 +1267,7 @@ function renderGroupings(){
       <div class="grp-groups">${gs.map((g,gi)=>`<div class="grp-ball"><span class="grp-n">Group ${gi+1}</span>${g.map(pid=>`<span class="grp-p" style="border-color:${TEAM_COLORS[teamOfPlayer(pid)]||'var(--rule)'}">${escapeHtml(playerName(pid))}</span>`).join('')}</div>`).join('')}</div>
     </div>`;
   }).join('');
-  const ids=players.map(p=>p.id), pairCount={};
-  COURSES.forEach(c=>groupsForRound(c.id).forEach(g=>{
-    for(let a=0;a<g.length;a++) for(let b=a+1;b<g.length;b++){ const k=[g[a],g[b]].sort().join('|'); pairCount[k]=(pairCount[k]||0)+1; }
-  }));
-  const head=`<th class="gm-corner"></th>`+ids.map(pid=>`<th class="gm-h">${escapeHtml(playerName(pid)).slice(0,3)}</th>`).join('');
-  const rowsM=ids.map(ra=>`<tr><td class="gm-name">${escapeHtml(playerName(ra))}</td>`+ids.map(rb=>{
-    if(ra===rb) return `<td class="gm-x">·</td>`;
-    const n=pairCount[[ra,rb].sort().join('|')]||0;
-    return `<td class="gm-c gm-${Math.min(n,3)}">${n||''}</td>`;
-  }).join('')+`</tr>`).join('');
-  host.innerHTML=`
-    <div class="grp-rounds">${roundsHtml}</div>
-    <div class="csub" style="margin:16px 0 8px">How many rounds each pair shares a group, on the current format. Darker means they play together more, so it is easy to spot who never crosses paths.</div>
-    <div class="gm-wrap"><table class="gm"><thead><tr>${head}</tr></thead><tbody>${rowsM}</tbody></table></div>`;
+  host.innerHTML=`<div class="grp-rounds">${roundsHtml}</div>`;
 }
 
 function renderIndivBoard(){
