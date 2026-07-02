@@ -488,7 +488,7 @@
     </section>
     <div class="foot">
       <span class="dot">▪</span>
-      <span>Tee times and travel come off the trip sheet, so confirm them each morning. The golf days map straight to the five cup rounds: <b>pairings</b> at Kingsbarns and Dumbarnie, <b>team foursomes</b> at Carnoustie and the Old Course, and a <b>mixed singles</b> at the New Course.</span>
+      <span>Tee times and travel come off the trip sheet, so confirm them each morning. The golf days map straight to the five cup rounds: <b>pairings</b> at Kingsbarns, Dumbarnie and Carnoustie, a <b>mixed singles</b> at the New Course, and the <b>team foursome</b> finale at the Old Course.</span>
     </div>
   </div>
 
@@ -527,10 +527,10 @@
 
       <div class="csection">
         <h3>The format at a glance</h3>
-        <div class="csub">Fife against Angus over five rounds. Every round is worth cup points, and the first side to 5½ of the 10 keeps the cup. You play three formats:</div>
+        <div class="csub">Fife against Angus over five rounds. Every round is worth cup points, and the first side to 6½ of the 12 keeps the cup. You play three formats:</div>
         <div class="fexplain">
-          <div class="fex"><span class="fex-t">Pairings</span> at Kingsbarns and Dumbarnie. You and your partner take on another pair, match play. <b>Better Ball</b> counts your lower net on each hole, <b>Combined</b> counts both of you. Win the match to win a point, two points on offer each round.</div>
-          <div class="fex"><span class="fex-t">Team foursome</span> at Carnoustie and the Old Course. Your whole team plays their own ball and we add the best nets, the best two at Carnoustie and the best four on the Old. Lowest team total wins the point.</div>
+          <div class="fex"><span class="fex-t">Pairings</span> at Kingsbarns, Dumbarnie and Carnoustie. You and your partner take on another pair, match play. <b>Better Ball</b> counts your lower net on each hole, <b>Combined</b> counts both of you. Win the match to win a point, two points on offer each round.</div>
+          <div class="fex"><span class="fex-t">Team foursome</span> to finish at the Old Course. Your whole team plays their own ball and we add the best three nets, so one blow-up hole won't sink you. Lowest team total wins, and it's worth two points.</div>
           <div class="fex"><span class="fex-t">Singles</span> at the New Course. Everyone leaves their partner and plays one on one against the other side. Win your match to win a point, four up for grabs.</div>
         </div>
         <div id="formatTable"></div>
@@ -576,7 +576,7 @@
 
     <div class="foot">
       <span class="dot">▪</span>
-      <span>Every round feeds the cup. The two pairings rounds are worth a point per match, the two team foursomes a point each on best net, and the mixed singles four points, so ten are in play and five and a half wins it. Scores you post anywhere also build the individual net board.</span>
+      <span>Every round feeds the cup. The three pairings rounds are worth two points each, the mixed singles four, and the team foursome two on its best three nets, so twelve are in play and six and a half wins it. Scores you post anywhere also build the individual net board.</span>
     </div>
   </div>
 
@@ -650,7 +650,7 @@ const ROUND_CFG = {
   dumb: {team:'pairs',    ball:'aggregate',  play:'match',  label:'Pairs · Combined'},
   carn: {team:'pairs',    ball:'aggregate',  play:'match',  label:'Pairs · Combined'},  // format TBD by Justin
   new:  {team:'singles',                     play:'match',  label:'Singles · mix it up'},
-  old:  {team:'foursome', bestN:4,           play:'stroke', label:'Team foursome · Best 4'},
+  old:  {team:'foursome', bestN:3, pts:2,     play:'stroke', label:'Team foursome · Best 3'},
 };
 const cfg = id => ROUND_CFG[id] || ROUND_CFG.kings;
 // Playing groups per round. Kingsbarns + Dumbarnie: pairings (with your partner), rotated
@@ -825,22 +825,22 @@ function foursomeResult(cid){
   if(nb<na) return {na, nb, winner:'B'};
   return {na, nb, winner:'half'};
 }
-function award(res, acc){
-  if(res==='A'){ acc.A+=1; acc.decided++; }
-  else if(res==='B'){ acc.B+=1; acc.decided++; }
-  else if(res==='half'){ acc.A+=0.5; acc.B+=0.5; acc.decided++; }
+function award(res, acc, w){
+  if(res==='A'){ acc.A+=w; acc.decided+=w; }
+  else if(res==='B'){ acc.B+=w; acc.decided+=w; }
+  else if(res==='half'){ acc.A+=w/2; acc.B+=w/2; acc.decided+=w; }
 }
 function cupTotals(){
   const acc={A:0, B:0, decided:0}; let total=0;
   COURSES.forEach(c=>{
-    if(cfg(c.id).team==='foursome'){ total++; award(foursomeResult(c.id).winner, acc); }
-    else matchesForRound(c.id).forEach((m,i)=>{ total++; award(rounds[c.id].results[i], acc); });
+    if(cfg(c.id).team==='foursome'){ const w=roundPoints(c.id); total+=w; award(foursomeResult(c.id).winner, acc, w); }
+    else matchesForRound(c.id).forEach((m,i)=>{ total+=1; award(rounds[c.id].results[i], acc, 1); });
   });
   const need = total ? (total%2===0 ? total/2 + 0.5 : (total+1)/2) : 0;
   return {A:acc.A, B:acc.B, total, decided:acc.decided, need};
 }
 function roundPoints(cid){   // how many cup points this round is worth
-  return cfg(cid).team==='foursome' ? 1 : matchesForRound(cid).length;
+  return cfg(cid).team==='foursome' ? (cfg(cid).pts||1) : matchesForRound(cid).length;
 }
 function roundDone(cid){
   if(cfg(cid).team==='foursome') return foursomeResult(cid).winner!=null;
