@@ -529,7 +529,7 @@
         <h3>The format at a glance</h3>
         <div class="csub">Fife against Angus over five rounds. Every round is worth cup points, and the first side to 6½ of the 12 keeps the cup. You play three formats:</div>
         <div class="fexplain">
-          <div class="fex"><span class="fex-t">Pairings</span> at Kingsbarns, Dumbarnie and Carnoustie. You and your partner take on another pair, match play. <b>Better Ball</b> counts your lower net on each hole, <b>Combined</b> counts both of you. Win the match to win a point, two points on offer each round.</div>
+          <div class="fex"><span class="fex-t">Pairings</span> with your partner against another pair, a different game each round: <b>Combined</b> at Kingsbarns (both your nets count), <b>High-Low</b> at Dumbarnie (a point for the low ball and a point for the low total on every hole), <b>Better Ball</b> at Carnoustie (only your lower net counts, the kind option on the hardest course). Win your match for a cup point, two on offer each round.</div>
           <div class="fex"><span class="fex-t">Team foursome</span> to finish at the Old Course. Your whole team plays their own ball and we add the best three nets, so one blow-up hole won't sink you. Lowest team total wins, and it's worth two points.</div>
           <div class="fex"><span class="fex-t">Singles</span> at the New Course. Everyone leaves their partner and plays one on one against the other side. Win your match to win a point, four up for grabs.</div>
         </div>
@@ -641,14 +641,14 @@ const SEED_DUOS = [
   {id:'d4', team:'B', players:['p5','p6']}, // Andrew & Mike   (Angus)
 ];
 const TEAM_COLORS = {A:'#16243f', B:'#8a3b46'};
-const FORMATS = {betterball:'Better Ball', aggregate:'Combined'};
+const FORMATS = {betterball:'Better Ball', aggregate:'Combined', highlow:'High-Low'};
 // Locked 5-round format, one source of truth. To change a round later, edit one line here.
 //   team: 'pairs' | 'singles' (match play, tap the winner)  or  'foursome' (stroke, enter scores)
 //   ball: 'betterball' | 'aggregate'  (pairs only)   bestN: how many team nets count (foursome only)
 const ROUND_CFG = {
-  kings:{team:'pairs',    ball:'betterball', play:'match',  label:'Pairs · Better Ball'},
-  dumb: {team:'pairs',    ball:'aggregate',  play:'match',  label:'Pairs · Combined'},
-  carn: {team:'pairs',    ball:'aggregate',  play:'match',  label:'Pairs · Combined'},  // format TBD by Justin
+  kings:{team:'pairs',    ball:'aggregate',  play:'match',  label:'Pairs · Combined'},
+  dumb: {team:'pairs',    ball:'highlow',    play:'match',  label:'Pairs · High-Low'},
+  carn: {team:'pairs',    ball:'betterball', play:'match',  label:'Pairs · Better Ball'},
   new:  {team:'singles',                     play:'match',  label:'Singles · mix it up'},
   old:  {team:'foursome', bestN:3, pts:2,     play:'stroke', label:'Team foursome · Best 3'},
 };
@@ -896,9 +896,8 @@ function scoringLabel(id){
   const cf=cfg(id);
   if(cf.team==='foursome') return `Add each team's ${cf.bestN} lowest nets, low total wins the point`;
   if(cf.team==='singles')  return 'Play it out, tap each winner, a point per match';
-  return cf.ball==='aggregate'
-    ? 'Combined match play, tap the winning pair, a point per match'
-    : 'Better ball match play, tap the winning pair, a point per match';
+  const g = cf.ball==='aggregate' ? 'Combined' : cf.ball==='highlow' ? 'High-Low' : 'Better ball';
+  return `${g}, play it out and tap the winning pair, a point per match`;
 }
 function pointsLabel(id){
   const n = roundPoints(id);
