@@ -457,7 +457,7 @@
       </div>
     </section>
 
-    <div class="formula">Course HCP = Index × (Slope ÷ 113) + (Course Rating − Par) → rounded. <b>Playing HCP</b> applies your comp allowance.</div>
+    <div class="formula">Course HCP = Index × (Slope ÷ 113) + (Course Rating − Par), rounded. <b>Playing HCP</b> is 80% of that, and that is the handicap every net score in the cup runs off.</div>
 
     <nav class="tabs" id="tabs"></nav>
     <section class="board" id="board"></section>
@@ -563,12 +563,8 @@ const COURSES = [
     ], def:'Blue (Medal)' },
 ];
 
-const ALLOWANCES = [
-  {label:'Full (100%)', v:1.00},
-  {label:'Singles stroke play (95%)', v:0.95},
-  {label:'4BBB / better ball (90%)', v:0.90},
-  {label:'Foursomes combined (85%)', v:0.85},
-];
+// competition handicap allowance: everyone plays off 80% of their course handicap
+const HCP_ALLOWANCE = 0.80;
 
 const SEED_PLAYERS = [
   {id:'p1', name:'Brett',  index:0},
@@ -630,7 +626,6 @@ const LS_KEY = 'fs-invitational-v9';
 let players = [];
 let active = 'kings';         // handicap-tab active course
 let teeChoice = {};
-let allowance = {};
 let teams = {};
 let duos = [];
 let rounds = {};              // rounds[cid] = {type, format, pairMode, scores:{pid:gross}}
@@ -646,8 +641,8 @@ function freshRounds(){
 function freshDefaults(){
   players = SEED_PLAYERS.map(p => ({...p}));
   active = 'kings'; compRound = 'kings';
-  teeChoice = {}; allowance = {};
-  COURSES.forEach(c => { teeChoice[c.id] = {}; allowance[c.id] = 1.00; });
+  teeChoice = {};
+  COURSES.forEach(c => { teeChoice[c.id] = {}; });
   freshComp();
   uid = players.length;
 }
@@ -660,7 +655,6 @@ function freshComp(){
 function ensureShape(){
   COURSES.forEach(c => {
     if(!teeChoice[c.id]) teeChoice[c.id] = {};
-    if(allowance[c.id] == null) allowance[c.id] = 1.00;
     if(!rounds[c.id]) rounds[c.id] = {scores:{}, results:{}};
     if(!rounds[c.id].scores) rounds[c.id].scores = {};
     if(!rounds[c.id].results) rounds[c.id].results = {};
@@ -672,7 +666,7 @@ function ensureShape(){
 }
 function save(which){
   try{
-    localStorage.setItem(LS_KEY, JSON.stringify({players, teeChoice, allowance, active, teams, duos, rounds, compRound, appTab}));
+    localStorage.setItem(LS_KEY, JSON.stringify({players, teeChoice, active, teams, duos, rounds, compRound, appTab}));
     const t = document.getElementById(which==='comp'?'savedTagC':'savedTag');
     if(t){ t.classList.add('show'); clearTimeout(window.__st); window.__st = setTimeout(()=>t.classList.remove('show'),1100); }
   }catch(e){/* preview sandbox – persistence resumes once hosted */}
@@ -683,7 +677,7 @@ function load(){
     if(!s) return false;
     const d = JSON.parse(s);
     if(!d || !Array.isArray(d.players)) return false;
-    players = d.players; teeChoice = d.teeChoice||{}; allowance = d.allowance||{}; active = d.active||'kings';
+    players = d.players; teeChoice = d.teeChoice||{}; active = d.active||'kings';
     teams = d.teams || {A:{name:'Fife'}, B:{name:'Angus'}};
     duos = d.duos || SEED_DUOS.map(x => ({id:x.id, team:x.team, players:[...x.players]}));
     rounds = d.rounds || {};
@@ -749,7 +743,7 @@ function roundCourseHcp(pid, course){
   const idx=(p.index===''||p.index==null||isNaN(p.index))?null:Number(p.index);
   if(idx==null) return null;
   const tee=teeObj(course, teeFor(course,pid));
-  return Math.round(courseHcp(idx, course, tee));
+  return Math.round(courseHcp(idx, course, tee) * HCP_ALLOWANCE);   // 80% comp allowance
 }
 function playerNet(pid, course){
   const g = rounds[course.id].scores[pid];
@@ -970,7 +964,6 @@ function renderTabs(){
 function renderBoard(){
   const c=COURSES.find(x=>x.id===active);
   const host=document.getElementById('board');
-  const alw=allowance[c.id];
   const teeOpts = teeName => c.tees.map(t=>
     `<option value="${t.name}" ${t.name===teeName?'selected':''}>${t.name} · ${t.cr}/${t.sl}${t.par!=null&&t.par!==c.par?' · par '+t.par:''}</option>`).join('');
 
@@ -985,8 +978,6 @@ function renderBoard(){
           <select id="allTees"><option value="">Pick a tee</option>
             ${c.tees.map(t=>`<option value="${t.name}">${t.name}</option>`).join('')}
           </select></div>
-        <div class="ctl"><label>Comp allowance</label>
-          <select id="alw">${ALLOWANCES.map(a=>`<option value="${a.v}" ${a.v===alw?'selected':''}>${a.label}</option>`).join('')}</select></div>
       </div>
     </div>`;
   if(c.note) head+=`<div class="flag"><b>Heads up:</b> ${c.note}</div>`;
@@ -1004,7 +995,7 @@ function renderBoard(){
         chCell=`<span class="tbd">TBD</span>`; phCell=`<span class="tbd">TBD</span>`;
       }else{
         const ch=courseHcp(idxNum,c,t);
-        const chB=fmt(ch), phB=fmt(Math.round(ch)*alw);
+        const chB=fmt(ch), phB=fmt(Math.round(ch*HCP_ALLOWANCE));
         chCell=`<div class="big${chB.startsWith('+')?' plus':''}">${chB}</div><div class="raw">${ch.toFixed(1)}</div>`;
         phCell=`<div class="big${phB.startsWith('+')?' plus':''}">${phB}</div>`;
       }
@@ -1021,15 +1012,13 @@ function renderBoard(){
     }).join('');
     body=`<table class="rt"><thead><tr>
         <th>Player</th><th>Tee</th><th class="num">CR / Slope / Par</th>
-        <th class="num">Course HCP</th><th class="num">Playing HCP</th></tr></thead>
+        <th class="num">Course HCP</th><th class="num">Playing HCP · 80%</th></tr></thead>
       <tbody>${rows}</tbody></table>`;
   }
   host.innerHTML=head+body;
 
   const allSel=document.getElementById('allTees');
   if(allSel) allSel.addEventListener('change',e=>{ if(e.target.value){ players.forEach(p=>teeChoice[c.id][p.id]=e.target.value); renderBoard(); renderComp(); save(); }});
-  const alwSel=document.getElementById('alw');
-  if(alwSel) alwSel.addEventListener('change',e=>{ allowance[c.id]=parseFloat(e.target.value); renderBoard(); save(); });
   host.querySelectorAll('.tee-sel select').forEach(sel=>{
     sel.addEventListener('change',e=>{ teeChoice[c.id][e.target.dataset.id]=e.target.value; renderBoard(); renderComp(); save(); });
   });
