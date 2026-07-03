@@ -10,7 +10,7 @@ palette); the app still lives in the `handicap-calculator-scotland` repo.
 - **Repo**: `GTMpath/handicap-calculator-scotland` (public). Push as `GTMpath` or
   `spartacus3131` — run `gh auth switch` first; the machine defaults to another account.
 - **Trip dates**: Jul 8–14 2026. Roster: Brett, Bruce, Kyle, Ron, Andrew, Mike, Justin, Robert.
-- **Teams**: Fife (A, sea green) vs Angus (B, terracotta), two father-son duos each.
+- **Teams**: Fife (A, navy) vs Angus (B, claret), two father-son duos each. Locked to the seed.
 
 ## Architecture (all inside `index.html`)
 
@@ -20,16 +20,28 @@ palette); the app still lives in the `handicap-calculator-scotland` repo.
   Carnoustie plays par 70 off the Yellows/Greens; that per-tee `par` override matters.
 - `SCHEDULE` — the seven trip days; golf days link to a course by `id`.
 - `ROUND_CFG` — the 5-round cup format, ONE source of truth. To change a round, edit one line.
-  `team: 'pairs'|'singles'` are match play (tap the winner); `'foursome'` is stroke (enter
-  scores, best-N team net wins the point). LOCKED plan (confirmed 2026-07-01): R1 Kingsbarns
-  pairings better ball, R2 Dumbarnie pairings combined, R3 Carnoustie team foursome best-2,
-  R4 St Andrews New singles (the mix round), R5 St Andrews Old team foursome best-4. Points
-  2/2/1/4/1 = 10, 5½ to win. Everyone plays with their partner/team 4 of 5 rounds.
-- `ROUND_GROUPS` — playing groups per round (who walks together). Pairings rounds rotate
-  opponents; team rounds put each full team together; the New singles mixes so nobody is with
-  their partner. `matchesForRound` (pairs) and `groupsForRound` both read this. UI calls them
-  "pairings," not "duos" (internal `duos`/`teamDuos`/`SEED_DUOS` names kept).
-- State: `players`, `teeChoice`, `allowance`, `rounds` where each round is
+  `team: 'pairs'|'singles'` are match play (tap the winner, own-ball formats vary by round);
+  `'foursome'` is stroke (enter gross scores, best-N team net wins the point). A round can
+  carry its own `pts` field to weight it differently from the default. LOCKED plan (confirmed
+  2026-07-02, supersedes the 2026-07-01 version): R1 Kingsbarns pairs Combined (aggregate,
+  2 pts), R2 Dumbarnie pairs High-Low (2 pts, a new format: one point for low ball + one for
+  low total each hole), R3 Carnoustie pairs Better Ball (2 pts, the forgiving game on the
+  hardest course), R4 St Andrews New Singles mixed/split round (4 pts, the one round where
+  fathers and sons split up), R5 St Andrews Old team foursome best 3 nets (2 pts, the one team
+  game, softens a blow-up hole). Cup total is 12 points, 6½ to win.
+- `ROUND_GROUPS` — playing groups per round (who walks together), locked via a brute-force
+  Python optimization run outside the repo (scratch scripts, not committed): proved
+  everyone-plays-everyone-twice is impossible across 5 foursome rounds, so the floor is
+  father-son together 4 of 5 rounds (split only at the New Course singles), Brett plays
+  Andrew 3x / Kyle 2x / Mike 2x, and everyone plays everyone at least once. `matchesForRound`
+  (pairs) and `groupsForRound` both read this. UI calls them "pairings," not "duos" (internal
+  `duos`/`teamDuos`/`SEED_DUOS` names kept).
+- `HCP_ALLOWANCE` (0.80) — the cup is played off 80% of course handicap. This is applied
+  directly to `roundCourseHcp` (the number actually used for net scoring), not just to the
+  displayed Playing HCP column. There used to be a per-course allowance dropdown that only
+  changed the display while nets used full handicap; that dropdown/state is gone, replaced by
+  this single constant applied everywhere.
+- State: `players`, `teeChoice`, `rounds` where each round is
   `{scores:{pid:gross}, results:{matchIdx:'A'|'B'|'half'}}`, saved under `LS_KEY`
   (`fs-invitational-v9`; bump the suffix when the shape changes). Teams are LOCKED to the seed.
 - Render functions are named `render*`; live in-place updaters (`updateMatchLive`,
@@ -50,7 +62,8 @@ Navy/blue heraldic identity taken from the event logo (was a green newsprint loo
   match `--teamA/--teamB`.
 - Type: Space Grotesk (display), Inter (body), Space Mono (data/labels/eyebrows).
 - Ruled-paper background, 2px ink borders, dark navy tab bar with a denim active tab (white
-  text + bottom accent). Masthead has an `assets/logo.png` slot with an SVG crest fallback.
+  text + bottom accent). Masthead loads the real event logo from `assets/logo.jpeg`
+  (circle-clipped), with an inline SVG crest as the `onerror` fallback if the file is missing.
 - Keep the boldness in the signature (masthead + the live scoreboard). Everything else quiet.
 
 ## Gotchas
