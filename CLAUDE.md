@@ -21,20 +21,26 @@ palette); the app still lives in the `handicap-calculator-scotland` repo.
 - `SCHEDULE` — the seven trip days; golf days link to a course by `id`.
 - `ROUND_CFG` — the 5-round cup format, ONE source of truth. To change a round, edit one line.
   `team: 'pairs'|'singles'` are match play (tap the winner, own-ball formats vary by round);
-  `'foursome'` is stroke (enter gross scores, best-N team net wins the point). A round can
-  carry its own `pts` field to weight it differently from the default. LOCKED plan (confirmed
-  2026-07-02, supersedes the 2026-07-01 version): R1 Kingsbarns pairs Combined (aggregate,
-  2 pts), R2 Dumbarnie pairs High-Low (2 pts, a new format: one point for low ball + one for
-  low total each hole), R3 Carnoustie pairs Better Ball (2 pts, the forgiving game on the
-  hardest course), R4 St Andrews New Singles mixed/split round (4 pts, the one round where
-  fathers and sons split up), R5 St Andrews Old team foursome best 3 nets (2 pts, the one team
-  game, softens a blow-up hole). Cup total is 12 points, 6½ to win.
+  `'foursome'` is stroke (enter gross scores, best-N team net wins the point) — retired from
+  the plan but the code path is kept working for future format changes. A round can carry its
+  own `pts` field to weight it differently from the default. LOCKED plan (confirmed
+  2026-07-08 on the ground in Scotland, supersedes the 2026-07-02 version): every pairs day
+  is now High-Low (one point for low ball + one for low total each hole, most points takes
+  the match) with a ROTATING partner — R1 Kingsbarns with your father/son, R2 Dumbarnie and
+  R3 Carnoustie the two mixed pairings, R5 St Andrews Old duos reunited for the finale
+  (2 pts each). R4 St Andrews New Singles unchanged (4 pts) except fathers and sons now walk
+  in the same group. A blind draw for the Old was floated and skipped in favour of optimized
+  max-mixing pairings. Cup total is still 12 points, 6½ to win.
 - `ROUND_GROUPS` — playing groups per round (who walks together), locked via a brute-force
-  Python optimization run outside the repo (scratch scripts, not committed): proved
-  everyone-plays-everyone-twice is impossible across 5 foursome rounds, so the floor is
-  father-son together 4 of 5 rounds (split only at the New Course singles), Brett plays
-  Andrew 3x / Kyle 2x / Mike 2x, and everyone plays everyone at least once. `matchesForRound`
-  (pairs) and `groupsForRound` both read this. UI calls them "pairings," not "duos" (internal
+  Python optimization run outside the repo (scratch scripts, not committed) under the
+  2026-07-08 constraints: everyone gets a different partner on each of R1–R3 (all three
+  teammates covered), the one forced partner repeat is the father-son duo at the R5 finale,
+  and father-son share a foursome exactly 3 of 5 rounds (R1, R4 singles, R5). Nobody walks
+  with the same player more than 3 of 5 days, everyone walks with everyone at least once, and
+  12 of the 16 cross-team pairs meet 3×. R1 and R4 sharing a group composition is provably
+  forced (any schedule with duos together on 3 rounds duplicates one composition among
+  R1/R4/R5); they're different games, days apart. `matchesForRound` (pairs) and
+  `groupsForRound` both read this. UI calls them "pairings," not "duos" (internal
   `duos`/`teamDuos`/`SEED_DUOS` names kept).
 - `HCP_ALLOWANCE` (0.80) — the cup is played off 80% of course handicap. This is applied
   directly to `roundCourseHcp` (the number actually used for net scoring), not just to the
@@ -43,7 +49,8 @@ palette); the app still lives in the `handicap-calculator-scotland` repo.
   this single constant applied everywhere.
 - State: `players`, `teeChoice`, `rounds` where each round is
   `{scores:{pid:gross}, results:{matchIdx:'A'|'B'|'half'}}`, saved under `LS_KEY`
-  (`fs-invitational-v9`; bump the suffix when the shape changes). Teams are LOCKED to the seed.
+  (`fs-invitational-v10`; bump the suffix when the shape changes — v10 because the 2026-07-08
+  remix re-keyed what each round's match indexes mean). Teams are LOCKED to the seed.
 - Render functions are named `render*`; live in-place updaters (`updateMatchLive`,
   `updateIndividualLive`) exist so typing a score doesn't drop input focus.
 
@@ -51,7 +58,8 @@ palette); the app still lives in the `handicap-calculator-scotland` repo.
 
 `Course HCP = Index × (Slope ÷ 113) + (Course Rating − Par)`, rounded. Playing HCP applies
 the comp allowance. Net = gross − rounded Course HCP. Match play: low net wins, 1 pt, ½ tied.
-Better Ball takes a duo's lower net; Aggregate adds both. Every format is own-ball.
+High-Low is scored on the course (two points a hole: low ball, low pair total) and the app
+just records the match winner. Every format is own-ball.
 
 ## Design system
 
