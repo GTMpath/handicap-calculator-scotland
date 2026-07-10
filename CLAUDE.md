@@ -31,16 +31,16 @@ palette); the app still lives in the `handicap-calculator-scotland` repo.
   with your father/son, R2 Dumbarnie pairs Better Ball mixed pairings (Better Ball so a
   blow-up costs nothing), R3 Carnoustie 4v4 best-2 (the kind game on the beast), R4
   St Andrews New singles, R5 St Andrews Old 4v4 best-2 finale.
-- `ROUND_GROUPS` — playing groups per round (who walks together), locked via a brute-force
-  Python optimization run outside the repo (scratch scripts, not committed) under the
-  2026-07-08-evening constraints: different partner on each pairs day, whole team walks
-  together on the 4v4 days, father-son share a foursome exactly 3 of 5 rounds (R1, R3, R5),
-  everyone shares a fairway with every opponent at least once (max twice), and every
-  singles match (Brett–Robert, Kyle–Mike, Bruce–Justin, Ron–Andrew) is against the one
-  opponent that player never walks with otherwise. Singles matchups pair by array order
-  within a group (A[i] plays B[i]). `matchesForRound` (pairs/singles) and `groupsForRound`
-  both read this. UI calls them "pairings," not "duos" (internal `duos`/`teamDuos`/
-  `SEED_DUOS` names kept).
+- `ROUND_GROUPS` — playing groups per round (who walks together). RESHUFFLED mid-trip
+  2026-07-10: Dumbarnie got a on-the-day swap (Justin↔Mike), so R3/R4 were re-planned by
+  hand around what had actually been played. Guarantees now: Carnoustie's mixed walking
+  groups (4v4 stroke, so groups don't affect scoring) cover the four remaining never-met
+  pairs, Brett+Ron share two days (New + Old), Justin and Andrew only overlap at the Old,
+  and everyone still shares a fairway with everyone at least once by the finale. Singles
+  matchups are now Brett–Mike, Ron–Justin, Bruce–Andrew, Kyle–Robert, paired by array
+  order within a group (A[i] plays B[i]). `matchesForRound` (pairs/singles) and
+  `groupsForRound` both read this. UI calls them "pairings," not "duos" (internal
+  `duos`/`teamDuos`/`SEED_DUOS` names kept).
 - `HCP_ALLOWANCE` (0.80) — the cup is played off 80% of course handicap. This is applied
   directly to `roundCourseHcp` (the number actually used for net scoring), not just to the
   displayed Playing HCP column. There used to be a per-course allowance dropdown that only
