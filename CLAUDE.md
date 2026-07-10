@@ -31,16 +31,17 @@ palette); the app still lives in the `handicap-calculator-scotland` repo.
   with your father/son, R2 Dumbarnie pairs Better Ball mixed pairings (Better Ball so a
   blow-up costs nothing), R3 Carnoustie 4v4 best-2 (the kind game on the beast), R4
   St Andrews New singles, R5 St Andrews Old 4v4 best-2 finale.
-- `ROUND_GROUPS` — playing groups per round (who walks together). RESHUFFLED mid-trip
-  2026-07-10: Dumbarnie got a on-the-day swap (Justin↔Mike), so R3/R4 were re-planned by
-  hand around what had actually been played. Guarantees now: Carnoustie's mixed walking
-  groups (4v4 stroke, so groups don't affect scoring) cover the four remaining never-met
-  pairs, Brett+Ron share two days (New + Old), Justin and Andrew only overlap at the Old,
-  and everyone still shares a fairway with everyone at least once by the finale. Singles
-  matchups are now Brett–Mike, Ron–Justin, Bruce–Andrew, Kyle–Robert, paired by array
-  order within a group (A[i] plays B[i]). `matchesForRound` (pairs/singles) and
-  `groupsForRound` both read this. UI calls them "pairings," not "duos" (internal
-  `duos`/`teamDuos`/`SEED_DUOS` names kept).
+- `ROUND_GROUPS` — playing groups per round (who walks together). FINAL, called by Justin
+  mid-trip 2026-07-10 after Dumbarnie's on-the-day swap (Justin↔Mike): Carnoustie mixed
+  walking groups Brett/Kyle/Mike/Justin + Bruce/Ron/Andrew/Robert (4v4 stroke, groups
+  don't affect scoring), New Course groups Brett/Bruce/Robert/Justin + Kyle/Ron/Mike/
+  Andrew which restore the originally announced singles matchups (Brett–Robert,
+  Bruce–Justin, Kyle–Mike, Ron–Andrew), Old unchanged (Fife | Angus). Everyone still
+  shares a fairway with everyone at least once by the finale; Justin gets Brett on both
+  Sat and Sun; Justin/Andrew only overlap at the Old. Matchups pair by array order within
+  a group (A[i] plays B[i]). `matchesForRound` (pairs/singles) and `groupsForRound` both
+  read this. UI calls them "pairings," not "duos" (internal `duos`/`teamDuos`/`SEED_DUOS`
+  names kept).
 - `HCP_ALLOWANCE` (0.80) — the cup is played off 80% of course handicap. This is applied
   directly to `roundCourseHcp` (the number actually used for net scoring), not just to the
   displayed Playing HCP column. There used to be a per-course allowance dropdown that only

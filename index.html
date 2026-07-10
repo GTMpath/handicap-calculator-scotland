@@ -600,21 +600,21 @@ const ROUND_CFG = {
   old:  {team:'foursome', bestN:2,           play:'stroke', label:'4v4 · Best 2 nets'},
 };
 const cfg = id => ROUND_CFG[id] || ROUND_CFG.kings;
-// Playing groups per round — RESHUFFLED ON THE GROUND 2026-07-10. Dumbarnie was swapped
-// on the day (Justin↔Mike), which meant Ron/Justin/Robert had shared a group twice by day
-// two. R3/R4 were re-planned by hand so that, with the locked Old Course teams, every
-// player still shares a fairway with every other at least once by the finale: Carnoustie
-// covers all four remaining never-met pairs (Brett-Justin, Brett-Robert, Ron-Andrew,
-// Ron-Mike) and gives Ron a Justin/Robert-free day; the New gives Brett+Ron their extra
-// day together and keeps Justin and Andrew apart until the Old (they've got post-trip
-// golf together anyway). Carnoustie is 4v4 stroke, so mixed walking groups don't affect
-// its scoring. Seed ids: p1 Brett, p2 Bruce, p3 Kyle, p4 Ron (Fife); p5 Andrew, p6 Mike,
-// p7 Justin, p8 Robert (Angus). Singles matchups pair by array order: A[i] plays B[i].
+// Playing groups per round — FINAL, called by Justin on the ground 2026-07-10 evening.
+// Dumbarnie was swapped on the day (Justin↔Mike), so R3/R4 were re-drawn around what had
+// actually been played. With the locked Old Course teams these groups still cover every
+// never-met pair: everyone shares a fairway with everyone at least once by the finale,
+// Justin gets Brett on both Saturday and Sunday, and Justin/Andrew only overlap at the
+// Old (post-trip golf together anyway). Sunday's walking groups line up with the
+// originally announced singles matchups, so those are restored. Carnoustie is 4v4
+// stroke — walking groups don't affect its scoring. Seed ids: p1 Brett, p2 Bruce,
+// p3 Kyle, p4 Ron (Fife); p5 Andrew, p6 Mike, p7 Justin, p8 Robert (Angus). Singles
+// matchups pair by array order: A[i] plays B[i] within a group.
 const ROUND_GROUPS = {
   kings:[['p1','p2','p5','p6'],['p3','p4','p7','p8']],   // duos day: Brett+Bruce v Andrew+Mike | Kyle+Ron v Justin+Robert
   dumb: [['p1','p3','p5','p6'],['p2','p4','p7','p8']],   // as played after the swap: Brett+Kyle v Andrew+Mike | Bruce+Ron v Justin+Robert
-  carn: [['p1','p2','p7','p8'],['p3','p4','p5','p6']],   // 4v4, mixed walking groups: Brett,Bruce,Justin,Robert | Kyle,Ron,Andrew,Mike
-  new:  [['p1','p4','p6','p7'],['p2','p3','p5','p8']],   // singles: Brett-Mike, Ron-Justin | Bruce-Andrew, Kyle-Robert
+  carn: [['p1','p3','p6','p7'],['p2','p4','p5','p8']],   // 4v4, mixed walking groups: Brett,Kyle,Mike,Justin | Bruce,Ron,Andrew,Robert
+  new:  [['p1','p2','p8','p7'],['p3','p4','p6','p5']],   // singles: Brett-Robert, Bruce-Justin | Kyle-Mike, Ron-Andrew
   old:  [['p1','p2','p3','p4'],['p5','p6','p7','p8']],   // 4v4 finale: Fife | Angus
 };
 

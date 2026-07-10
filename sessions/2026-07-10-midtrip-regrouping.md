@@ -13,32 +13,28 @@ never-met list stood at ten pairs. The locked Old Course teams cover six of them
 (Brett–Ron, Bruce–Kyle, Andrew–Justin, Andrew–Robert, Mike–Justin, Mike–Robert), leaving
 four for Sat/Sun: Brett–Justin, Brett–Robert, Ron–Andrew, Ron–Mike.
 
-## New R3/R4 (planned by hand, verified in-app headless)
+## Final R3/R4 — Justin's call, evening of Jul 10 (supersedes the afternoon draft)
 
-- **R3 Carnoustie (Sat)**: Brett, Bruce, Justin, Robert | Kyle, Ron, Andrew, Mike.
-  Covers all four never-met pairs in one day; Ron gets a Justin/Robert-free day; 4v4
-  stroke scoring is unaffected by walking groups (still best-2 nets per team).
-- **R4 St Andrews New (Sun)**: Brett, Ron, Mike, Justin | Bruce, Kyle, Andrew, Robert.
-  Matchups: **Brett v Mike, Ron v Justin, Bruce v Andrew, Kyle v Robert** (Kyle and
-  Robert both 16.0 — dead-even match). Gives Brett+Ron their second day together
-  (with the Old) and Justin his day with Brett before Brett leaves.
+An afternoon draft (Carnoustie: Brett/Bruce/Justin/Robert + Kyle/Ron/Andrew/Mike; New:
+Brett/Ron/Mike/Justin with matchups Brett–Mike, Ron–Justin, Bruce–Andrew, Kyle–Robert)
+was pushed briefly, then replaced the same evening by Justin's final groups:
+
+- **R3 Carnoustie (Sat)**: Brett, Kyle, Mike, Justin | Bruce, Ron, Andrew, Robert.
+  4v4 stroke, so walking groups don't affect the best-2-nets scoring.
+- **R4 St Andrews New (Sun)**: Brett, Bruce, Robert, Justin | Kyle, Ron, Mike, Andrew.
+  These walking groups line up with the ORIGINALLY announced matchups, so they're
+  restored: **Brett v Robert, Bruce v Justin, Kyle v Mike, Ron v Andrew**.
 - **R5 Old (Mon)**: unchanged, Fife | Angus.
 
-Wishes honoured: Brett–Ron together twice (R4 + R5); Justin–Andrew only at the Old (they
-have post-trip golf together); everyone shares a fairway with everyone ≥1 across the week
-(verified programmatically — zero never-together pairs).
-
-Justin was offered an alternative R4 that preserved the originally announced matchups
-(Brett/Ron/Andrew/Robert + Bruce/Kyle/Mike/Justin → Brett–Robert, Ron–Andrew,
-Bruce–Justin, Kyle–Mike) at the cost of Bruce–Justin and Kyle–Mike walking together three
-straight days. Default shipped is his own suggested groups; flipping back is a one-line
-`ROUND_GROUPS.new` edit.
+Verified programmatically: everyone still shares a fairway with everyone at least once
+across the week; Justin gets Brett on both Sat and Sun; Justin–Andrew only overlap at the
+Old. Known trade-offs Justin accepted: Brett–Ron share only the one day (the Old, not the
+two he'd wanted earlier), and Ron is with Robert a third straight day at Carnoustie.
 
 No LS_KEY bump — state shape unchanged, and bumping would wipe the R1 results already on
 devices. R2 match indexes still line up (two matches, same group slots).
 
 ## Where we left off
 
-Pushed to `claude/golf-tournament-format-uz9kba` and fast-forwarded to `main` (Pages
-auto-deploys). Awaiting Justin's confirmation on the R4 choice; Carnoustie tees off
-2:40pm Saturday.
+Final groups pushed to `claude/golf-tournament-format-uz9kba` and fast-forwarded to
+`main` (Pages auto-deploys). Carnoustie tees off 2:40pm Saturday.
